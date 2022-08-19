@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:minimal_time_tracker/data/mock_data.dart';
+import 'package:minimal_time_tracker/add_activity_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -49,6 +50,17 @@ class _MyHomePageState extends State<MyHomePage> {
             );
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (BuildContext context) => AddActivityScreen(),
+              fullscreenDialog: true,
+            ),
+          );
+        },
       ),
     );
   }
