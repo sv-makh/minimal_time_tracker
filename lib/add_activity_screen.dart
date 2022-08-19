@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:minimal_time_tracker/data/mock_data.dart';
+import 'package:minimal_time_tracker/data/activity.dart';
 
 class AddActivityScreen extends StatelessWidget {
-  const AddActivityScreen({Key? key}) : super(key: key);
+  AddActivityScreen({Key? key}) : super(key: key);
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _subtitleController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -11,17 +15,36 @@ class AddActivityScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Padding(
-          padding: 10,
+          padding: EdgeInsets.all(10),
           child: Column(
             children: [
               Text('Title'),
-              TextField(),
+              TextField(
+                controller: _titleController,
+              ),
               Text('Subtitle'),
-              TextField()
+              TextField(
+                controller: _subtitleController,
+              ),
+              //colorpicker
             ],
           ),
         ),
       ),
+      floatingActionButton: ElevatedButton(
+        child: Text('Ok'),
+        onPressed: () {
+          () => _addActivity;
+          Navigator.pop(context);
+        }
+      ),
+    );
+  }
+
+  void _addActivity() {
+    activities.add(
+      Activity(
+          title: _titleController.text, subtitle: _subtitleController.text),
     );
   }
 }
