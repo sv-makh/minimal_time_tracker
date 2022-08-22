@@ -10,9 +10,15 @@ class AddActivityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Add new activity'),
-      ),
+      appBar: AppBar(title: Text('Add new activity'), actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.save),
+          onPressed: () {
+            () => _addActivity;
+            Navigator.pop(context);
+          },
+        ),
+      ],),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(10),
@@ -30,13 +36,6 @@ class AddActivityScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
-      floatingActionButton: ElevatedButton(
-        child: Text('Ok'),
-        onPressed: () {
-          () => _addActivity;
-          Navigator.pop(context);
-        }
       ),
     );
   }

@@ -42,24 +42,30 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView.builder(
           itemCount: activities.length,
           itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(activities[index].title),
-              subtitle: (activities[index].subtitle != null)
-                  ? Text(activities[index].subtitle!)
-                  : Container(),
+            return Card(
+              child: ListTile(
+                title: Text(activities[index].title),
+                subtitle: (activities[index].subtitle != null)
+                    ? Text(activities[index].subtitle!)
+                    : Container(),
+              ),
             );
           },
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        child: Icon(Icons.add),
+        onPressed: () async {
+          await Navigator.push(
             context,
             MaterialPageRoute<void>(
               builder: (BuildContext context) => AddActivityScreen(),
               fullscreenDialog: true,
             ),
           );
+          setState(() {
+            activities.length;
+          });
         },
       ),
     );
