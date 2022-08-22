@@ -10,15 +10,23 @@ class AddActivityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Add new activity'), actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.save),
-          onPressed: () {
-            () => _addActivity;
-            Navigator.pop(context);
-          },
-        ),
-      ],),
+      appBar: AppBar(
+        title: Text('Add new activity'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.save),
+            onPressed: () {
+              Navigator.pop(
+                context,
+                Activity(
+                  title: _titleController.text,
+                  subtitle: _subtitleController.text,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(10),
@@ -37,13 +45,6 @@ class AddActivityScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  void _addActivity() {
-    activities.add(
-      Activity(
-          title: _titleController.text, subtitle: _subtitleController.text),
     );
   }
 }

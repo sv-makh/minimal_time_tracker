@@ -55,19 +55,19 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (BuildContext context) => AddActivityScreen(),
-              fullscreenDialog: true,
-            ),
-          );
-          setState(() {
-            activities.length;
-          });
+        onPressed: () {
+          _addActivity(context);
         },
       ),
     );
+  }
+
+  Future<void> _addActivity(BuildContext context) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddActivityScreen()),
+    ).then((value) => setState(() {
+      activities.add(value);
+    }));
   }
 }
