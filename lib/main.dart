@@ -48,6 +48,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 subtitle: (activities[index].subtitle != null)
                     ? Text(activities[index].subtitle!)
                     : Container(),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    _deleteActivity(index);
+                  }
+                ),
               ),
             );
           },
@@ -60,6 +66,12 @@ class _MyHomePageState extends State<MyHomePage> {
         },
       ),
     );
+  }
+
+  void _deleteActivity(int index) {
+    setState(() {
+      activities.removeAt(index);
+    });
   }
 
   Future<void> _addActivity(BuildContext context) async {
