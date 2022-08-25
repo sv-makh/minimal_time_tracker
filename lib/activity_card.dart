@@ -21,19 +21,27 @@ class ActivityCard extends StatelessWidget {
             onPressed: () {},
           ),
         ),
-        (activity.durationButtons == null)
-            ? Container()
-            : _rowOfButtons()
+        (activity.durationButtons == null) ? Container() : _rowOfButtons()
       ]),
     );
   }
-}
 
-class _rowOfButtons extends StatelessWidget {
-  const _rowOfButtons({Key? key}) : super(key: key);
+  Widget _rowOfButtons() {
+    return Row(
+      children: [
+        for (var d in activity.durationButtons)
+          Padding(
+            padding: EdgeInsets.only(right: 5),
+            child: OutlinedButton(
+              onPressed: () {},
+              child: Text(_stringDuration(d)),
+            ),
+          )
+      ],
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container();
+  String _stringDuration(Duration d) {
+    return d.toString();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/add_activity_screen.dart';
+import 'package:minimal_time_tracker/activity_card.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,20 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView.builder(
           itemCount: activities.length,
           itemBuilder: (context, index) {
-            return Card(
-              child: ListTile(
-                title: Text(activities[index].title),
-                subtitle: (activities[index].subtitle != null)
-                    ? Text(activities[index].subtitle!)
-                    : Container(),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    _deleteActivity(index);
-                  }
-                ),
-              ),
-            );
+            return ActivityCard(activity: activities[index],);
           },
         ),
       ),
