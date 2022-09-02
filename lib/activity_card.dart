@@ -27,21 +27,47 @@ class ActivityCard extends StatelessWidget {
   }
 
   Widget _rowOfButtons() {
-    return Row(
-      children: [
-        for (var d in activity.durationButtons)
-          Padding(
-            padding: EdgeInsets.only(right: 5),
-            child: OutlinedButton(
-              onPressed: () {},
-              child: Text(_stringDuration(d)),
-            ),
-          )
-      ],
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          for (var d in activity.durationButtons)
+            Padding(
+              padding: EdgeInsets.only(right: 5),
+              child: OutlinedButton(
+                onPressed: () {},
+                child: Text('+ ' + _stringDuration(d)),
+              ),
+            )
+        ],
+      ),
     );
   }
 
   String _stringDuration(Duration d) {
-    return d.toString();
+    var _seconds = d.inSeconds;
+    final _days = _seconds~/Duration.secondsPerDay;
+    _seconds -= _days*Duration.secondsPerDay;
+    final _hours = _seconds~/Duration.secondsPerHour;
+    _seconds -= _hours*Duration.secondsPerHour;
+    final _minutes = _seconds~/Duration.secondsPerMinute;
+    _seconds -= _minutes*Duration.secondsPerMinute;
+
+    final List<String> _tokens = [];
+    if (_days != 0) {
+      _tokens.add('${_days}d');
+    }
+    if (_tokens.isNotEmpty || (_hours != 0)) {
+      _tokens.add('${_hours}h');
+    }
+    if (_tokens.isNotEmpty || (_minutes != 0)) {
+      _tokens.add('${_minutes}m');
+    }
+    if (_tokens.isNotEmpty || (_seconds != 0)) {
+      _tokens.add('${_seconds}s');
+    }
+
+    return _tokens.join(' ');
+    //return d.toString();
   }
 }
