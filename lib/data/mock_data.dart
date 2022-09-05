@@ -8,7 +8,7 @@ List<Activity> activities = [
   Activity(title: 'Exercizing', subtitle: 'Yoga', durationButtons: [
     Duration(hours: 1, minutes: 30),
     Duration(seconds: 30),
-    Duration(hours: 2, minutes: 15, seconds: 45)
+    Duration(hours: 2, minutes: 15, seconds: 45),
   ]),
   Activity(title: 'Exercizing', subtitle: 'Cycling'),
   Activity(title: 'Sleeping'),

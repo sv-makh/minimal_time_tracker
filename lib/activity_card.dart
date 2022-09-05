@@ -12,7 +12,7 @@ class ActivityCard extends StatelessWidget {
     return Card(
       child: Column(children: [
         ListTile(
-          title: Text('${activity.title}, total = ${activity.totalTime()}'),
+          title: Text('${activity.title}, total = ${_stringDuration(activity.totalTime())}'),
           subtitle: (activity.subtitle != null)
               ? Text(activity.subtitle!)
               : Container(),
@@ -44,6 +44,9 @@ class ActivityCard extends StatelessWidget {
     );
   }
 
+  //функция преобразования Duration d в строку вида
+  //2d 15h 30m 13s (или 15h 20s, или 3h...)
+  //если всё в d = 0, то результат будет 0m
   String _stringDuration(Duration d) {
     var _seconds = d.inSeconds;
     final _days = _seconds~/Duration.secondsPerDay;
@@ -57,17 +60,19 @@ class ActivityCard extends StatelessWidget {
     if (_days != 0) {
       _tokens.add('${_days}d');
     }
-    if (_tokens.isNotEmpty || (_hours != 0)) {
+    if (_hours != 0) {
       _tokens.add('${_hours}h');
     }
-    if (_tokens.isNotEmpty || (_minutes != 0)) {
+    if (_tokens.isEmpty || (_minutes != 0)) {
       _tokens.add('${_minutes}m');
     }
-    if (_tokens.isNotEmpty || (_seconds != 0)) {
+    if (_seconds != 0) {
+      if (_minutes == 0) {
+        _tokens.remove('${_minutes}m');
+      }
       _tokens.add('${_seconds}s');
     }
 
     return _tokens.join(' ');
-    //return d.toString();
   }
 }
