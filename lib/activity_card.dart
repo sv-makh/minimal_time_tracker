@@ -12,7 +12,8 @@ class ActivityCard extends StatelessWidget {
     return Card(
       child: Column(children: [
         ListTile(
-          title: Text('${activity.title}, total = ${_stringDuration(activity.totalTime())}'),
+          title: Text(
+              '${activity.title}, total = ${_stringDuration(activity.totalTime())}'),
           subtitle: (activity.subtitle != null)
               ? Text(activity.subtitle!)
               : Container(),
@@ -49,12 +50,12 @@ class ActivityCard extends StatelessWidget {
   //если всё в d = 0, то результат будет 0m
   String _stringDuration(Duration d) {
     var _seconds = d.inSeconds;
-    final _days = _seconds~/Duration.secondsPerDay;
-    _seconds -= _days*Duration.secondsPerDay;
-    final _hours = _seconds~/Duration.secondsPerHour;
-    _seconds -= _hours*Duration.secondsPerHour;
-    final _minutes = _seconds~/Duration.secondsPerMinute;
-    _seconds -= _minutes*Duration.secondsPerMinute;
+    final _days = _seconds ~/ Duration.secondsPerDay;
+    _seconds -= _days * Duration.secondsPerDay;
+    final _hours = _seconds ~/ Duration.secondsPerHour;
+    _seconds -= _hours * Duration.secondsPerHour;
+    final _minutes = _seconds ~/ Duration.secondsPerMinute;
+    _seconds -= _minutes * Duration.secondsPerMinute;
 
     final List<String> _tokens = [];
     if (_days != 0) {
