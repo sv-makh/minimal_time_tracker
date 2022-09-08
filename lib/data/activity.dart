@@ -8,8 +8,12 @@ class Activity {
       {required this.title, this.subtitle, List<Duration>? durationButtons})
       : durationButtons = durationButtons ?? [];
 
-  void addInterval(DateTime start, DateTime end) {
+  /*void addInterval(DateTime start, DateTime end) {
     _intervals.add(TimeInterval(start: start, end: end));
+  }*/
+
+  void addInterval(TimeInterval ti) {
+    _intervals.add(ti);
   }
 
   void addDurationButton(Duration duration) {

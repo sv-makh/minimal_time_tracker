@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/add_activity_screen.dart';
 import 'package:minimal_time_tracker/activity_card.dart';
+import 'package:minimal_time_tracker/activity_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,12 +20,54 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Minimal Time Tracker'),
+      home: const MyHomePage(), //title: 'Minimal Time Tracker'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => ActivitiesBloc(activities),
+      child: const ActivitiesView(),
+    );
+  }
+}
+
+class ActivitiesView extends StatelessWidget {
+  const ActivitiesView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Minimal Time Tracker'),
+      ),
+      body: SafeArea(
+        child: ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            return BlocBuilder<ActivitiesBloc, ActivitiesState>(
+              builder: (context, ActivitiesState state) {
+                return ActivityCard(activity: state.activitiesState[index],);
+              },
+            );
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          //_addActivity(context);
+        },
+      ),
+    );
+  }
+}
+
+/*class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
@@ -70,4 +114,4 @@ class _MyHomePageState extends State<MyHomePage> {
       activities.add(value);
     }));
   }
-}
+}*/
