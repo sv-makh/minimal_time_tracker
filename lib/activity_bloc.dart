@@ -10,8 +10,10 @@ class ActivityDeleted extends ActivityEvent {
   ActivityDeleted({required this.index});
 }
 
-class ActiviryAdded extends ActivityEvent {
+class ActivityAdded extends ActivityEvent {
+  Activity activity;
 
+  ActivityAdded({required this.activity});
 }
 
 class ActivityAddedTime extends ActivityEvent {
@@ -30,24 +32,23 @@ class ActivitiesState {
 class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState>{
   List<Activity> activitiesBloc;
 
-  ActivitiesBloc(this.activitiesBloc) : super(ActivitiesState(activitiesBloc));
+  ActivitiesBloc(this.activitiesBloc) : super(ActivitiesState(activitiesBloc)) {
 
-  @override
-  Stream<ActivitiesState> mapEventToState(ActivityEvent event) async* {
-    if (event is ActivityDeleted) {
-      yield* _mapActivityDeletedToState(event);
-    } else if (event is ActivityAddedTime) {
-      yield* _mapActivityAddedTimeToState(event);
-    }
+    on<ActivityDeleted>((ActivityDeleted event,
+        Emitter<ActivitiesState> emitter) {
+      activitiesBloc.removeAt(event.index);
+      return emitter(ActivitiesState(activitiesBloc));
+    });
+
+    on<ActivityAddedTime>((ActivityAddedTime event, Emitter<ActivitiesState> emitter) {
+      activitiesBloc[event.index].addInterval(event.interval);
+      return emitter(ActivitiesState(activitiesBloc));
+    });
+
+    on<ActivityAdded>((ActivityAdded event, Emitter<ActivitiesState> emitter) {
+      activitiesBloc.add(event.activity);
+      return emitter(ActivitiesState(activitiesBloc));
+    });
   }
 
-  Stream<ActivitiesState> _mapActivityDeletedToState(ActivityDeleted event) async* {
-    activitiesBloc.removeAt(event.index);
-    yield ActivitiesState(activitiesBloc);
-  }
-
-  Stream<ActivitiesState> _mapActivityAddedTimeToState(ActivityAddedTime event) async* {
-    activitiesBloc[event.index].addInterval(event.interval);
-    yield ActivitiesState(activitiesBloc);
-  }
 }

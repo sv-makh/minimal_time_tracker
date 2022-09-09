@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
+import 'package:minimal_time_tracker/activity_bloc.dart';
 
 class ActivityCard extends StatelessWidget {
   final Activity activity;
@@ -9,21 +11,28 @@ class ActivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(children: [
-        ListTile(
-          title: Text(
-              '${activity.title}, total = ${_stringDuration(activity.totalTime())}'),
-          subtitle: (activity.subtitle != null)
-              ? Text(activity.subtitle!)
-              : Container(),
-          trailing: IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {},
-          ),
-        ),
-        (activity.durationButtons == null) ? Container() : _rowOfButtons()
-      ]),
+    return BlocBuilder<ActivitiesBloc, ActivitiesState>(
+      builder: (context, ActivitiesState state) {
+        return Card(
+          child: Column(children: [
+            ListTile(
+              title: Text(
+                  '${activity.title}, total = ${_stringDuration(activity.totalTime())}'),
+              subtitle: (activity.subtitle != null)
+                  ? Text(activity.subtitle!)
+                  : Container(),
+              trailing: IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () {
+                  BlocProvider.of<ActivitiesBloc>(context).add(
+                      ActivityDeleted(index: activities.indexOf(activity)));
+                },
+              ),
+            ),
+            (activity.durationButtons == null) ? Container() : _rowOfButtons()
+          ]),
+        );
+      },
     );
   }
 

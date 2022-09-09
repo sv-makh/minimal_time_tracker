@@ -42,76 +42,42 @@ class ActivitiesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Minimal Time Tracker'),
-      ),
-      body: SafeArea(
-        child: ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            return BlocBuilder<ActivitiesBloc, ActivitiesState>(
-              builder: (context, ActivitiesState state) {
-                return ActivityCard(activity: state.activitiesState[index],);
+    return BlocBuilder<ActivitiesBloc, ActivitiesState>(
+      builder: (context, ActivitiesState state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Minimal Time Tracker'),
+          ),
+          body: SafeArea(
+            child: ListView.builder(
+              itemCount: state.activitiesState.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ActivityCard(
+                  activity: state.activitiesState[index],
+                );
               },
-            );
-          },
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          //_addActivity(context);
-        },
-      ),
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () {
+              _addActivity(context);
+            },
+          ),
+        );
+      },
     );
-  }
-}
-
-/*class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: SafeArea(
-        child: ListView.builder(
-          itemCount: activities.length,
-          itemBuilder: (context, index) {
-            return ActivityCard(activity: activities[index],);
-          },
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          _addActivity(context);
-        },
-      ),
-    );
-  }
-
-  void _deleteActivity(int index) {
-    setState(() {
-      activities.removeAt(index);
-    });
   }
 
   Future<void> _addActivity(BuildContext context) async {
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => AddActivityScreen()),
-    ).then((value) => setState(() {
+    ).then((value) => BlocProvider.of<ActivitiesBloc>(context)
+        .add(ActivityAdded(activity: value)));
+
+    /*setState(() {
       activities.add(value);
-    }));
+    }));*/
   }
-}*/
+}
