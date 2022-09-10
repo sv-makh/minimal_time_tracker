@@ -29,14 +29,14 @@ class ActivityCard extends StatelessWidget {
                 },
               ),
             ),
-            (activity.durationButtons == null) ? Container() : _rowOfButtons()
+            (activity.durationButtons == null) ? Container() : _rowOfButtons(context)
           ]),
         );
       },
     );
   }
 
-  Widget _rowOfButtons() {
+  Widget _rowOfButtons(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -45,7 +45,13 @@ class ActivityCard extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(right: 5),
               child: OutlinedButton(
-                onPressed: () {},
+                onPressed: () {
+                  BlocProvider.of<ActivitiesBloc>(context).add(
+                      ActivityAddedTime(
+                          index: activities.indexOf(activity),
+                          interval: TimeInterval.duration(
+                              end: DateTime.now(), duration: d)));
+                },
                 child: Text('+ ' + _stringDuration(d)),
               ),
             )

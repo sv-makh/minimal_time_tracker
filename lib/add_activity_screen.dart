@@ -40,6 +40,7 @@ class AddActivityScreen extends StatelessWidget {
               TextField(
                 controller: _subtitleController,
               ),
+              //adding buttons with duration
               //colorpicker
             ],
           ),

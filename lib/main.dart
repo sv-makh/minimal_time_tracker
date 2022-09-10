@@ -75,9 +75,5 @@ class ActivitiesView extends StatelessWidget {
       MaterialPageRoute(builder: (context) => AddActivityScreen()),
     ).then((value) => BlocProvider.of<ActivitiesBloc>(context)
         .add(ActivityAdded(activity: value)));
-
-    /*setState(() {
-      activities.add(value);
-    }));*/
   }
 }
