@@ -4,6 +4,8 @@ import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/add_activity_screen.dart';
 import 'package:minimal_time_tracker/activity_card.dart';
 import 'package:minimal_time_tracker/activity_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +22,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(), //title: 'Minimal Time Tracker'),
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en', ''), // English, no country code
+        Locale('ru', ''), // Russian, no country code
+      ],
+      home: const MyHomePage(),
     );
   }
 }
@@ -46,7 +58,7 @@ class ActivitiesView extends StatelessWidget {
       builder: (context, ActivitiesState state) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('Minimal Time Tracker'),
+            title: Text(AppLocalizations.of(context)!.title),//'Minimal Time Tracker'),
           ),
           body: SafeArea(
             child: ListView.builder(

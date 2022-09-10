@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddActivityScreen extends StatelessWidget {
   AddActivityScreen({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class AddActivityScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add new activity'),
+        title: Text(AppLocalizations.of(context)!.addNewActivity),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save),

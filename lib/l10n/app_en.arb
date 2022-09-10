@@ -1,0 +1,9 @@
+{
+    "title": "Minimal Time Tracker",
+    "addNewActivity": "Add new activity",
+    "monthShort": "M",
+    "daysShort": "d",
+    "hoursShort": "h",
+    "minutesShort": "m",
+    "secondsShort": "s"
+}

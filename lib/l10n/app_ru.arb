@@ -1,0 +1,9 @@
+{
+    "title": "Минимальный трекер времени",
+    "addNewActivity": "Добавить новую активность",
+    "monthShort": "М",
+    "daysShort": "д",
+    "hoursShort": "ч",
+    "minutesShort": "м",
+    "secondsShort": "с"
+}
