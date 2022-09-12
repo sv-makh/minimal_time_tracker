@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/activity_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ActivityCard extends StatelessWidget {

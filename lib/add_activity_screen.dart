@@ -33,11 +33,11 @@ class AddActivityScreen extends StatelessWidget {
           padding: EdgeInsets.all(10),
           child: Column(
             children: [
-              Text('${AppLocalizations.of(context)!.titleActivity}'),
+              Text(AppLocalizations.of(context)!.titleActivity),
               TextField(
                 controller: _titleController,
               ),
-              Text('${AppLocalizations.of(context)!.subtitleActivity}'),
+              Text(AppLocalizations.of(context)!.subtitleActivity),
               TextField(
                 controller: _subtitleController,
               ),

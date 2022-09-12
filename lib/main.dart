@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/add_activity_screen.dart';
 import 'package:minimal_time_tracker/activity_card.dart';
 import 'package:minimal_time_tracker/activity_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:minimal_time_tracker/data/activity.dart';
 
-void main() {
+//const String boxName = 'activitiesBox';
+
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(ActivityAdapter());
+  Hive.registerAdapter(TimeIntervalAdapter());
+  Hive.registerAdapter(DurationAdapter());
+  await Hive.openBox<Activity>(boxName);
+
   runApp(const MyApp());
 }
 
@@ -42,6 +54,8 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
+
     return BlocProvider(
       create: (_) => ActivitiesBloc(activities),
       child: const ActivitiesView(),
@@ -54,22 +68,31 @@ class ActivitiesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
+
     return BlocBuilder<ActivitiesBloc, ActivitiesState>(
       builder: (context, ActivitiesState state) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.title),//'Minimal Time Tracker'),
+            title: Text(
+                AppLocalizations.of(context)!.title), //'Minimal Time Tracker'),
           ),
-          body: SafeArea(
-            child: ListView.builder(
-              itemCount: state.activitiesState.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ActivityCard(
-                  activity: state.activitiesState[index],
-                );
-              },
-            ),
-          ),
+          body: activitiesBox.values.isEmpty
+              ? SafeArea(
+                  child: Center(
+                    child: Text('No activities'),
+                  ),
+                )
+              : SafeArea(
+                  child: ListView.builder(
+                    itemCount: state.activitiesState.length,//activitiesBox.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ActivityCard(
+                        activity: state.activitiesState[index],//activitiesBox.getAt(index)!,
+                      );
+                    },
+                  ),
+                ),
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () {

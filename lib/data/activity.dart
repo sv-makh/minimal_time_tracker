@@ -1,7 +1,19 @@
+//import 'package:build_runner/build_runner.dart';
+import 'package:hive/hive.dart';
+
+part 'activity.g.dart';
+
+const String boxName = 'activitiesBox';
+
+@HiveType(typeId: 1)
 class Activity {
+  @HiveField(0)
   String title;
+  @HiveField(1)
   String? subtitle;
+  @HiveField(2)
   List<TimeInterval> _intervals = [];
+  @HiveField(3)
   List<Duration> durationButtons = <Duration>[];
 
   Activity(
@@ -26,9 +38,13 @@ class Activity {
   }
 }
 
+@HiveType(typeId: 2)
 class TimeInterval {
+  @HiveField(0)
   late DateTime start;
+  @HiveField(1)
   late DateTime end;
+  @HiveField(2)
   late Duration duration;
 
   TimeInterval({required this.start, required this.end})
@@ -40,4 +56,17 @@ class TimeInterval {
   Duration length() {
     return duration;
   }
+}
+
+class DurationAdapter extends TypeAdapter<Duration> {
+  @override
+  final typeId = 3;
+
+  @override
+  void write(BinaryWriter writer, Duration value) =>
+      writer.writeInt(value.inMicroseconds);
+
+  @override
+  Duration read(BinaryReader reader) =>
+      Duration(microseconds: reader.readInt());
 }

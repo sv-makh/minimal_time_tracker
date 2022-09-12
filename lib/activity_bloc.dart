@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/data/mock_data.dart';
 
@@ -31,6 +33,8 @@ class ActivitiesState {
 
 class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState>{
   List<Activity> activitiesBloc;
+
+  Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
 
   ActivitiesBloc(this.activitiesBloc) : super(ActivitiesState(activitiesBloc)) {
 
