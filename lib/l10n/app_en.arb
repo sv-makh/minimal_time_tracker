@@ -5,5 +5,8 @@
     "daysShort": "d",
     "hoursShort": "h",
     "minutesShort": "m",
-    "secondsShort": "s"
+    "secondsShort": "s",
+    "total": "total",
+    "titleActivity": "Title",
+    "subtitleActivity": "Subtitle"
 }

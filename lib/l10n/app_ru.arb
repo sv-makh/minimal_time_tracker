@@ -5,5 +5,8 @@
     "daysShort": "д",
     "hoursShort": "ч",
     "minutesShort": "м",
-    "secondsShort": "с"
+    "secondsShort": "с",
+    "total": "всего",
+    "titleActivity": "Заголовок",
+    "subtitleActivity": "Подзаголовок"
 }

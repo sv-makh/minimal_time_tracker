@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/activity_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ActivityCard extends StatelessWidget {
   final Activity activity;
@@ -17,7 +19,7 @@ class ActivityCard extends StatelessWidget {
           child: Column(children: [
             ListTile(
               title: Text(
-                  '${activity.title}, total = ${_stringDuration(activity.totalTime())}'),
+                  '${activity.title}, ${AppLocalizations.of(context)!.total} = ${_stringDuration(activity.totalTime(), context)}'),
               subtitle: (activity.subtitle != null)
                   ? Text(activity.subtitle!)
                   : Container(),
@@ -29,7 +31,9 @@ class ActivityCard extends StatelessWidget {
                 },
               ),
             ),
-            (activity.durationButtons == null) ? Container() : _rowOfButtons(context)
+            (activity.durationButtons == null)
+                ? Container()
+                : _rowOfButtons(context)
           ]),
         );
       },
@@ -52,7 +56,7 @@ class ActivityCard extends StatelessWidget {
                           interval: TimeInterval.duration(
                               end: DateTime.now(), duration: d)));
                 },
-                child: Text('+ ' + _stringDuration(d)),
+                child: Text('+ ' + _stringDuration(d, context)),
               ),
             )
         ],
@@ -63,7 +67,7 @@ class ActivityCard extends StatelessWidget {
   //функция преобразования Duration d в строку вида
   //2d 15h 30m 13s (или 15h 20s, или 3h...)
   //если всё в d = 0, то результат будет 0m
-  String _stringDuration(Duration d) {
+  String _stringDuration(Duration d, BuildContext context) {
     var _seconds = d.inSeconds;
     final _days = _seconds ~/ Duration.secondsPerDay;
     _seconds -= _days * Duration.secondsPerDay;
@@ -74,19 +78,19 @@ class ActivityCard extends StatelessWidget {
 
     final List<String> _tokens = [];
     if (_days != 0) {
-      _tokens.add('${_days}d');
+      _tokens.add('${_days}${AppLocalizations.of(context)!.daysShort}');
     }
     if (_hours != 0) {
-      _tokens.add('${_hours}h');
+      _tokens.add('${_hours}${AppLocalizations.of(context)!.hoursShort}');
     }
     if (_tokens.isEmpty || (_minutes != 0)) {
-      _tokens.add('${_minutes}m');
+      _tokens.add('${_minutes}${AppLocalizations.of(context)!.minutesShort}');
     }
     if (_seconds != 0) {
       if (_minutes == 0) {
-        _tokens.remove('${_minutes}m');
+        _tokens.remove('${_minutes}${AppLocalizations.of(context)!.minutesShort}');
       }
-      _tokens.add('${_seconds}s');
+      _tokens.add('${_seconds}${AppLocalizations.of(context)!.secondsShort}');
     }
 
     return _tokens.join(' ');
