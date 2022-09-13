@@ -7,8 +7,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ActivityCard extends StatelessWidget {
   final Activity activity;
+  final int activityIndex;
 
-  const ActivityCard({Key? key, required this.activity}) : super(key: key);
+  const ActivityCard({Key? key, required this.activity, required this.activityIndex}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class ActivityCard extends StatelessWidget {
                 icon: Icon(Icons.delete),
                 onPressed: () {
                   BlocProvider.of<ActivitiesBloc>(context).add(
-                      ActivityDeleted(index: activities.indexOf(activity)));
+                      ActivityDeleted(index: activityIndex));
                 },
               ),
             ),
@@ -51,7 +52,7 @@ class ActivityCard extends StatelessWidget {
                 onPressed: () {
                   BlocProvider.of<ActivitiesBloc>(context).add(
                       ActivityAddedTime(
-                          index: activities.indexOf(activity),
+                          index: activityIndex,
                           interval: TimeInterval.duration(
                               end: DateTime.now(), duration: d)));
                 },

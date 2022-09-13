@@ -26,15 +26,36 @@ class ActivityAddedTime extends ActivityEvent {
 }
 
 class ActivitiesState {
-  final List<Activity> activitiesState;
+  final Box<Activity> activitiesBox;
 
-  ActivitiesState(this.activitiesState);
+  ActivitiesState(this.activitiesBox);
 }
 
-class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState>{
-  List<Activity> activitiesBloc;
-
+class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
   Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
+
+  ActivitiesBloc() : super(ActivitiesState(Hive.box<Activity>(boxName))) {
+    on<ActivityDeleted>(
+        (ActivityDeleted event, Emitter<ActivitiesState> emitter) {
+      activitiesBox.deleteAt(event.index);
+      return emitter(ActivitiesState(activitiesBox));
+    });
+
+    on<ActivityAddedTime>(
+        (ActivityAddedTime event, Emitter<ActivitiesState> emitter) {
+      activitiesBox.getAt(event.index)!.addInterval(event.interval);
+      return emitter(ActivitiesState(activitiesBox));
+    });
+
+    on<ActivityAdded>((ActivityAdded event, Emitter<ActivitiesState> emitter) {
+      activitiesBox.add(event.activity);
+      return emitter(ActivitiesState(activitiesBox));
+    });
+  }
+}
+
+/*class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState>{
+  List<Activity> activitiesBloc;
 
   ActivitiesBloc(this.activitiesBloc) : super(ActivitiesState(activitiesBloc)) {
 
@@ -55,4 +76,4 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState>{
     });
   }
 
-}
+}*/

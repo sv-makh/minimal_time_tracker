@@ -57,7 +57,7 @@ class MyHomePage extends StatelessWidget {
     Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
 
     return BlocProvider(
-      create: (_) => ActivitiesBloc(activities),
+      create: (_) => ActivitiesBloc(),
       child: const ActivitiesView(),
     );
   }
@@ -74,8 +74,7 @@ class ActivitiesView extends StatelessWidget {
       builder: (context, ActivitiesState state) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(
-                AppLocalizations.of(context)!.title), //'Minimal Time Tracker'),
+            title: Text(AppLocalizations.of(context)!.title),
           ),
           body: activitiesBox.values.isEmpty
               ? SafeArea(
@@ -85,10 +84,11 @@ class ActivitiesView extends StatelessWidget {
                 )
               : SafeArea(
                   child: ListView.builder(
-                    itemCount: state.activitiesState.length,//activitiesBox.length,
+                    itemCount: state.activitiesBox.length,
                     itemBuilder: (BuildContext context, int index) {
                       return ActivityCard(
-                        activity: state.activitiesState[index],//activitiesBox.getAt(index)!,
+                        activity: state.activitiesBox.getAt(index)!,
+                        activityIndex: index,
                       );
                     },
                   ),

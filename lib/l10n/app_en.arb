@@ -8,5 +8,6 @@
     "secondsShort": "s",
     "total": "total",
     "titleActivity": "Title",
-    "subtitleActivity": "Subtitle"
+    "subtitleActivity": "Subtitle",
+    "addButtons": "Buttons"
 }

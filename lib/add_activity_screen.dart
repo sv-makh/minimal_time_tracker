@@ -7,6 +7,7 @@ class AddActivityScreen extends StatelessWidget {
   AddActivityScreen({Key? key}) : super(key: key);
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _subtitleController = TextEditingController();
+  Set<Duration> _durationButtons = Set<Duration>();
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +18,16 @@ class AddActivityScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.save),
             onPressed: () {
+              Activity _activity = Activity(
+                title: _titleController.text,
+                subtitle: _subtitleController.text,
+              );
+
+              for (var d in _durationButtons) _activity.addDurationButton(d);
+
               Navigator.pop(
                 context,
-                Activity(
-                  title: _titleController.text,
-                  subtitle: _subtitleController.text,
-                ),
+                _activity,
               );
             },
           ),
@@ -41,7 +46,24 @@ class AddActivityScreen extends StatelessWidget {
               TextField(
                 controller: _subtitleController,
               ),
-              //adding buttons with duration
+              //add choise - buttons or table
+              Text(AppLocalizations.of(context)!.addButtons),
+              Row(
+                children: [
+                  OutlinedButton(
+                    child: Text('1h'),
+                    onPressed: () {
+                      _durationButtons.add(Duration(hours: 1));
+                    },
+                  ),
+                  OutlinedButton(
+                    onPressed: () {
+                      _durationButtons.add(Duration(minutes: 30));
+                    },
+                    child: Text('30m'),
+                  )
+                ],
+              ),
               //colorpicker
             ],
           ),
