@@ -55,27 +55,3 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
     });
   }
 }
-
-/*class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState>{
-  List<Activity> activitiesBloc;
-
-  ActivitiesBloc(this.activitiesBloc) : super(ActivitiesState(activitiesBloc)) {
-
-    on<ActivityDeleted>((ActivityDeleted event,
-        Emitter<ActivitiesState> emitter) {
-      activitiesBloc.removeAt(event.index);
-      return emitter(ActivitiesState(activitiesBloc));
-    });
-
-    on<ActivityAddedTime>((ActivityAddedTime event, Emitter<ActivitiesState> emitter) {
-      activitiesBloc[event.index].addInterval(event.interval);
-      return emitter(ActivitiesState(activitiesBloc));
-    });
-
-    on<ActivityAdded>((ActivityAdded event, Emitter<ActivitiesState> emitter) {
-      activitiesBloc.add(event.activity);
-      return emitter(ActivitiesState(activitiesBloc));
-    });
-  }
-
-}*/

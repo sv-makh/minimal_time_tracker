@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -9,6 +10,10 @@ class AddActivityScreen extends StatelessWidget {
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _subtitleController = TextEditingController();
+
+  final TextEditingController _daysController = TextEditingController();
+  final TextEditingController _hoursController = TextEditingController();
+  final TextEditingController _minutesController = TextEditingController();
 
   Set<Duration> _durationButtons = Set<Duration>();
   List<Duration> _durations = [
@@ -67,10 +72,66 @@ class AddActivityScreen extends StatelessWidget {
                         },
                       ),
                     ),
+                  OutlinedButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) => _durationPicker(context),
+                      );
+                    },
+                    child: Text('+'),
+                  ),
                 ],
               ),
               //colorpicker
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _durationPicker(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: SizedBox(
+          height: 200,
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  width: 50,
+                  child: TextField(
+                    controller: _daysController,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                Text(AppLocalizations.of(context)!.daysShort),
+                Container(
+                  width: 50,
+                  child: TextField(
+                    controller: _hoursController,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                Text(AppLocalizations.of(context)!.hoursShort),
+                Container(
+                  width: 50,
+                  child: TextField(
+                    controller: _minutesController,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                Text(AppLocalizations.of(context)!.minutesShort),
+              ],
+            ),
           ),
         ),
       ),

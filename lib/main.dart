@@ -56,13 +56,6 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
 
-    for (var v in activitiesBox.values) {
-      print('~!!!~');
-      print(v.title);
-      print(v.totalTime().inMinutes);
-      print(v.intervalsList.length);
-    }
-
     return BlocProvider(
       create: (_) => ActivitiesBloc(),
       child: const ActivitiesView(),
