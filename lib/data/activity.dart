@@ -36,6 +36,8 @@ class Activity {
     }
     return sum;
   }
+
+  List<TimeInterval> get intervalsList => _intervals;
 }
 
 @HiveType(typeId: 2)

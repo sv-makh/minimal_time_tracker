@@ -43,7 +43,9 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
 
     on<ActivityAddedTime>(
         (ActivityAddedTime event, Emitter<ActivitiesState> emitter) {
-      activitiesBox.getAt(event.index)!.addInterval(event.interval);
+      Activity activity = activitiesBox.getAt(event.index)!;
+      activity.addInterval(event.interval);
+      activitiesBox.putAt(event.index, activity);
       return emitter(ActivitiesState(activitiesBox));
     });
 

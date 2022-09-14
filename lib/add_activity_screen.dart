@@ -6,8 +6,10 @@ import 'package:minimal_time_tracker/helpers/convert.dart';
 
 class AddActivityScreen extends StatelessWidget {
   AddActivityScreen({Key? key}) : super(key: key);
+
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _subtitleController = TextEditingController();
+
   Set<Duration> _durationButtons = Set<Duration>();
   List<Duration> _durations = [
     Duration(hours: 1),
