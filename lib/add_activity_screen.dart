@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:minimal_time_tracker/helpers/convert.dart';
 
 class AddActivityScreen extends StatelessWidget {
   AddActivityScreen({Key? key}) : super(key: key);
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _subtitleController = TextEditingController();
   Set<Duration> _durationButtons = Set<Duration>();
+  List<Duration> _durations = [
+    Duration(hours: 1),
+    Duration(minutes: 30),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -50,18 +55,16 @@ class AddActivityScreen extends StatelessWidget {
               Text(AppLocalizations.of(context)!.addButtons),
               Row(
                 children: [
-                  OutlinedButton(
-                    child: Text('1h'),
-                    onPressed: () {
-                      _durationButtons.add(Duration(hours: 1));
-                    },
-                  ),
-                  OutlinedButton(
-                    onPressed: () {
-                      _durationButtons.add(Duration(minutes: 30));
-                    },
-                    child: Text('30m'),
-                  )
+                  for (var d in _durations)
+                    Padding(
+                      padding: EdgeInsets.only(right: 5),
+                      child: OutlinedButton(
+                        child: Text(stringDuration(d, context)),
+                        onPressed: () {
+                          _durationButtons.add(d);
+                        },
+                      ),
+                    ),
                 ],
               ),
               //colorpicker
