@@ -9,5 +9,7 @@
     "total": "всего",
     "titleActivity": "Заголовок",
     "subtitleActivity": "Подзаголовок",
-    "addButtons": "Кнопки"
+    "addButtons": "Кнопки",
+    "ok": "Ок",
+    "cancel": "Отмена"
 }

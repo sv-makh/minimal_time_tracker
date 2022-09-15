@@ -100,36 +100,68 @@ class AddActivityScreen extends StatelessWidget {
         child: SizedBox(
           height: 200,
           child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: Column(
               children: [
-                Container(
-                  width: 50,
-                  child: TextField(
-                    controller: _daysController,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    keyboardType: TextInputType.number,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      width: 50,
+                      child: TextField(
+                        controller: _daysController,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                    Text(AppLocalizations.of(context)!.daysShort),
+                    Container(
+                      width: 50,
+                      child: TextField(
+                        controller: _hoursController,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                    Text(AppLocalizations.of(context)!.hoursShort),
+                    Container(
+                      width: 50,
+                      child: TextField(
+                        controller: _minutesController,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        keyboardType: TextInputType.number,
+                      ),
+                    ),
+                    Text(AppLocalizations.of(context)!.minutesShort),
+                  ],
                 ),
-                Text(AppLocalizations.of(context)!.daysShort),
-                Container(
-                  width: 50,
-                  child: TextField(
-                    controller: _hoursController,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    keyboardType: TextInputType.number,
-                  ),
+                Row(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        //нужны начальные знчения и проверка на 0
+                        _durations.add(Duration(
+                          days: int.parse(_daysController.text),
+                          hours: int.parse(_hoursController.text),
+                          minutes: int.parse(_minutesController.text),
+                        ));
+                      },
+                      child: Text(AppLocalizations.of(context)!.ok),
+                    ),
+                    SizedBox(width: 5,),
+                    OutlinedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(AppLocalizations.of(context)!.cancel),
+                    )
+                  ],
                 ),
-                Text(AppLocalizations.of(context)!.hoursShort),
-                Container(
-                  width: 50,
-                  child: TextField(
-                    controller: _minutesController,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    keyboardType: TextInputType.number,
-                  ),
-                ),
-                Text(AppLocalizations.of(context)!.minutesShort),
               ],
             ),
           ),

@@ -9,5 +9,7 @@
     "total": "total",
     "titleActivity": "Title",
     "subtitleActivity": "Subtitle",
-    "addButtons": "Buttons"
+    "addButtons": "Buttons",
+    "ok": "Ok",
+    "cancel": "Cancel"
 }
