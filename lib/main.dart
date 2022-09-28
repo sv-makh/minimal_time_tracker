@@ -56,9 +56,12 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
 
-    return BlocProvider(
+    return BlocProvider(//Provider<ActivitiesBloc>(//
       create: (_) => ActivitiesBloc(),
       child: const ActivitiesView(),
+      /*builder: (context, child) {
+        return ActivitiesView();
+      }*/
     );
   }
 }

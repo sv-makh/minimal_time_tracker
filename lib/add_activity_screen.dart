@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/helpers/convert.dart';
+import 'package:minimal_time_tracker/duration_bottom_sheet.dart';
+
+import 'activity_bloc.dart';
 
 class AddActivityScreen extends StatelessWidget {
   AddActivityScreen({Key? key}) : super(key: key);
@@ -60,6 +64,7 @@ class AddActivityScreen extends StatelessWidget {
               ),
               //add choise - buttons or table
               Text(AppLocalizations.of(context)!.addButtons),
+
               Row(
                 children: [
                   for (var d in _durations)
@@ -77,7 +82,9 @@ class AddActivityScreen extends StatelessWidget {
                       showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        builder: (context) => _durationPicker(context),
+                        builder: (context) => DurationBottomSheet(
+                          context: context,
+                        ), //(context) => _durationPicker(context),
                       ).then((value) => null);
                     },
                     child: Text('+'),
@@ -150,10 +157,14 @@ class AddActivityScreen extends StatelessWidget {
                           hours: int.parse(_hoursController.text),
                           minutes: int.parse(_minutesController.text),
                         ));
+
+                        //BlocProvider.of<ActivitiesBloc>(context).add(AddedDurationButton(duration: duration));
                       },
                       child: Text(AppLocalizations.of(context)!.ok),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     OutlinedButton(
                       onPressed: () {
                         Navigator.pop(context);
