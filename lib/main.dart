@@ -29,22 +29,25 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Minimal Time Tracker',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return BlocProvider(
+      create: (_) => ActivitiesBloc(),
+      child: MaterialApp(
+        title: 'Minimal Time Tracker',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          Locale('en', ''), // English, no country code
+          Locale('ru', ''), // Russian, no country code
+        ],
+        home: const MyHomePage(),
       ),
-      localizationsDelegates: [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: [
-        Locale('en', ''), // English, no country code
-        Locale('ru', ''), // Russian, no country code
-      ],
-      home: const MyHomePage(),
     );
   }
 }
@@ -56,13 +59,11 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
 
-    return BlocProvider(//Provider<ActivitiesBloc>(//
+    return const ActivitiesView();
+    /*return BlocProvider(
       create: (_) => ActivitiesBloc(),
       child: const ActivitiesView(),
-      /*builder: (context, child) {
-        return ActivitiesView();
-      }*/
-    );
+    );*/
   }
 }
 
