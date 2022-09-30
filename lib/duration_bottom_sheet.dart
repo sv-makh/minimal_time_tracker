@@ -4,21 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/activity_bloc.dart';
 
-/*class DurationBottomSheet extends StatelessWidget {
-  BuildContext context;
-
-  DurationBottomSheet({Key? key, required this.context}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ActivitiesBloc(),
-      child: DurationBottomSheetWithBlock(context: context,),
-    );
-  }
-}*/
-
-
 class DurationBottomSheet extends StatelessWidget {
   BuildContext context;
 

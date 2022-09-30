@@ -39,7 +39,8 @@ class AddActivityScreen extends StatelessWidget {
                 subtitle: _subtitleController.text,
               );
 
-              for (var d in _durationButtons) _activity.addDurationButton(d);
+              for (var d in _durationButtons)
+                _activity.addDurationButton(d);
 
               Navigator.pop(
                 context,
@@ -82,9 +83,10 @@ class AddActivityScreen extends StatelessWidget {
                       showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        builder: (context) => DurationBottomSheet(
-                          context: context,
-                        ), //(context) => _durationPicker(context),
+                        builder: (context) =>
+                            DurationBottomSheet(
+                              context: context,
+                            ), //(context) => _durationPicker(context),
                       ).then((value) => null);
                     },
                     child: Text('+'),
@@ -93,88 +95,6 @@ class AddActivityScreen extends StatelessWidget {
               ),
               //colorpicker
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _durationPicker(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: SizedBox(
-          height: 200,
-          child: Center(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      width: 50,
-                      child: TextField(
-                        controller: _daysController,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    Text(AppLocalizations.of(context)!.daysShort),
-                    Container(
-                      width: 50,
-                      child: TextField(
-                        controller: _hoursController,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    Text(AppLocalizations.of(context)!.hoursShort),
-                    Container(
-                      width: 50,
-                      child: TextField(
-                        controller: _minutesController,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    Text(AppLocalizations.of(context)!.minutesShort),
-                  ],
-                ),
-                Row(
-                  children: [
-                    OutlinedButton(
-                      onPressed: () {
-                        //нужны начальные знчения и проверка на 0
-                        _durations.add(Duration(
-                          days: int.parse(_daysController.text),
-                          hours: int.parse(_hoursController.text),
-                          minutes: int.parse(_minutesController.text),
-                        ));
-
-                        //BlocProvider.of<ActivitiesBloc>(context).add(AddedDurationButton(duration: duration));
-                      },
-                      child: Text(AppLocalizations.of(context)!.ok),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    OutlinedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text(AppLocalizations.of(context)!.cancel),
-                    )
-                  ],
-                ),
-              ],
-            ),
           ),
         ),
       ),
