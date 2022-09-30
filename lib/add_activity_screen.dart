@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/helpers/convert.dart';
+import 'package:minimal_time_tracker/duration_bottom_sheet.dart';
+
+import 'activity_bloc.dart';
 
 class AddActivityScreen extends StatelessWidget {
   AddActivityScreen({Key? key}) : super(key: key);
@@ -35,7 +39,8 @@ class AddActivityScreen extends StatelessWidget {
                 subtitle: _subtitleController.text,
               );
 
-              for (var d in _durationButtons) _activity.addDurationButton(d);
+              for (var d in _durationButtons)
+                _activity.addDurationButton(d);
 
               Navigator.pop(
                 context,
@@ -60,6 +65,7 @@ class AddActivityScreen extends StatelessWidget {
               ),
               //add choise - buttons or table
               Text(AppLocalizations.of(context)!.addButtons),
+
               Row(
                 children: [
                   for (var d in _durations)
@@ -77,7 +83,10 @@ class AddActivityScreen extends StatelessWidget {
                       showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        builder: (context) => _durationPicker(context),
+                        builder: (context) =>
+                            DurationBottomSheet(
+                              context: context,
+                            ), //(context) => _durationPicker(context),
                       ).then((value) => null);
                     },
                     child: Text('+'),
@@ -86,84 +95,6 @@ class AddActivityScreen extends StatelessWidget {
               ),
               //colorpicker
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _durationPicker(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: SizedBox(
-          height: 200,
-          child: Center(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      width: 50,
-                      child: TextField(
-                        controller: _daysController,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    Text(AppLocalizations.of(context)!.daysShort),
-                    Container(
-                      width: 50,
-                      child: TextField(
-                        controller: _hoursController,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    Text(AppLocalizations.of(context)!.hoursShort),
-                    Container(
-                      width: 50,
-                      child: TextField(
-                        controller: _minutesController,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    Text(AppLocalizations.of(context)!.minutesShort),
-                  ],
-                ),
-                Row(
-                  children: [
-                    OutlinedButton(
-                      onPressed: () {
-                        //нужны начальные знчения и проверка на 0
-                        _durations.add(Duration(
-                          days: int.parse(_daysController.text),
-                          hours: int.parse(_hoursController.text),
-                          minutes: int.parse(_minutesController.text),
-                        ));
-                      },
-                      child: Text(AppLocalizations.of(context)!.ok),
-                    ),
-                    SizedBox(width: 5,),
-                    OutlinedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text(AppLocalizations.of(context)!.cancel),
-                    )
-                  ],
-                ),
-              ],
-            ),
           ),
         ),
       ),
