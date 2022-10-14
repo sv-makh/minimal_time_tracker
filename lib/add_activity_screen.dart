@@ -20,84 +20,89 @@ class AddActivityScreen extends StatelessWidget {
   final TextEditingController _minutesController = TextEditingController();
 
   Set<Duration> _durationButtons = Set<Duration>();
-  List<Duration> _durations = [
-    Duration(hours: 1),
-    Duration(minutes: 30),
-  ];
+  // List<Duration> _durations = [
+  //   Duration(hours: 1),
+  //   Duration(minutes: 30),
+  // ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.addNewActivity),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.save),
-            onPressed: () {
-              Activity _activity = Activity(
-                title: _titleController.text,
-                subtitle: _subtitleController.text,
-              );
+    return BlocBuilder<ActivitiesBloc, ActivitiesState>(
+      builder: (context, ActivitiesState state) {
+        List<Duration> _durations = state.durationButtons.keys.toList();
+        return Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.addNewActivity),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.save),
+              onPressed: () {
+                Activity _activity = Activity(
+                  title: _titleController.text,
+                  subtitle: _subtitleController.text,
+                );
 
-              for (var d in _durationButtons)
-                _activity.addDurationButton(d);
+                for (var d in _durationButtons)
+                  _activity.addDurationButton(d);
 
-              Navigator.pop(
-                context,
-                _activity,
-              );
-            },
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: [
-              Text(AppLocalizations.of(context)!.titleActivity),
-              TextField(
-                controller: _titleController,
-              ),
-              Text(AppLocalizations.of(context)!.subtitleActivity),
-              TextField(
-                controller: _subtitleController,
-              ),
-              //add choise - buttons or table
-              Text(AppLocalizations.of(context)!.addButtons),
+                Navigator.pop(
+                  context,
+                  _activity,
+                );
+              },
+            ),
+          ],
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Text(AppLocalizations.of(context)!.titleActivity),
+                TextField(
+                  controller: _titleController,
+                ),
+                Text(AppLocalizations.of(context)!.subtitleActivity),
+                TextField(
+                  controller: _subtitleController,
+                ),
+                //add choise - buttons or table
+                Text(AppLocalizations.of(context)!.addButtons),
 
-              Row(
-                children: [
-                  for (var d in _durations)
-                    Padding(
-                      padding: EdgeInsets.only(right: 5),
-                      child: OutlinedButton(
-                        child: Text(stringDuration(d, context)),
-                        onPressed: () {
-                          _durationButtons.add(d);
-                        },
+                Row(
+                  children: [
+                    for (var d in _durations)
+                      Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child: OutlinedButton(
+                          child: Text(stringDuration(d, context)),
+                          onPressed: () {
+                            _durationButtons.add(d);
+                          },
+                        ),
                       ),
+                    OutlinedButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) =>
+                              DurationBottomSheet(
+                                context: context,
+                              ), //(context) => _durationPicker(context),
+                        ).then((value) => null);
+                      },
+                      child: Text('+'),
                     ),
-                  OutlinedButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) =>
-                            DurationBottomSheet(
-                              context: context,
-                            ), //(context) => _durationPicker(context),
-                      ).then((value) => null);
-                    },
-                    child: Text('+'),
-                  ),
-                ],
-              ),
-              //colorpicker
-            ],
+                  ],
+                ),
+                //colorpicker
+              ],
+            ),
           ),
         ),
-      ),
+      );
+      }
     );
   }
 }

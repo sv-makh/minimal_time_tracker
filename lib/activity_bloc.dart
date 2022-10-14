@@ -47,6 +47,11 @@ class ActivitiesState{
 class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
   Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
 
+  Map<Duration, bool> defaultDurationButtons = {
+    Duration(hours: 1): false,
+    Duration(minutes: 30): false,
+  };
+
   Map<Duration, bool> durationButtons = {
     Duration(hours: 1): false,
     Duration(minutes: 30): false,
