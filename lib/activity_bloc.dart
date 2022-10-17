@@ -62,31 +62,35 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
     Duration(minutes: 30): false,
   })) {
     on<ActivityDeleted>(
-        (ActivityDeleted event, Emitter<ActivitiesState> emitter) {
-      activitiesBox.deleteAt(event.index);
-      return emitter(ActivitiesState(activitiesBox, durationButtons));
-    });
+            (ActivityDeleted event, Emitter<ActivitiesState> emitter) {
+          activitiesBox.deleteAt(event.index);
+          return emitter(ActivitiesState(activitiesBox, durationButtons));
+        });
 
     on<ActivityAddedTime>(
-        (ActivityAddedTime event, Emitter<ActivitiesState> emitter) {
-      Activity activity = activitiesBox.getAt(event.index)!;
-      activity.addInterval(event.interval);
-      activitiesBox.putAt(event.index, activity);
-      return emitter(ActivitiesState(activitiesBox, durationButtons));
-    });
+            (ActivityAddedTime event, Emitter<ActivitiesState> emitter) {
+          Activity activity = activitiesBox.getAt(event.index)!;
+          activity.addInterval(event.interval);
+          activitiesBox.putAt(event.index, activity);
+          return emitter(ActivitiesState(activitiesBox, durationButtons));
+        });
 
     on<ActivityAdded>((ActivityAdded event, Emitter<ActivitiesState> emitter) {
       activitiesBox.add(event.activity);
       return emitter(ActivitiesState(activitiesBox, durationButtons));
     });
 
-    on<AddedDurationButton>((AddedDurationButton event, Emitter<ActivitiesState> emitter) {
-      durationButtons.update(event.duration, (value) => false, ifAbsent: () => false);
+    on<AddedDurationButton>((AddedDurationButton event,
+        Emitter<ActivitiesState> emitter) {
+      durationButtons.update(
+          event.duration, (value) => false, ifAbsent: () => false);
       return emitter(ActivitiesState(activitiesBox, durationButtons));
     });
 
-    on<PressedDurationButton>((PressedDurationButton event, Emitter<ActivitiesState> emitter) {
-      durationButtons.update(event.duration, (value) => !value, ifAbsent: () => false);
+    on<PressedDurationButton>((PressedDurationButton event,
+        Emitter<ActivitiesState> emitter) {
+      durationButtons.update(
+          event.duration, (value) => !value, ifAbsent: () => false);
       return emitter(ActivitiesState(activitiesBox, durationButtons));
     });
   }

@@ -19,17 +19,11 @@ class AddActivityScreen extends StatelessWidget {
   final TextEditingController _hoursController = TextEditingController();
   final TextEditingController _minutesController = TextEditingController();
 
-  Set<Duration> _durationButtons = Set<Duration>();
-  // List<Duration> _durations = [
-  //   Duration(hours: 1),
-  //   Duration(minutes: 30),
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ActivitiesBloc, ActivitiesState>(
       builder: (context, ActivitiesState state) {
-        List<Duration> _durations = state.durationButtons.keys.toList();
+        Map<Duration, bool> _durations = state.durationButtons;
         return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.addNewActivity),
@@ -42,8 +36,9 @@ class AddActivityScreen extends StatelessWidget {
                   subtitle: _subtitleController.text,
                 );
 
-                for (var d in _durationButtons)
-                  _activity.addDurationButton(d);
+                for (MapEntry<Duration, bool> d in _durations.entries) {
+                  if (d.value) _activity.addDurationButton(d.key);
+                }
 
                 Navigator.pop(
                   context,
@@ -66,18 +61,21 @@ class AddActivityScreen extends StatelessWidget {
                 TextField(
                   controller: _subtitleController,
                 ),
-                //add choise - buttons or table
+                //add choice - buttons or table
                 Text(AppLocalizations.of(context)!.addButtons),
 
                 Row(
                   children: [
-                    for (var d in _durations)
+                    for (MapEntry<Duration, bool> d in _durations.entries)
                       Padding(
                         padding: EdgeInsets.only(right: 5),
                         child: OutlinedButton(
-                          child: Text(stringDuration(d, context)),
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: d.value ? Colors.black12 : Colors.white,
+                          ),
+                          child: Text(stringDuration(d.key, context)),
                           onPressed: () {
-                            _durationButtons.add(d);
+                            BlocProvider.of<ActivitiesBloc>(context).add(PressedDurationButton(duration: d.key));
                           },
                         ),
                       ),
@@ -89,7 +87,7 @@ class AddActivityScreen extends StatelessWidget {
                           builder: (context) =>
                               DurationBottomSheet(
                                 context: context,
-                              ), //(context) => _durationPicker(context),
+                              ),
                         ).then((value) => null);
                       },
                       child: Text('+'),
