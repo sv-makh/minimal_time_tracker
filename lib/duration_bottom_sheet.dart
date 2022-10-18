@@ -4,14 +4,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/activity_bloc.dart';
 
-class DurationBottomSheet extends StatelessWidget {
-  BuildContext context;
+class DurationBottomSheet extends StatefulWidget {
+  final BuildContext context;
+  const DurationBottomSheet({Key? key, required this.context}) : super(key: key);
 
-  DurationBottomSheet({Key? key, required this.context}) : super(key: key);
+  @override
+  State<DurationBottomSheet> createState() => _DurationBottomSheetState();
+}
 
-  final TextEditingController _daysController = TextEditingController();
-  final TextEditingController _hoursController = TextEditingController();
-  final TextEditingController _minutesController = TextEditingController();
+// class _DurationBottomSheetState extends State<DurationBottomSheet> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container();
+//   }
+// }
+
+
+class _DurationBottomSheetState extends State<DurationBottomSheet> {
+  //BuildContext context;
+
+  //DurationBottomSheet({Key? key, required this.context}) : super(key: key);
+
+  var _daysController = TextEditingController();
+  var _hoursController = TextEditingController();
+  var _minutesController = TextEditingController();
 
   @override
   Widget build(context) {
@@ -77,6 +93,7 @@ class DurationBottomSheet extends StatelessWidget {
 
                           BlocProvider.of<ActivitiesBloc>(context).add(AddedDurationButton(duration: duration));
                           Navigator.pop(context);
+                          FocusScope.of(context).unfocus();
                         },
                         child: Text(AppLocalizations.of(context)!.ok),
                       ),
@@ -84,6 +101,7 @@ class DurationBottomSheet extends StatelessWidget {
                       OutlinedButton(
                         onPressed: () {
                           Navigator.pop(context);
+                          FocusScope.of(context).unfocus();
                         },
                         child: Text(AppLocalizations.of(context)!.cancel),
                       )

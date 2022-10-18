@@ -15,10 +15,6 @@ class AddActivityScreen extends StatelessWidget {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _subtitleController = TextEditingController();
 
-  final TextEditingController _daysController = TextEditingController();
-  final TextEditingController _hoursController = TextEditingController();
-  final TextEditingController _minutesController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ActivitiesBloc, ActivitiesState>(
