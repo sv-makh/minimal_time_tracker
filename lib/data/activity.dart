@@ -5,6 +5,11 @@ part 'activity.g.dart';
 
 const String boxName = 'activitiesBox';
 
+enum Presentation{
+  BUTTONS,
+  TABLE
+}
+
 @HiveType(typeId: 1)
 class Activity {
   @HiveField(0)
