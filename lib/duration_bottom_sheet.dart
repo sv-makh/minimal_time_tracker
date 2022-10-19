@@ -49,10 +49,10 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                         width: 50,
                         child: TextField(
                           controller: _daysController,
-                          //inputFormatters: [
-                          //  FilteringTextInputFormatter.digitsOnly
-                          //],
-                          //keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          keyboardType: TextInputType.number,
                         ),
                       ),
                       Text(AppLocalizations.of(context)!.daysShort),
@@ -60,10 +60,10 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                         width: 50,
                         child: TextField(
                           controller: _hoursController,
-                          // inputFormatters: [
-                          //   FilteringTextInputFormatter.digitsOnly
-                          // ],
-                          // keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          keyboardType: TextInputType.number,
                         ),
                       ),
                       Text(AppLocalizations.of(context)!.hoursShort),
@@ -71,10 +71,10 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                         width: 50,
                         child: TextField(
                           controller: _minutesController,
-                          // inputFormatters: [
-                          //   FilteringTextInputFormatter.digitsOnly
-                          // ],
-                          // keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          keyboardType: TextInputType.number,
                         ),
                       ),
                       Text(AppLocalizations.of(context)!.minutesShort),
@@ -92,16 +92,16 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                           );
 
                           BlocProvider.of<ActivitiesBloc>(context).add(AddedDurationButton(duration: duration));
-                          Navigator.pop(context);
                           FocusScope.of(context).unfocus();
+                          Navigator.pop(context);
                         },
                         child: Text(AppLocalizations.of(context)!.ok),
                       ),
                       SizedBox(width: 5,),
                       OutlinedButton(
                         onPressed: () {
-                          Navigator.pop(context);
                           FocusScope.of(context).unfocus();
+                          Navigator.pop(context);
                         },
                         child: Text(AppLocalizations.of(context)!.cancel),
                       )
