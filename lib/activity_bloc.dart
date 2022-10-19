@@ -39,7 +39,7 @@ class PressedDurationButton extends ActivityEvent {
 
 class ActivitiesState{
   final Box<Activity> activitiesBox;
-  final Map<Duration, bool> durationButtons;
+  Map<Duration, bool> durationButtons;
 
   ActivitiesState(this.activitiesBox, this.durationButtons);
 }
@@ -77,6 +77,10 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
 
     on<ActivityAdded>((ActivityAdded event, Emitter<ActivitiesState> emitter) {
       activitiesBox.add(event.activity);
+      durationButtons = {
+        Duration(hours: 1): false,
+        Duration(minutes: 30): false,
+      };
       return emitter(ActivitiesState(activitiesBox, durationButtons));
     });
 

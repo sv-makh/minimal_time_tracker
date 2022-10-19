@@ -18,28 +18,41 @@ class AddActivityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ActivitiesBloc, ActivitiesState>(
-      builder: (context, ActivitiesState state) {
-        Map<Duration, bool> _durations = state.durationButtons;
-        return Scaffold(
+        builder: (context, ActivitiesState state) {
+      Map<Duration, bool> _durations = state.durationButtons;
+      return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.addNewActivity),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.save),
               onPressed: () {
-                Activity _activity = Activity(
-                  title: _titleController.text,
-                  subtitle: _subtitleController.text,
-                );
+                if (_titleController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(AppLocalizations.of(context)!.enterTitle),
+                    duration: const Duration(seconds: 3),
+                    //backgroundColor: messageColor,
+                    action: SnackBarAction(
+                      label: "Ok",
+                      textColor: Colors.black,
+                      onPressed: () {},
+                    ),
+                  ));
+                } else {
+                  Activity _activity = Activity(
+                    title: _titleController.text,
+                    subtitle: _subtitleController.text,
+                  );
 
-                for (MapEntry<Duration, bool> d in _durations.entries) {
-                  if (d.value) _activity.addDurationButton(d.key);
+                  for (MapEntry<Duration, bool> d in _durations.entries) {
+                    if (d.value) _activity.addDurationButton(d.key);
+                  }
+
+                  Navigator.pop(
+                    context,
+                    _activity,
+                  );
                 }
-
-                Navigator.pop(
-                  context,
-                  _activity,
-                );
               },
             ),
           ],
@@ -67,11 +80,13 @@ class AddActivityScreen extends StatelessWidget {
                         padding: EdgeInsets.only(right: 5),
                         child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
-                            backgroundColor: d.value ? Colors.black12 : Colors.white,
+                            backgroundColor:
+                                d.value ? Colors.black12 : Colors.white,
                           ),
                           child: Text(stringDuration(d.key, context)),
                           onPressed: () {
-                            BlocProvider.of<ActivitiesBloc>(context).add(PressedDurationButton(duration: d.key));
+                            BlocProvider.of<ActivitiesBloc>(context)
+                                .add(PressedDurationButton(duration: d.key));
                           },
                         ),
                       ),
@@ -80,10 +95,9 @@ class AddActivityScreen extends StatelessWidget {
                         showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
-                          builder: (context) =>
-                              DurationBottomSheet(
-                                context: context,
-                              ),
+                          builder: (context) => DurationBottomSheet(
+                            context: context,
+                          ),
                         ).then((value) => null);
                       },
                       child: Text('+'),
@@ -96,7 +110,6 @@ class AddActivityScreen extends StatelessWidget {
           ),
         ),
       );
-      }
-    );
+    });
   }
 }

@@ -11,5 +11,6 @@
     "subtitleActivity": "Subtitle",
     "addButtons": "Buttons",
     "ok": "Ok",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "enterTitle": "Please, enter new activity's title"
 }

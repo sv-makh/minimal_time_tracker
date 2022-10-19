@@ -12,22 +12,21 @@ class DurationBottomSheet extends StatefulWidget {
   State<DurationBottomSheet> createState() => _DurationBottomSheetState();
 }
 
-// class _DurationBottomSheetState extends State<DurationBottomSheet> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container();
-//   }
-// }
-
-
 class _DurationBottomSheetState extends State<DurationBottomSheet> {
-  //BuildContext context;
 
   //DurationBottomSheet({Key? key, required this.context}) : super(key: key);
 
   var _daysController = TextEditingController();
   var _hoursController = TextEditingController();
   var _minutesController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _daysController.text = '0';
+    _hoursController.text = '0';
+    _minutesController.text = '0';
+  }
 
   @override
   Widget build(context) {
@@ -84,14 +83,17 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                     children: [
                       OutlinedButton(
                         onPressed: () {
-                          //нужны начальные знчения и проверка на 0
                           Duration duration = Duration(
-                            days: int.tryParse(_daysController.text) ?? 1,
-                            hours: int.tryParse(_hoursController.text) ?? 1,
-                            minutes: int.tryParse(_minutesController.text) ?? 1,
+                            days: int.tryParse(_daysController.text) ?? 0,
+                            hours: int.tryParse(_hoursController.text) ?? 0,
+                            minutes: int.tryParse(_minutesController.text) ?? 0,
                           );
 
-                          BlocProvider.of<ActivitiesBloc>(context).add(AddedDurationButton(duration: duration));
+                          if (duration.inSeconds != 0) {
+                            BlocProvider.of<ActivitiesBloc>(context).add(
+                                AddedDurationButton(duration: duration));
+                          }
+
                           FocusScope.of(context).unfocus();
                           Navigator.pop(context);
                         },
