@@ -33,9 +33,9 @@ class AddActivityScreen extends StatelessWidget {
                     duration: const Duration(seconds: 3),
                     //backgroundColor: messageColor,
                     action: SnackBarAction(
-                      label: "Ok",
+                      label: 'Ok',
                       textColor: Colors.black,
-                      onPressed: () {},
+                      onPressed: () { },
                     ),
                   ));
                 } else {
@@ -73,22 +73,21 @@ class AddActivityScreen extends StatelessWidget {
                 //add choice - buttons or table
                 Text(AppLocalizations.of(context)!.addButtons),
 
-                Row(
+                Wrap(
+                  spacing: 5,
+                  runSpacing: 2.5,
                   children: [
                     for (MapEntry<Duration, bool> d in _durations.entries)
-                      Padding(
-                        padding: EdgeInsets.only(right: 5),
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor:
-                                d.value ? Colors.black12 : Colors.white,
-                          ),
-                          child: Text(stringDuration(d.key, context)),
-                          onPressed: () {
-                            BlocProvider.of<ActivitiesBloc>(context)
-                                .add(PressedDurationButton(duration: d.key));
-                          },
+                      OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor:
+                              d.value ? Colors.black12 : Colors.white,
                         ),
+                        child: Text(stringDuration(d.key, context)),
+                        onPressed: () {
+                          BlocProvider.of<ActivitiesBloc>(context)
+                              .add(PressedDurationButton(duration: d.key));
+                        },
                       ),
                     OutlinedButton(
                       onPressed: () {

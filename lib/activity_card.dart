@@ -42,26 +42,25 @@ class ActivityCard extends StatelessWidget {
   }
 
   Widget _rowOfButtons(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          for (var d in activity.durationButtons)
-            Padding(
-              padding: EdgeInsets.only(right: 5),
-              child: OutlinedButton(
-                onPressed: () {
-                  BlocProvider.of<ActivitiesBloc>(context).add(
-                      ActivityAddedTime(
-                          index: activityIndex,
-                          interval: TimeInterval.duration(
-                              end: DateTime.now(), duration: d)));
-                },
-                child: Text('+ ' + stringDuration(d, context)),
-              ),
-            )
-        ],
-      ),
+    return Wrap(
+      spacing: 5,
+      runSpacing: 2.5,
+      children: [
+        for (var d in activity.durationButtons)
+          Padding(
+            padding: EdgeInsets.only(right: 5),
+            child: OutlinedButton(
+              onPressed: () {
+                BlocProvider.of<ActivitiesBloc>(context).add(
+                    ActivityAddedTime(
+                        index: activityIndex,
+                        interval: TimeInterval.duration(
+                            end: DateTime.now(), duration: d)));
+              },
+              child: Text('+ ' + stringDuration(d, context)),
+            ),
+          )
+      ],
     );
   }
 
