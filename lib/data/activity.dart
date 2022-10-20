@@ -5,11 +5,6 @@ part 'activity.g.dart';
 
 const String boxName = 'activitiesBox';
 
-enum Presentation{
-  BUTTONS,
-  TABLE
-}
-
 @HiveType(typeId: 1)
 class Activity {
   @HiveField(0)
@@ -20,9 +15,13 @@ class Activity {
   List<TimeInterval> _intervals = [];
   @HiveField(3)
   List<Duration> durationButtons = <Duration>[];
+  @HiveField(4)
+  Presentation? presentation;
+  @HiveField(5)
+  int? maxNum;
 
   Activity(
-      {required this.title, this.subtitle, List<Duration>? durationButtons})
+      {required this.title, this.subtitle, List<Duration>? durationButtons, this.presentation, this.maxNum})
       : durationButtons = durationButtons ?? [];
 
   void addInterval(TimeInterval ti) {
@@ -76,4 +75,12 @@ class DurationAdapter extends TypeAdapter<Duration> {
   @override
   Duration read(BinaryReader reader) =>
       Duration(microseconds: reader.readInt());
+}
+
+@HiveType(typeId: 4)
+enum Presentation{
+  @HiveField(0)
+  BUTTONS,
+  @HiveField(1)
+  TABLE
 }
