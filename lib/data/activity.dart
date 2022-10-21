@@ -19,9 +19,16 @@ class Activity {
   Presentation? presentation;
   @HiveField(5)
   int? maxNum;
+  @HiveField(6)
+  int? color;
 
   Activity(
-      {required this.title, this.subtitle, List<Duration>? durationButtons, this.presentation, this.maxNum})
+      {required this.title,
+      this.subtitle,
+      List<Duration>? durationButtons,
+      this.presentation,
+      this.maxNum,
+      this.color})
       : durationButtons = durationButtons ?? [];
 
   void addInterval(TimeInterval ti) {
@@ -78,7 +85,7 @@ class DurationAdapter extends TypeAdapter<Duration> {
 }
 
 @HiveType(typeId: 4)
-enum Presentation{
+enum Presentation {
   @HiveField(0)
   BUTTONS,
   @HiveField(1)

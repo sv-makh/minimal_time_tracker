@@ -22,13 +22,14 @@ class ActivityAdapter extends TypeAdapter<Activity> {
       durationButtons: (fields[3] as List?)?.cast<Duration>(),
       presentation: fields[4] as Presentation?,
       maxNum: fields[5] as int?,
+      color: fields[6] as int?,
     ).._intervals = (fields[2] as List).cast<TimeInterval>();
   }
 
   @override
   void write(BinaryWriter writer, Activity obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -40,7 +41,9 @@ class ActivityAdapter extends TypeAdapter<Activity> {
       ..writeByte(4)
       ..write(obj.presentation)
       ..writeByte(5)
-      ..write(obj.maxNum);
+      ..write(obj.maxNum)
+      ..writeByte(6)
+      ..write(obj.color);
   }
 
   @override
