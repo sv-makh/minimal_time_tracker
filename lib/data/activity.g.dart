@@ -20,13 +20,15 @@ class ActivityAdapter extends TypeAdapter<Activity> {
       title: fields[0] as String,
       subtitle: fields[1] as String?,
       durationButtons: (fields[3] as List?)?.cast<Duration>(),
+      presentation: fields[4] as Presentation?,
+      maxNum: fields[5] as int?,
     ).._intervals = (fields[2] as List).cast<TimeInterval>();
   }
 
   @override
   void write(BinaryWriter writer, Activity obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -34,7 +36,11 @@ class ActivityAdapter extends TypeAdapter<Activity> {
       ..writeByte(2)
       ..write(obj._intervals)
       ..writeByte(3)
-      ..write(obj.durationButtons);
+      ..write(obj.durationButtons)
+      ..writeByte(4)
+      ..write(obj.presentation)
+      ..writeByte(5)
+      ..write(obj.maxNum);
   }
 
   @override
@@ -83,6 +89,45 @@ class TimeIntervalAdapter extends TypeAdapter<TimeInterval> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is TimeIntervalAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class PresentationAdapter extends TypeAdapter<Presentation> {
+  @override
+  final int typeId = 4;
+
+  @override
+  Presentation read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return Presentation.BUTTONS;
+      case 1:
+        return Presentation.TABLE;
+      default:
+        return Presentation.BUTTONS;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, Presentation obj) {
+    switch (obj) {
+      case Presentation.BUTTONS:
+        writer.writeByte(0);
+        break;
+      case Presentation.TABLE:
+        writer.writeByte(1);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PresentationAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
