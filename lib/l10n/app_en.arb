@@ -12,5 +12,6 @@
     "addButtons": "Buttons",
     "ok": "Ok",
     "cancel": "Cancel",
-    "enterTitle": "Please, enter new activity's title"
+    "enterTitle": "Please, enter new activity's title",
+    "color": "Color"
 }

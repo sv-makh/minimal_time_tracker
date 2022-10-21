@@ -40,8 +40,9 @@ class PressedDurationButton extends ActivityEvent {
 class ActivitiesState{
   final Box<Activity> activitiesBox;
   Map<Duration, bool> durationButtons;
+  int color;
 
-  ActivitiesState(this.activitiesBox, this.durationButtons);
+  ActivitiesState(this.activitiesBox, this.durationButtons, this.color);
 }
 
 class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
@@ -57,14 +58,16 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
     Duration(minutes: 30): false,
   };
 
+  int color = 0;
+
   ActivitiesBloc() : super(ActivitiesState(Hive.box<Activity>(boxName), {
     Duration(hours: 1): false,
     Duration(minutes: 30): false,
-  })) {
+  }, 0)) {
     on<ActivityDeleted>(
             (ActivityDeleted event, Emitter<ActivitiesState> emitter) {
           activitiesBox.deleteAt(event.index);
-          return emitter(ActivitiesState(activitiesBox, durationButtons));
+          return emitter(ActivitiesState(activitiesBox, durationButtons, color));
         });
 
     on<ActivityAddedTime>(
@@ -72,7 +75,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           Activity activity = activitiesBox.getAt(event.index)!;
           activity.addInterval(event.interval);
           activitiesBox.putAt(event.index, activity);
-          return emitter(ActivitiesState(activitiesBox, durationButtons));
+          return emitter(ActivitiesState(activitiesBox, durationButtons, color));
         });
 
     on<ActivityAdded>((ActivityAdded event, Emitter<ActivitiesState> emitter) {
@@ -81,21 +84,21 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         Duration(hours: 1): false,
         Duration(minutes: 30): false,
       };
-      return emitter(ActivitiesState(activitiesBox, durationButtons));
+      return emitter(ActivitiesState(activitiesBox, durationButtons, color));
     });
 
     on<AddedDurationButton>((AddedDurationButton event,
         Emitter<ActivitiesState> emitter) {
       durationButtons.update(
           event.duration, (value) => false, ifAbsent: () => false);
-      return emitter(ActivitiesState(activitiesBox, durationButtons));
+      return emitter(ActivitiesState(activitiesBox, durationButtons, color));
     });
 
     on<PressedDurationButton>((PressedDurationButton event,
         Emitter<ActivitiesState> emitter) {
       durationButtons.update(
           event.duration, (value) => !value, ifAbsent: () => false);
-      return emitter(ActivitiesState(activitiesBox, durationButtons));
+      return emitter(ActivitiesState(activitiesBox, durationButtons, color));
     });
   }
 }

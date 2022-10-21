@@ -6,6 +6,7 @@ import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/helpers/convert.dart';
 import 'package:minimal_time_tracker/duration_bottom_sheet.dart';
+import 'package:minimal_time_tracker/themes/color_palettes.dart';
 
 import 'activity_bloc.dart';
 
@@ -14,6 +15,8 @@ class AddActivityScreen extends StatelessWidget {
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _subtitleController = TextEditingController();
+
+  int palette = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +38,7 @@ class AddActivityScreen extends StatelessWidget {
                     action: SnackBarAction(
                       label: 'Ok',
                       textColor: Colors.black,
-                      onPressed: () { },
+                      onPressed: () {},
                     ),
                   ));
                 } else {
@@ -70,6 +73,34 @@ class AddActivityScreen extends StatelessWidget {
                 TextField(
                   controller: _subtitleController,
                 ),
+                Text(AppLocalizations.of(context)!.color),
+
+                Wrap(
+                  spacing: 5,
+                  runSpacing: 2.5,
+                  children: [
+                    for (int i = 0; i < palettes[palette].length; i++)
+                      GestureDetector(
+                        child: Container(
+                          width: 30,
+                          height: 30,
+                          decoration: (i == state.color)
+                              ? BoxDecoration(
+                                  border: Border.all(
+                                  color: palettesDark[palette][i],
+                                  width: 3,
+                                ))
+                              : BoxDecoration(
+                                  color: palettes[palette][i],
+                                ),
+                        ),
+                        onTap: () {
+                          state.color = i;
+                        },
+                      ),
+                  ],
+                ),
+
                 //add choice - buttons or table
                 Text(AppLocalizations.of(context)!.addButtons),
 
