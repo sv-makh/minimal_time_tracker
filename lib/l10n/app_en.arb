@@ -13,5 +13,7 @@
     "ok": "Ok",
     "cancel": "Cancel",
     "enterTitle": "Please, enter new activity's title",
-    "color": "Color"
+    "color": "Color",
+    "presentationIntervals": "Intervals",
+    "presentaionTable": "Table"
 }

@@ -13,5 +13,7 @@
     "ok": "Ок",
     "cancel": "Отмена",
     "enterTitle": "Пожалуйста, введите заголовок новой активности",
-    "color": "Цвет"
+    "color": "Цвет",
+    "presentationIntervals": "Интервалы",
+    "presentaionTable": "Таблица"
 }

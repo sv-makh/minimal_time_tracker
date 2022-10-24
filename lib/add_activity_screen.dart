@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +25,11 @@ class AddActivityScreen extends StatelessWidget {
     return BlocBuilder<ActivitiesBloc, ActivitiesState>(
         builder: (context, ActivitiesState state) {
       Map<Duration, bool> _durations = state.durationButtons;
+
+      bool presentationValue;
+      if (state.presentation == Presentation.BUTTONS) { presentationValue = true; }
+      else { presentationValue = false; }
+
       return Scaffold(
         backgroundColor: palettes[palette][state.color],
         appBar: AppBar(
@@ -108,6 +115,15 @@ class AddActivityScreen extends StatelessWidget {
                 ),
 
                 //add choice - buttons or table
+                Row(children: [
+                  Text(AppLocalizations.of(context)!.presentaionTable),
+                  Switch(value: presentationValue, onChanged: (bool value) {
+                    Presentation p = value ? Presentation.BUTTONS : Presentation.TABLE;
+                    BlocProvider.of<ActivitiesBloc>(context).add(ChangePresentation(presentation: p));
+                  }),
+                  Text(AppLocalizations.of(context)!.presentationIntervals),
+                ],),
+                
                 Text(AppLocalizations.of(context)!.addButtons),
 
                 Wrap(
