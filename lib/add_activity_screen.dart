@@ -24,6 +24,7 @@ class AddActivityScreen extends StatelessWidget {
         builder: (context, ActivitiesState state) {
       Map<Duration, bool> _durations = state.durationButtons;
       return Scaffold(
+        backgroundColor: palettes[palette][state.color],
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.addNewActivity),
           actions: <Widget>[
@@ -45,6 +46,7 @@ class AddActivityScreen extends StatelessWidget {
                   Activity _activity = Activity(
                     title: _titleController.text,
                     subtitle: _subtitleController.text,
+                    color: state.color,//colorForCard,
                   );
 
                   for (MapEntry<Duration, bool> d in _durations.entries) {
@@ -80,22 +82,24 @@ class AddActivityScreen extends StatelessWidget {
                   runSpacing: 2.5,
                   children: [
                     for (int i = 0; i < palettes[palette].length; i++)
-                      GestureDetector(
+                      InkWell(
                         child: Container(
                           width: 30,
                           height: 30,
                           decoration: (i == state.color)
                               ? BoxDecoration(
+                                  color: palettes[palette][i],
                                   border: Border.all(
-                                  color: palettesDark[palette][i],
-                                  width: 3,
-                                ))
+                                    color: palettesDark[palette][i],
+                                    width: 3,
+                                  ))
                               : BoxDecoration(
                                   color: palettes[palette][i],
                                 ),
                         ),
                         onTap: () {
-                          state.color = i;
+                          BlocProvider.of<ActivitiesBloc>(context)
+                              .add(ChangeColor(color: i));
                         },
                       ),
                   ],

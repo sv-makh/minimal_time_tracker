@@ -5,6 +5,7 @@ import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/activity_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/helpers/convert.dart';
+import 'package:minimal_time_tracker/themes/color_palettes.dart';
 
 class ActivityCard extends StatelessWidget {
   final Activity activity;
@@ -12,11 +13,14 @@ class ActivityCard extends StatelessWidget {
 
   const ActivityCard({Key? key, required this.activity, required this.activityIndex}) : super(key: key);
 
+  final int palette = 0;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ActivitiesBloc, ActivitiesState>(
       builder: (context, ActivitiesState state) {
         return Card(
+          color: palettes[palette][activity.color ?? 0],
           child: Column(children: [
             ListTile(
               title: Text(

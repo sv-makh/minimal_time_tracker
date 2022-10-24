@@ -37,6 +37,12 @@ class PressedDurationButton extends ActivityEvent {
   PressedDurationButton({required this.duration});
 }
 
+class ChangeColor extends ActivityEvent {
+  int color;
+
+  ChangeColor({required this.color});
+}
+
 class ActivitiesState{
   final Box<Activity> activitiesBox;
   Map<Duration, bool> durationButtons;
@@ -98,6 +104,11 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         Emitter<ActivitiesState> emitter) {
       durationButtons.update(
           event.duration, (value) => !value, ifAbsent: () => false);
+      return emitter(ActivitiesState(activitiesBox, durationButtons, color));
+    });
+
+    on<ChangeColor>((ChangeColor event, Emitter<ActivitiesState> emitter) {
+      color = event.color;
       return emitter(ActivitiesState(activitiesBox, durationButtons, color));
     });
   }
