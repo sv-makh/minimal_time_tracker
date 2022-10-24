@@ -92,6 +92,8 @@ class ActivitiesView extends StatelessWidget {
 
   Future<void> _addActivity(BuildContext context) async {
 
+    BlocProvider.of<ActivitiesBloc>(context).add(PressedNewActivity());
+
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => AddActivityScreen()),

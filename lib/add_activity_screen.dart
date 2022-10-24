@@ -53,6 +53,8 @@ class AddActivityScreen extends StatelessWidget {
                     if (d.value) _activity.addDurationButton(d.key);
                   }
 
+                  _durations.clear();
+
                   Navigator.pop(
                     context,
                     _activity,
