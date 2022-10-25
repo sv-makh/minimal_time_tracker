@@ -9,11 +9,14 @@
     "total": "всего",
     "titleActivity": "Заголовок",
     "subtitleActivity": "Подзаголовок",
-    "addButtons": "Кнопки",
+    "addButtons": "Настроить кнопки",
     "ok": "Ок",
     "cancel": "Отмена",
     "enterTitle": "Пожалуйста, введите заголовок новой активности",
     "color": "Цвет",
-    "presentationIntervals": "Интервалы",
-    "presentaionTable": "Таблица"
+    "presentationIntervals": "Кнопок",
+    "presentaionTable": "Таблицы",
+    "addNewIntervals": "Прибавлять время к активности с помощью:",
+    "numberOfCellsInTable": "Количество ячеек в таблице",
+    "timeOfCell": "Время одной ячейки"
 }

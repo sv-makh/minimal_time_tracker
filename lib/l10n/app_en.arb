@@ -9,11 +9,14 @@
     "total": "total",
     "titleActivity": "Title",
     "subtitleActivity": "Subtitle",
-    "addButtons": "Buttons",
+    "addButtons": "Set buttons",
     "ok": "Ok",
     "cancel": "Cancel",
     "enterTitle": "Please, enter new activity's title",
     "color": "Color",
-    "presentationIntervals": "Intervals",
-    "presentaionTable": "Table"
+    "presentationIntervals": "Buttons",
+    "presentaionTable": "Table",
+    "addNewIntervals": "Add time to activity with:",
+    "numberOfCellsInTable": "Number of cells in table",
+    "timeOfCell": "Time of one cell"
 }

@@ -1,4 +1,4 @@
-import 'dart:html';
+//import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +17,7 @@ class AddActivityScreen extends StatelessWidget {
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _subtitleController = TextEditingController();
+  final TextEditingController _cellsNumber = TextEditingController();
 
   int palette = 0;
 
@@ -27,8 +28,11 @@ class AddActivityScreen extends StatelessWidget {
       Map<Duration, bool> _durations = state.durationButtons;
 
       bool presentationValue;
-      if (state.presentation == Presentation.BUTTONS) { presentationValue = true; }
-      else { presentationValue = false; }
+      if (state.presentation == Presentation.BUTTONS) {
+        presentationValue = true;
+      } else {
+        presentationValue = false;
+      }
 
       return Scaffold(
         backgroundColor: palettes[palette][state.color],
@@ -53,7 +57,7 @@ class AddActivityScreen extends StatelessWidget {
                   Activity _activity = Activity(
                     title: _titleController.text,
                     subtitle: _subtitleController.text,
-                    color: state.color,//colorForCard,
+                    color: state.color, //colorForCard,
                   );
 
                   for (MapEntry<Duration, bool> d in _durations.entries) {
@@ -74,94 +78,139 @@ class AddActivityScreen extends StatelessWidget {
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                Text(AppLocalizations.of(context)!.titleActivity),
-                TextField(
-                  controller: _titleController,
-                ),
-                Text(AppLocalizations.of(context)!.subtitleActivity),
-                TextField(
-                  controller: _subtitleController,
-                ),
-                Text(AppLocalizations.of(context)!.color),
-
-                Wrap(
-                  spacing: 5,
-                  runSpacing: 2.5,
-                  children: [
-                    for (int i = 0; i < palettes[palette].length; i++)
-                      InkWell(
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: (i == state.color)
-                              ? BoxDecoration(
-                                  color: palettes[palette][i],
-                                  border: Border.all(
-                                    color: palettesDark[palette][i],
-                                    width: 3,
-                                  ))
-                              : BoxDecoration(
-                                  color: palettes[palette][i],
-                                ),
-                        ),
-                        onTap: () {
-                          BlocProvider.of<ActivitiesBloc>(context)
-                              .add(ChangeColor(color: i));
-                        },
-                      ),
-                  ],
-                ),
-
-                //add choice - buttons or table
-                Row(children: [
-                  Text(AppLocalizations.of(context)!.presentaionTable),
-                  Switch(value: presentationValue, onChanged: (bool value) {
-                    Presentation p = value ? Presentation.BUTTONS : Presentation.TABLE;
-                    BlocProvider.of<ActivitiesBloc>(context).add(ChangePresentation(presentation: p));
-                  }),
-                  Text(AppLocalizations.of(context)!.presentationIntervals),
-                ],),
-                
-                Text(AppLocalizations.of(context)!.addButtons),
-
-                Wrap(
-                  spacing: 5,
-                  runSpacing: 2.5,
-                  children: [
-                    for (MapEntry<Duration, bool> d in _durations.entries)
-                      OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          backgroundColor:
-                              d.value ? Colors.black12 : Colors.white,
-                        ),
-                        child: Text(stringDuration(d.key, context)),
-                        onPressed: () {
-                          BlocProvider.of<ActivitiesBloc>(context)
-                              .add(PressedDurationButton(duration: d.key));
-                        },
-                      ),
-                    OutlinedButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (context) => DurationBottomSheet(
-                            context: context,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Text(AppLocalizations.of(context)!.titleActivity),
+                  TextField(
+                    controller: _titleController,
+                  ),
+                  Text(AppLocalizations.of(context)!.subtitleActivity),
+                  TextField(
+                    controller: _subtitleController,
+                  ),
+                  Text(AppLocalizations.of(context)!.color),
+                  Wrap(
+                    spacing: 5,
+                    runSpacing: 2.5,
+                    children: [
+                      for (int i = 0; i < palettes[palette].length; i++)
+                        InkWell(
+                          child: Container(
+                            width: 30,
+                            height: 30,
+                            decoration: (i == state.color)
+                                ? BoxDecoration(
+                                    color: palettes[palette][i],
+                                    border: Border.all(
+                                      color: palettesDark[palette][i],
+                                      width: 3,
+                                    ))
+                                : BoxDecoration(
+                                    color: palettes[palette][i],
+                                  ),
                           ),
-                        ).then((value) => null);
-                      },
-                      child: Text('+'),
-                    ),
-                  ],
-                ),
-                //colorpicker
-              ],
+                          onTap: () {
+                            BlocProvider.of<ActivitiesBloc>(context)
+                                .add(ChangeColor(color: i));
+                          },
+                        ),
+                    ],
+                  ),
+                  Text(AppLocalizations.of(context)!.addNewIntervals),
+                  Row(
+                    children: [
+                      Text(AppLocalizations.of(context)!.presentaionTable),
+                      Switch(
+                          value: presentationValue,
+                          onChanged: (bool value) {
+                            Presentation p =
+                                value ? Presentation.BUTTONS : Presentation.TABLE;
+                            BlocProvider.of<ActivitiesBloc>(context)
+                                .add(ChangePresentation(presentation: p));
+                          }),
+                      Text(AppLocalizations.of(context)!.presentationIntervals),
+                    ],
+                  ),
+                  //виджет для настройки того как будет добавляться время к активности
+                  //с помощью кнопок либо таблицы
+                  (state.presentation == Presentation.BUTTONS)
+                      ? _buttonSettings(context, _durations)
+                      : _tableSettings(context, _durations),
+                ],
+              ),
             ),
           ),
         ),
       );
     });
+  }
+
+  Widget _buttonSettings(BuildContext context, Map<Duration, bool> durations) {
+    return Column(
+      children: [
+        Text(AppLocalizations.of(context)!.addButtons),
+        Wrap(
+          spacing: 5,
+          runSpacing: 2.5,
+          children: [
+            for (MapEntry<Duration, bool> d in durations.entries)
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: d.value ? Colors.black12 : Colors.white,
+                ),
+                child: Text(stringDuration(d.key, context)),
+                onPressed: () {
+                  BlocProvider.of<ActivitiesBloc>(context)
+                      .add(PressedDurationButton(duration: d.key));
+                },
+              ),
+            OutlinedButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) => DurationBottomSheet(
+                    context: context,
+                  ),
+                ).then((value) => null);
+              },
+              child: Text('+'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _tableSettings(BuildContext context, Map<Duration, bool> durations) {
+    return Column(
+      children: [
+        Text(AppLocalizations.of(context)!.numberOfCellsInTable),
+        TextField(
+          controller: _cellsNumber,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly
+          ],
+          keyboardType: TextInputType.number,
+        ),
+        Text(AppLocalizations.of(context)!.timeOfCell),
+        OutlinedButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => DurationBottomSheet(
+                context: context,
+              ),
+            ).then((value) => null);
+          },
+          child: (durations.isEmpty)// ||
+                  //durations.values.toList().every((e) => e == false))
+              ? Text('+')
+              : Text(stringDuration(durations.keys.toList().first, context)),
+        ),
+      ],
+    );
   }
 }
