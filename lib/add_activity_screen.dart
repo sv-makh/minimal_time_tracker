@@ -12,6 +12,14 @@ import 'package:minimal_time_tracker/themes/color_palettes.dart';
 
 import 'activity_bloc.dart';
 
+// class AddActivityScreen extends StatefulWidget {
+//   const AddActivityScreen({Key? key}) : super(key: key);
+//
+//   @override
+//   State<AddActivityScreen> createState() => _AddActivityScreenState();
+// }
+
+//class _AddActivityScreenState extends State<AddActivityScreen> {
 class AddActivityScreen extends StatelessWidget {
   AddActivityScreen({Key? key}) : super(key: key);
 
@@ -20,6 +28,12 @@ class AddActivityScreen extends StatelessWidget {
   final TextEditingController _cellsNumber = TextEditingController();
 
   int palette = 0;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _cellsNumber.text = '0';
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -208,10 +222,14 @@ class AddActivityScreen extends StatelessWidget {
               builder: (context) => DurationBottomSheet(
                 context: context,
               ),
-            ).then((value) => null);
+            ).then((value) {
+              if (value.inSeconds != 0) {
+                BlocProvider.of<ActivitiesBloc>(context).add(
+                    AddedDurationForTable(duration: value));
+              }
+            });
           },
-          child: (durations.isEmpty)// ||
-                  //durations.values.toList().every((e) => e == false))
+          child: (durations.isEmpty)
               ? Text('+')
               : Text(stringDuration(durations.keys.toList().first, context)),
         ),

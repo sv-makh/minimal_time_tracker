@@ -11,7 +11,9 @@ class ActivityCard extends StatelessWidget {
   final Activity activity;
   final int activityIndex;
 
-  const ActivityCard({Key? key, required this.activity, required this.activityIndex}) : super(key: key);
+  const ActivityCard(
+      {Key? key, required this.activity, required this.activityIndex})
+      : super(key: key);
 
   final int palette = 0;
 
@@ -31,14 +33,17 @@ class ActivityCard extends StatelessWidget {
               trailing: IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () {
-                  BlocProvider.of<ActivitiesBloc>(context).add(
-                      ActivityDeleted(index: activityIndex));
+                  BlocProvider.of<ActivitiesBloc>(context)
+                      .add(ActivityDeleted(index: activityIndex));
                 },
               ),
             ),
-            (activity.durationButtons == null)
-                ? Container()
-                : _rowOfButtons(context)
+            //добавление времени к активности просиходит в виджетах
+            //в зависимости от того, какое представление для этой активности
+            //выбрано
+            (state.presentation == Presentation.BUTTONS)
+                ? _rowOfButtons(context)
+                : _table(context)
           ]),
         );
       },
@@ -46,26 +51,32 @@ class ActivityCard extends StatelessWidget {
   }
 
   Widget _rowOfButtons(BuildContext context) {
-    return Wrap(
-      spacing: 5,
-      runSpacing: 2.5,
-      children: [
-        for (var d in activity.durationButtons)
-          Padding(
-            padding: EdgeInsets.only(right: 5),
-            child: OutlinedButton(
-              onPressed: () {
-                BlocProvider.of<ActivitiesBloc>(context).add(
-                    ActivityAddedTime(
+    return (activity.durationButtons == null)
+        ? Container()
+        : Wrap(
+            spacing: 5,
+            runSpacing: 2.5,
+            children: [
+              for (var d in activity.durationButtons)
+                Padding(
+                  padding: EdgeInsets.only(right: 5),
+                  child: OutlinedButton(
+                    onPressed: () {
+                      BlocProvider.of<ActivitiesBloc>(context)
+                          .add(ActivityAddedTime(
                         index: activityIndex,
                         interval: TimeInterval.duration(
-                            end: DateTime.now(), duration: d)));
-              },
-              child: Text('+ ' + stringDuration(d, context)),
-            ),
-          )
-      ],
-    );
+                            end: DateTime.now(), duration: d),
+                      ));
+                    },
+                    child: Text('+ ' + stringDuration(d, context)),
+                  ),
+                )
+            ],
+          );
   }
 
+  Widget _table(BuildContext context) {
+    return Container();
+  }
 }

@@ -53,6 +53,12 @@ class ChangePresentation extends ActivityEvent {
   ChangePresentation({required this.presentation});
 }
 
+class AddedDurationForTable extends ActivityEvent {
+  Duration duration;
+
+  AddedDurationForTable({required this.duration});
+}
+
 class ActivitiesState {
   final Box<Activity> activitiesBox;
   Map<Duration, bool> durationButtons;
@@ -143,9 +149,25 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           activitiesBox, defaultDurationButtons, 0, Presentation.BUTTONS));
     });
 
-    on<ChangePresentation>((ChangePresentation event, Emitter<ActivitiesState> emitter) {
+    on<ChangePresentation>(
+        (ChangePresentation event, Emitter<ActivitiesState> emitter) {
       presentation = event.presentation;
-      return emitter(ActivitiesState(activitiesBox, durationButtons, color, presentation));
+      if (presentation == Presentation.TABLE) {
+        durationButtons.clear();
+      } else {
+        durationButtons = defaultDurationButtons;
+      }
+      return emitter(
+          ActivitiesState(activitiesBox, durationButtons, color, presentation));
+    });
+
+    on<AddedDurationForTable>(
+        (AddedDurationForTable event, Emitter<ActivitiesState> emitter) {
+      durationButtons.clear();
+      durationButtons.update(event.duration, (value) => false,
+          ifAbsent: () => false);
+      return emitter(
+          ActivitiesState(activitiesBox, durationButtons, color, presentation));
     });
   }
 }

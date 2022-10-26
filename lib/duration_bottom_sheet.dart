@@ -89,11 +89,6 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                             minutes: int.tryParse(_minutesController.text) ?? 0,
                           );
 
-                          // if (duration.inSeconds != 0) {
-                          //   BlocProvider.of<ActivitiesBloc>(context).add(
-                          //       AddedDurationButton(duration: duration));
-                          // }
-
                           FocusScope.of(context).unfocus();
                           Navigator.pop(context, duration);
                         },
