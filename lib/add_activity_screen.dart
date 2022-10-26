@@ -173,7 +173,12 @@ class AddActivityScreen extends StatelessWidget {
                   builder: (context) => DurationBottomSheet(
                     context: context,
                   ),
-                ).then((value) => null);
+                ).then((value) {
+                  if (value.inSeconds != 0) {
+                    BlocProvider.of<ActivitiesBloc>(context).add(
+                        AddedDurationButton(duration: value));
+                  }
+                });
               },
               child: Text('+'),
             ),
