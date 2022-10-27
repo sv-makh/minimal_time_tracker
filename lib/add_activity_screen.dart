@@ -12,28 +12,17 @@ import 'package:minimal_time_tracker/themes/color_palettes.dart';
 
 import 'activity_bloc.dart';
 
-// class AddActivityScreen extends StatefulWidget {
-//   const AddActivityScreen({Key? key}) : super(key: key);
-//
-//   @override
-//   State<AddActivityScreen> createState() => _AddActivityScreenState();
-// }
+TextEditingController cellsNumber = TextEditingController();
 
-//class _AddActivityScreenState extends State<AddActivityScreen> {
 class AddActivityScreen extends StatelessWidget {
   AddActivityScreen({Key? key}) : super(key: key);
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _subtitleController = TextEditingController();
-  final TextEditingController _cellsNumber = TextEditingController();
+
+  String _numOfCells = '0';
 
   int palette = 0;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _cellsNumber.text = '0';
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +31,14 @@ class AddActivityScreen extends StatelessWidget {
       Map<Duration, bool> _durations = state.durationButtons;
 
       bool presentationValue;
+
       if (state.presentation == Presentation.BUTTONS) {
         presentationValue = true;
       } else {
         presentationValue = false;
       }
+
+      _numOfCells = state.numOfCells.toString();
 
       return Scaffold(
         backgroundColor: palettes[palette][state.color],
@@ -138,8 +130,9 @@ class AddActivityScreen extends StatelessWidget {
                       Switch(
                           value: presentationValue,
                           onChanged: (bool value) {
-                            Presentation p =
-                                value ? Presentation.BUTTONS : Presentation.TABLE;
+                            Presentation p = value
+                                ? Presentation.BUTTONS
+                                : Presentation.TABLE;
                             BlocProvider.of<ActivitiesBloc>(context)
                                 .add(ChangePresentation(presentation: p));
                           }),
@@ -189,8 +182,8 @@ class AddActivityScreen extends StatelessWidget {
                   ),
                 ).then((value) {
                   if (value.inSeconds != 0) {
-                    BlocProvider.of<ActivitiesBloc>(context).add(
-                        AddedDurationButton(duration: value));
+                    BlocProvider.of<ActivitiesBloc>(context)
+                        .add(AddedDurationButton(duration: value));
                   }
                 });
               },
@@ -207,10 +200,19 @@ class AddActivityScreen extends StatelessWidget {
       children: [
         Text(AppLocalizations.of(context)!.numberOfCellsInTable),
         TextField(
-          controller: _cellsNumber,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly
-          ],
+          //установка курсора в конец поля
+          controller: TextEditingController.fromValue(
+            TextEditingValue(
+              text: _numOfCells,
+              selection: TextSelection.collapsed(offset: _numOfCells.length),
+            ),
+          ),
+          onChanged: (value) {
+            _numOfCells = value;
+            BlocProvider.of<ActivitiesBloc>(context)
+                .add(ChangeNumOfCells(num: int.tryParse(value) ?? 0));
+          },
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           keyboardType: TextInputType.number,
         ),
         Text(AppLocalizations.of(context)!.timeOfCell),
@@ -224,8 +226,8 @@ class AddActivityScreen extends StatelessWidget {
               ),
             ).then((value) {
               if (value.inSeconds != 0) {
-                BlocProvider.of<ActivitiesBloc>(context).add(
-                    AddedDurationForTable(duration: value));
+                BlocProvider.of<ActivitiesBloc>(context)
+                    .add(AddedDurationForTable(duration: value));
               }
             });
           },
