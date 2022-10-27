@@ -66,8 +66,17 @@ class AddActivityScreen extends StatelessWidget {
                     color: state.color, //colorForCard,
                   );
 
-                  for (MapEntry<Duration, bool> d in _durations.entries) {
-                    if (d.value) _activity.addDurationButton(d.key);
+                  if (state.presentation == Presentation.BUTTONS) {
+                    for (MapEntry<Duration, bool> d in _durations.entries) {
+                      if (d.value) _activity.addDurationButton(d.key);
+                    }
+                  } else {
+                    Duration currentDuration = _durations.keys.toList().first;
+                    int currentNum = int.tryParse(_numOfCells) ?? 0;
+                    _activity.maxNum = currentNum;
+                    for (int i = 0; i < currentNum; i++) {
+                      _activity.addDurationButton(currentDuration);
+                    }
                   }
 
                   _durations.clear();
