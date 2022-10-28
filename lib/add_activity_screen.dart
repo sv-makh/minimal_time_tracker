@@ -63,7 +63,8 @@ class AddActivityScreen extends StatelessWidget {
                   Activity _activity = Activity(
                     title: _titleController.text,
                     subtitle: _subtitleController.text,
-                    color: state.color, //colorForCard,
+                    color: state.color,
+                    presentation: state.presentation,
                   );
 
                   if (state.presentation == Presentation.BUTTONS) {
