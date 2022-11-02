@@ -38,10 +38,10 @@ class ActivityCard extends StatelessWidget {
                 },
               ),
             ),
-            //добавление времени к активности просиходит в виджетах
+            //добавление времени к активности происходит в виджетах
             //в зависимости от того, какое представление для этой активности
             //выбрано
-            (state.presentation == Presentation.BUTTONS)
+            (activity.presentation == Presentation.BUTTONS)
                 ? _rowOfButtons(context)
                 : _table(context)
           ]),
@@ -51,32 +51,86 @@ class ActivityCard extends StatelessWidget {
   }
 
   Widget _rowOfButtons(BuildContext context) {
-    return (activity.durationButtons == null)
+    return (activity.durationButtons.isEmpty)
         ? Container()
         : Wrap(
             spacing: 5,
             runSpacing: 2.5,
             children: [
               for (var d in activity.durationButtons)
-                Padding(
-                  padding: EdgeInsets.only(right: 5),
-                  child: OutlinedButton(
-                    onPressed: () {
-                      BlocProvider.of<ActivitiesBloc>(context)
-                          .add(ActivityAddedTime(
-                        index: activityIndex,
-                        interval: TimeInterval.duration(
-                            end: DateTime.now(), duration: d),
-                      ));
-                    },
-                    child: Text('+ ' + stringDuration(d, context)),
-                  ),
+                OutlinedButton(
+                  onPressed: () {
+                    BlocProvider.of<ActivitiesBloc>(context)
+                        .add(ActivityAddedTime(
+                      index: activityIndex,
+                      interval: TimeInterval.duration(
+                          end: DateTime.now(), duration: d),
+                    ));
+                  },
+                  child: Text('+ ${stringDuration(d, context)}'),
                 )
             ],
           );
   }
 
   Widget _table(BuildContext context) {
-    return Container();
+    //кнопку в таблице нельзя нажать, если она уже была нажата,
+    //т.е. в список intervalsList занесён соответствующий интервал
+    bool _isInactive(int index) {
+      if (index != activity.intervalsList.length) return true;
+      return false;
+    }
+
+    bool _wasPressed(int index) {
+      if (index < activity.intervalsList.length) return true;
+      return false;
+    }
+
+    int _numOfLeftCells() {
+      int num = activity.maxNum! - activity.intervalsList.length!;
+      if (num >= 0) { return num; }
+      else { return 0; }
+    }
+
+    return (activity.durationButtons.isEmpty)
+        ? Container()
+        : Column(
+          children: [
+            Text('${AppLocalizations.of(context)!.timeOfCell}: ${stringDuration(activity.durationButtons.first, context)}'),
+            Text('${AppLocalizations.of(context)!.checkedCells} ${activity.intervalsList.length}'),
+            Text('${AppLocalizations.of(context)!.leftCells} ${_numOfLeftCells()}'),
+            Wrap(
+                spacing: 5,
+                runSpacing: 2.5,
+                children: [
+                  for (int i = 0; i < activity.durationButtons.length; i++)
+                    OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: _wasPressed(i)
+                            ? palettesDark[palette][activity.color!]
+                            : Colors.white,
+                        side: _isInactive(i) ? null : BorderSide(
+                          color: palettesDark[palette][activity.color!],
+                          width: 3.0
+                        ),
+                      ),
+                      onPressed: _isInactive(i)
+                          ? null
+                          : () {
+                              BlocProvider.of<ActivitiesBloc>(context)
+                                  .add(ActivityAddedTime(
+                                index: activityIndex,
+                                interval: TimeInterval.duration(
+                                    end: DateTime.now(),
+                                    duration: activity.durationButtons[i]),
+                              ));
+                            },
+                      onLongPress: _wasPressed(i) ? () {} : null,
+                      child: Text(''),
+                    )
+                ],
+              ),
+          ],
+        );
   }
 }

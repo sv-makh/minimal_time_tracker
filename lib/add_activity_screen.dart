@@ -63,7 +63,8 @@ class AddActivityScreen extends StatelessWidget {
                   Activity _activity = Activity(
                     title: _titleController.text,
                     subtitle: _subtitleController.text,
-                    color: state.color, //colorForCard,
+                    color: state.color,
+                    presentation: state.presentation,
                   );
 
                   if (state.presentation == Presentation.BUTTONS) {
@@ -119,7 +120,7 @@ class AddActivityScreen extends StatelessWidget {
                                     color: palettes[palette][i],
                                     border: Border.all(
                                       color: palettesDark[palette][i],
-                                      width: 3,
+                                      width: 3.0,
                                     ))
                                 : BoxDecoration(
                                     color: palettes[palette][i],
