@@ -18,5 +18,7 @@
     "presentaionTable": "Таблицы",
     "addNewIntervals": "Прибавлять время к активности с помощью:",
     "numberOfCellsInTable": "Количество ячеек в таблице",
-    "timeOfCell": "Время одной ячейки"
+    "timeOfCell": "Время одной ячейки",
+    "checkedCells": "Отмечено ячеек:",
+    "leftCells": "Осталось:"
 }

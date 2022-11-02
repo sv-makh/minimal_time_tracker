@@ -120,7 +120,7 @@ class AddActivityScreen extends StatelessWidget {
                                     color: palettes[palette][i],
                                     border: Border.all(
                                       color: palettesDark[palette][i],
-                                      width: 3,
+                                      width: 3.0,
                                     ))
                                 : BoxDecoration(
                                     color: palettes[palette][i],

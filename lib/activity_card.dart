@@ -77,37 +77,60 @@ class ActivityCard extends StatelessWidget {
     //кнопку в таблице нельзя нажать, если она уже была нажата,
     //т.е. в список intervalsList занесён соответствующий интервал
     bool _isInactive(int index) {
+      if (index != activity.intervalsList.length) return true;
+      return false;
+    }
+
+    bool _wasPressed(int index) {
       if (index < activity.intervalsList.length) return true;
       return false;
     }
 
+    int _numOfLeftCells() {
+      int num = activity.maxNum! - activity.intervalsList.length!;
+      if (num >= 0) { return num; }
+      else { return 0; }
+    }
+
     return (activity.durationButtons.isEmpty)
         ? Container()
-        : Wrap(
-            spacing: 5,
-            runSpacing: 2.5,
-            children: [
-              for (int i = 0; i < activity.durationButtons.length; i++)
-                OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    backgroundColor: _isInactive(i)
-                        ? palettesDark[palette][activity.color!]
-                        : Colors.white,
-                  ),
-                  onPressed: _isInactive(i)
-                      ? null
-                      : () {
-                          BlocProvider.of<ActivitiesBloc>(context)
-                              .add(ActivityAddedTime(
-                            index: activityIndex,
-                            interval: TimeInterval.duration(
-                                end: DateTime.now(),
-                                duration: activity.durationButtons[i]),
-                          ));
-                        },
-                  child: Text(' '),
-                )
-            ],
-          );
+        : Column(
+          children: [
+            Text('${AppLocalizations.of(context)!.timeOfCell}: ${stringDuration(activity.durationButtons.first, context)}'),
+            Text('${AppLocalizations.of(context)!.checkedCells} ${activity.intervalsList.length}'),
+            Text('${AppLocalizations.of(context)!.leftCells} ${_numOfLeftCells()}'),
+            Wrap(
+                spacing: 5,
+                runSpacing: 2.5,
+                children: [
+                  for (int i = 0; i < activity.durationButtons.length; i++)
+                    OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: _wasPressed(i)
+                            ? palettesDark[palette][activity.color!]
+                            : Colors.white,
+                        side: _isInactive(i) ? null : BorderSide(
+                          color: palettesDark[palette][activity.color!],
+                          width: 3.0
+                        ),
+                      ),
+                      onPressed: _isInactive(i)
+                          ? null
+                          : () {
+                              BlocProvider.of<ActivitiesBloc>(context)
+                                  .add(ActivityAddedTime(
+                                index: activityIndex,
+                                interval: TimeInterval.duration(
+                                    end: DateTime.now(),
+                                    duration: activity.durationButtons[i]),
+                              ));
+                            },
+                      onLongPress: _wasPressed(i) ? () {} : null,
+                      child: Text(''),
+                    )
+                ],
+              ),
+          ],
+        );
   }
 }
