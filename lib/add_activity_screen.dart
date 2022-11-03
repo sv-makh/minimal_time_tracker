@@ -28,7 +28,7 @@ class AddActivityScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ActivitiesBloc, ActivitiesState>(
         builder: (context, ActivitiesState state) {
-      Map<Duration, bool> _durations = state.durationButtons;
+      Map<Duration, bool> durations = state.durationButtons;
 
       bool presentationValue;
 
@@ -46,7 +46,7 @@ class AddActivityScreen extends StatelessWidget {
           title: Text(AppLocalizations.of(context)!.addNewActivity),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.save),
+              icon: const Icon(Icons.save),
               onPressed: () {
                 if (_titleController.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -60,7 +60,7 @@ class AddActivityScreen extends StatelessWidget {
                     ),
                   ));
                 } else {
-                  Activity _activity = Activity(
+                  Activity activity = Activity(
                     title: _titleController.text,
                     subtitle: _subtitleController.text,
                     color: state.color,
@@ -68,23 +68,23 @@ class AddActivityScreen extends StatelessWidget {
                   );
 
                   if (state.presentation == Presentation.BUTTONS) {
-                    for (MapEntry<Duration, bool> d in _durations.entries) {
-                      if (d.value) _activity.addDurationButton(d.key);
+                    for (MapEntry<Duration, bool> d in durations.entries) {
+                      if (d.value) activity.addDurationButton(d.key);
                     }
                   } else {
-                    Duration currentDuration = _durations.keys.toList().first;
+                    Duration currentDuration = durations.keys.toList().first;
                     int currentNum = int.tryParse(_numOfCells) ?? 0;
-                    _activity.maxNum = currentNum;
+                    activity.maxNum = currentNum;
                     for (int i = 0; i < currentNum; i++) {
-                      _activity.addDurationButton(currentDuration);
+                      activity.addDurationButton(currentDuration);
                     }
                   }
 
-                  _durations.clear();
+                  durations.clear();
 
                   Navigator.pop(
                     context,
-                    _activity,
+                    activity,
                   );
                 }
               },
@@ -152,8 +152,8 @@ class AddActivityScreen extends StatelessWidget {
                   //виджет для настройки того как будет добавляться время к активности
                   //с помощью кнопок либо таблицы
                   (state.presentation == Presentation.BUTTONS)
-                      ? _buttonSettings(context, _durations)
-                      : _tableSettings(context, _durations),
+                      ? _buttonSettings(context, durations)
+                      : _tableSettings(context, durations),
                 ],
               ),
             ),

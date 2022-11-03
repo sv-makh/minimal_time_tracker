@@ -44,7 +44,7 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Container(
+                      SizedBox(
                         width: 50,
                         child: TextField(
                           controller: _daysController,
@@ -55,7 +55,7 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                         ),
                       ),
                       Text(AppLocalizations.of(context)!.daysShort),
-                      Container(
+                      SizedBox(
                         width: 50,
                         child: TextField(
                           controller: _hoursController,
@@ -66,7 +66,7 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                         ),
                       ),
                       Text(AppLocalizations.of(context)!.hoursShort),
-                      Container(
+                      SizedBox(
                         width: 50,
                         child: TextField(
                           controller: _minutesController,
@@ -94,7 +94,7 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                         },
                         child: Text(AppLocalizations.of(context)!.ok),
                       ),
-                      SizedBox(width: 5,),
+                      const SizedBox(width: 5,),
                       OutlinedButton(
                         onPressed: () {
                           FocusScope.of(context).unfocus();

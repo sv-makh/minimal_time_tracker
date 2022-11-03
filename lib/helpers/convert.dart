@@ -5,30 +5,30 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 //2d 15h 30m 13s (или 15h 20s, или 3h...)
 //если всё в d = 0, то результат будет 0m
 String stringDuration(Duration d, BuildContext context) {
-  var _seconds = d.inSeconds;
-  final _days = _seconds ~/ Duration.secondsPerDay;
-  _seconds -= _days * Duration.secondsPerDay;
-  final _hours = _seconds ~/ Duration.secondsPerHour;
-  _seconds -= _hours * Duration.secondsPerHour;
-  final _minutes = _seconds ~/ Duration.secondsPerMinute;
-  _seconds -= _minutes * Duration.secondsPerMinute;
+  var seconds = d.inSeconds;
+  final days = seconds ~/ Duration.secondsPerDay;
+  seconds -= days * Duration.secondsPerDay;
+  final hours = seconds ~/ Duration.secondsPerHour;
+  seconds -= hours * Duration.secondsPerHour;
+  final minutes = seconds ~/ Duration.secondsPerMinute;
+  seconds -= minutes * Duration.secondsPerMinute;
 
-  final List<String> _tokens = [];
-  if (_days != 0) {
-    _tokens.add('${_days}${AppLocalizations.of(context)!.daysShort}');
+  final List<String> tokens = [];
+  if (days != 0) {
+    tokens.add('$days${AppLocalizations.of(context)!.daysShort}');
   }
-  if (_hours != 0) {
-    _tokens.add('${_hours}${AppLocalizations.of(context)!.hoursShort}');
+  if (hours != 0) {
+    tokens.add('$hours${AppLocalizations.of(context)!.hoursShort}');
   }
-  if (_tokens.isEmpty || (_minutes != 0)) {
-    _tokens.add('${_minutes}${AppLocalizations.of(context)!.minutesShort}');
+  if (tokens.isEmpty || (minutes != 0)) {
+    tokens.add('$minutes${AppLocalizations.of(context)!.minutesShort}');
   }
-  if (_seconds != 0) {
-    if (_minutes == 0) {
-      _tokens.remove('${_minutes}${AppLocalizations.of(context)!.minutesShort}');
+  if (seconds != 0) {
+    if (minutes == 0) {
+      tokens.remove('$minutes${AppLocalizations.of(context)!.minutesShort}');
     }
-    _tokens.add('${_seconds}${AppLocalizations.of(context)!.secondsShort}');
+    tokens.add('$seconds${AppLocalizations.of(context)!.secondsShort}');
   }
 
-  return _tokens.join(' ');
+  return tokens.join(' ');
 }
