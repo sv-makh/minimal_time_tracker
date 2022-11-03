@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/activity_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -32,7 +31,7 @@ class ActivityCard extends StatelessWidget {
                   ? Text(activity.subtitle!)
                   : Container(),
               trailing: IconButton(
-                icon: Icon(Icons.delete),
+                icon: const Icon(Icons.delete),
                 onPressed: () {
                   BlocProvider.of<ActivitiesBloc>(context)
                       .add(ActivityDeleted(index: activityIndex));
@@ -75,20 +74,23 @@ class ActivityCard extends StatelessWidget {
   }
 
   Widget _table(BuildContext context) {
-    //кнопку в таблице нельзя нажать, если она уже была нажата,
-    //т.е. в список intervalsList занесён соответствующий интервал
-    bool _isInactive(int index) {
+    //кнопку в таблице можно нажать, только если это первая кнопка после всех нажатых,
+    //(т.е. после всего списка intervalsList )
+    bool isInactive(int index) {
       if (index != activity.intervalsList.length) return true;
       return false;
     }
 
-    bool _wasPressed(int index) {
+    //проверка была ли нажата кнопка
+    //(т.е. в intervalsList был занес>н интервал)
+    bool wasPressed(int index) {
       if (index < activity.intervalsList.length) return true;
       return false;
     }
 
-    int _numOfLeftCells() {
-      int num = activity.maxNum! - activity.intervalsList.length!;
+    //количество ненажатых кнопок в таблице
+    int numOfLeftCells() {
+      int num = activity.maxNum! - activity.intervalsList.length;
       if (num >= 0) {
         return num;
       } else {
@@ -105,7 +107,7 @@ class ActivityCard extends StatelessWidget {
               Text('${AppLocalizations.of(context)!.checkedCells} '
                   '${activity.intervalsList.length}'),
               Text('${AppLocalizations.of(context)!.leftCells} '
-                  '${_numOfLeftCells()}'),
+                  '${numOfLeftCells()}'),
               Wrap(
                 spacing: 5,
                 runSpacing: 2.5,
@@ -113,16 +115,16 @@ class ActivityCard extends StatelessWidget {
                   for (int i = 0; i < activity.durationButtons.length; i++)
                     OutlinedButton(
                       style: OutlinedButton.styleFrom(
-                        backgroundColor: _wasPressed(i)
+                        backgroundColor: wasPressed(i)
                             ? palettesDark[palette][activity.color!]
                             : palettes[palette][activity.color!],
-                        side: _isInactive(i)
+                        side: isInactive(i)
                             ? null
                             : BorderSide(
                                 color: palettesDark[palette][activity.color!],
                                 width: 3.0),
                       ),
-                      onPressed: _isInactive(i)
+                      onPressed: isInactive(i)
                           ? null
                           : () {
                               BlocProvider.of<ActivitiesBloc>(context)
@@ -133,15 +135,19 @@ class ActivityCard extends StatelessWidget {
                                     duration: activity.durationButtons[i]),
                               ));
                             },
-                      onLongPress: _wasPressed(i)
+                      onLongPress: wasPressed(i)
                           ? () {
+                        //здесь индекс i кнопки из durationButtons можно использовать
+                        //как индекс интервала из intervalsList, т.к.
+                        //условие _wasPressed(i) обеспечивает выполнение
+                        //i < длины intervalsList
                               BlocProvider.of<ActivitiesBloc>(context).add(
                                   DeleteIntervalWithIndex(
                                       activityIndex: activityIndex,
                                       intervalIndex: i));
                             }
                           : null,
-                      child: Text(''),
+                      child: const Text(''),
                     )
                 ],
               ),
