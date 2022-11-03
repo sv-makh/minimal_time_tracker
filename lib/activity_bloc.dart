@@ -65,6 +65,13 @@ class ChangeNumOfCells extends ActivityEvent {
   ChangeNumOfCells({required this.num});
 }
 
+class DeleteIntervalWithIndex extends ActivityEvent {
+  int intervalIndex;
+  int activityIndex;
+
+  DeleteIntervalWithIndex({required this.activityIndex, required this.intervalIndex});
+}
+
 class ActivitiesState {
   final Box<Activity> activitiesBox;
   Map<Duration, bool> durationButtons;
@@ -189,6 +196,14 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       numOfCells = event.num;
       return emitter(ActivitiesState(
           activitiesBox, durationButtons, color, presentation, numOfCells));
+    });
+
+    on<DeleteIntervalWithIndex>((DeleteIntervalWithIndex event, Emitter<ActivitiesState> emitter) {
+      Activity activity = activitiesBox.getAt(event.activityIndex)!;
+      activity.intervalsList.removeAt(event.intervalIndex);
+      activitiesBox.putAt(event.activityIndex, activity);
+
+      return emitter(ActivitiesState(activitiesBox, durationButtons, color, presentation, numOfCells));
     });
   }
 }

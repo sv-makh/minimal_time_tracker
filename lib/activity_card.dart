@@ -26,7 +26,8 @@ class ActivityCard extends StatelessWidget {
           child: Column(children: [
             ListTile(
               title: Text(
-                  '${activity.title}, ${AppLocalizations.of(context)!.total} = ${stringDuration(activity.totalTime(), context)}'),
+                  '${activity.title}, ${AppLocalizations.of(context)!.total} = '
+                  '${stringDuration(activity.totalTime(), context)}'),
               subtitle: (activity.subtitle != null)
                   ? Text(activity.subtitle!)
                   : Container(),
@@ -88,18 +89,24 @@ class ActivityCard extends StatelessWidget {
 
     int _numOfLeftCells() {
       int num = activity.maxNum! - activity.intervalsList.length!;
-      if (num >= 0) { return num; }
-      else { return 0; }
+      if (num >= 0) {
+        return num;
+      } else {
+        return 0;
+      }
     }
 
     return (activity.durationButtons.isEmpty)
         ? Container()
         : Column(
-          children: [
-            Text('${AppLocalizations.of(context)!.timeOfCell}: ${stringDuration(activity.durationButtons.first, context)}'),
-            Text('${AppLocalizations.of(context)!.checkedCells} ${activity.intervalsList.length}'),
-            Text('${AppLocalizations.of(context)!.leftCells} ${_numOfLeftCells()}'),
-            Wrap(
+            children: [
+              Text('${AppLocalizations.of(context)!.timeOfCell}: '
+                  '${stringDuration(activity.durationButtons.first, context)}'),
+              Text('${AppLocalizations.of(context)!.checkedCells} '
+                  '${activity.intervalsList.length}'),
+              Text('${AppLocalizations.of(context)!.leftCells} '
+                  '${_numOfLeftCells()}'),
+              Wrap(
                 spacing: 5,
                 runSpacing: 2.5,
                 children: [
@@ -108,11 +115,12 @@ class ActivityCard extends StatelessWidget {
                       style: OutlinedButton.styleFrom(
                         backgroundColor: _wasPressed(i)
                             ? palettesDark[palette][activity.color!]
-                            : Colors.white,
-                        side: _isInactive(i) ? null : BorderSide(
-                          color: palettesDark[palette][activity.color!],
-                          width: 3.0
-                        ),
+                            : palettes[palette][activity.color!],
+                        side: _isInactive(i)
+                            ? null
+                            : BorderSide(
+                                color: palettesDark[palette][activity.color!],
+                                width: 3.0),
                       ),
                       onPressed: _isInactive(i)
                           ? null
@@ -125,12 +133,19 @@ class ActivityCard extends StatelessWidget {
                                     duration: activity.durationButtons[i]),
                               ));
                             },
-                      onLongPress: _wasPressed(i) ? () {} : null,
+                      onLongPress: _wasPressed(i)
+                          ? () {
+                              BlocProvider.of<ActivitiesBloc>(context).add(
+                                  DeleteIntervalWithIndex(
+                                      activityIndex: activityIndex,
+                                      intervalIndex: i));
+                            }
+                          : null,
                       child: Text(''),
                     )
                 ],
               ),
-          ],
-        );
+            ],
+          );
   }
 }
