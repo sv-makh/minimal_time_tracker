@@ -20,5 +20,8 @@
     "numberOfCellsInTable": "Количество ячеек в таблице",
     "timeOfCell": "Время одной ячейки",
     "checkedCells": "Отмечено ячеек:",
-    "leftCells": "Осталось:"
+    "leftCells": "Осталось:",
+    "deleteActivity": "Удалить активность?",
+    "deleteWarning": "Все её данные будут потеряны.",
+    "delete": "Удалить"
 }

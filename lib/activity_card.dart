@@ -33,8 +33,7 @@ class ActivityCard extends StatelessWidget {
               trailing: IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  BlocProvider.of<ActivitiesBloc>(context)
-                      .add(ActivityDeleted(index: activityIndex));
+                  _deleteDialog(context);
                 },
               ),
             ),
@@ -48,6 +47,31 @@ class ActivityCard extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _deleteDialog(BuildContext context) {
+    return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(AppLocalizations.of(context)!.deleteActivity),
+            content: Text(AppLocalizations.of(context)!.deleteWarning),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(AppLocalizations.of(context)!.cancel)),
+              TextButton(
+                  onPressed: () {
+                    BlocProvider.of<ActivitiesBloc>(context)
+                        .add(ActivityDeleted(index: activityIndex));
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(AppLocalizations.of(context)!.delete)),
+            ],
+          );
+        });
   }
 
   Widget _rowOfButtons(BuildContext context) {
@@ -137,10 +161,10 @@ class ActivityCard extends StatelessWidget {
                             },
                       onLongPress: wasPressed(i)
                           ? () {
-                        //здесь индекс i кнопки из durationButtons можно использовать
-                        //как индекс интервала из intervalsList, т.к.
-                        //условие _wasPressed(i) обеспечивает выполнение
-                        //i < длины intervalsList
+                              //здесь индекс i кнопки из durationButtons можно использовать
+                              //как индекс интервала из intervalsList, т.к.
+                              //условие _wasPressed(i) обеспечивает выполнение
+                              //i < длины intervalsList
                               BlocProvider.of<ActivitiesBloc>(context).add(
                                   DeleteIntervalWithIndex(
                                       activityIndex: activityIndex,

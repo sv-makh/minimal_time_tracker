@@ -20,5 +20,8 @@
     "numberOfCellsInTable": "Number of cells in table",
     "timeOfCell": "Time of one cell",
     "checkedCells": "Checked cells:",
-    "leftCells": "Left:"
+    "leftCells": "Left:",
+    "deleteActivity": "Delete Activity?",
+    "deleteWarning": "All its data will will be lost.",
+    "delete": "Delete"
 }
