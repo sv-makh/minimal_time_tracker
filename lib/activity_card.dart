@@ -24,19 +24,27 @@ class ActivityCard extends StatelessWidget {
           color: palettes[palette][activity.color ?? 0],
           child: Column(children: [
             ListTile(
-              title: Text(
-                  '${activity.title}, ${AppLocalizations.of(context)!.total} = '
-                  '${stringDuration(activity.totalTime(), context)}'),
-              subtitle: (activity.subtitle != null)
-                  ? Text(activity.subtitle!)
-                  : Container(),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  _deleteDialog(context);
-                },
-              ),
-            ),
+                title: Text(
+                    '${activity.title}, ${AppLocalizations.of(context)!.total} = '
+                    '${stringDuration(activity.totalTime(), context)}'),
+                subtitle: (activity.subtitle != null)
+                    ? Text(activity.subtitle!)
+                    : Container(),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        _deleteDialog(context);
+                      },
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.edit),
+                    )
+                  ],
+                )),
             //добавление времени к активности происходит в виджетах
             //в зависимости от того, какое представление для этой активности
             //выбрано

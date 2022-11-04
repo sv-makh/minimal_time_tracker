@@ -106,33 +106,7 @@ class AddActivityScreen extends StatelessWidget {
                     controller: _subtitleController,
                   ),
                   Text(AppLocalizations.of(context)!.color),
-                  Wrap(
-                    spacing: 5,
-                    runSpacing: 2.5,
-                    children: [
-                      for (int i = 0; i < palettes[palette].length; i++)
-                        InkWell(
-                          child: Container(
-                            width: 30,
-                            height: 30,
-                            decoration: (i == state.color)
-                                ? BoxDecoration(
-                                    color: palettes[palette][i],
-                                    border: Border.all(
-                                      color: palettesDark[palette][i],
-                                      width: 3.0,
-                                    ))
-                                : BoxDecoration(
-                                    color: palettes[palette][i],
-                                  ),
-                          ),
-                          onTap: () {
-                            BlocProvider.of<ActivitiesBloc>(context)
-                                .add(ChangeColor(color: i));
-                          },
-                        ),
-                    ],
-                  ),
+                  _colorPicker(context, state.color),
                   Text(AppLocalizations.of(context)!.addNewIntervals),
                   Row(
                     children: [
@@ -161,6 +135,31 @@ class AddActivityScreen extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Widget _colorPicker(BuildContext context, int colorIndex) {
+    return Wrap(spacing: 5, runSpacing: 2.5, children: [
+      for (int i = 0; i < palettes[palette].length; i++)
+        InkWell(
+          child: Container(
+            width: 30,
+            height: 30,
+            decoration: (i == colorIndex)
+                ? BoxDecoration(
+                    color: palettes[palette][i],
+                    border: Border.all(
+                      color: palettesDark[palette][i],
+                      width: 3.0,
+                    ))
+                : BoxDecoration(
+                    color: palettes[palette][i],
+                  ),
+          ),
+          onTap: () {
+            BlocProvider.of<ActivitiesBloc>(context).add(ChangeColor(color: i));
+          },
+        ),
+    ]);
   }
 
   Widget _buttonSettings(BuildContext context, Map<Duration, bool> durations) {
