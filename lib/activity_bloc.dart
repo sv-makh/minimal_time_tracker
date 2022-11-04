@@ -1,5 +1,7 @@
 //import 'dart:html';
 
+import 'dart:html';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 
@@ -69,7 +71,14 @@ class DeleteIntervalWithIndex extends ActivityEvent {
   int intervalIndex;
   int activityIndex;
 
-  DeleteIntervalWithIndex({required this.activityIndex, required this.intervalIndex});
+  DeleteIntervalWithIndex(
+      {required this.activityIndex, required this.intervalIndex});
+}
+
+class EditActivity extends ActivityEvent {
+  Activity activity;
+
+  EditActivity({required this.activity});
 }
 
 class ActivitiesState {
@@ -192,18 +201,36 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           activitiesBox, durationButtons, color, presentation, numOfCells));
     });
 
-    on<ChangeNumOfCells>((ChangeNumOfCells event, Emitter<ActivitiesState> emitter) {
+    on<ChangeNumOfCells>(
+        (ChangeNumOfCells event, Emitter<ActivitiesState> emitter) {
       numOfCells = event.num;
       return emitter(ActivitiesState(
           activitiesBox, durationButtons, color, presentation, numOfCells));
     });
 
-    on<DeleteIntervalWithIndex>((DeleteIntervalWithIndex event, Emitter<ActivitiesState> emitter) {
+    on<DeleteIntervalWithIndex>(
+        (DeleteIntervalWithIndex event, Emitter<ActivitiesState> emitter) {
       Activity activity = activitiesBox.getAt(event.activityIndex)!;
       activity.intervalsList.removeAt(event.intervalIndex);
       activitiesBox.putAt(event.activityIndex, activity);
 
-      return emitter(ActivitiesState(activitiesBox, durationButtons, color, presentation, numOfCells));
+      return emitter(ActivitiesState(
+          activitiesBox, durationButtons, color, presentation, numOfCells));
+    });
+
+    on<EditActivity>((EditActivity event, Emitter<ActivitiesState> emitter) {
+      durationButtons.clear();
+      for (var d in event.activity.durationButtons) {
+        durationButtons[d] = true;
+      }
+      color = event.activity.color!;
+      presentation = event.activity.presentation!;
+      if (presentation == Presentation.TABLE) {
+        numOfCells = event.activity.maxNum!;
+      }
+
+      return emitter(ActivitiesState(
+          activitiesBox, durationButtons, color, presentation, numOfCells));
     });
   }
 }
