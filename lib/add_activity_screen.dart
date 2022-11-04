@@ -72,11 +72,13 @@ class AddActivityScreen extends StatelessWidget {
                       if (d.value) activity.addDurationButton(d.key);
                     }
                   } else {
-                    Duration currentDuration = durations.keys.toList().first;
                     int currentNum = int.tryParse(_numOfCells) ?? 0;
                     activity.maxNum = currentNum;
-                    for (int i = 0; i < currentNum; i++) {
-                      activity.addDurationButton(currentDuration);
+                    if (currentNum != 0) {
+                      Duration currentDuration = durations.keys.toList().first;
+                      for (int i = 0; i < currentNum; i++) {
+                        activity.addDurationButton(currentDuration);
+                      }
                     }
                   }
 
