@@ -24,5 +24,6 @@
     "deleteActivity": "Delete Activity?",
     "deleteWarning": "All its data will will be lost.",
     "delete": "Delete",
-    "editActivity": "Edit activity"
+    "editActivity": "Edit activity",
+    "addedIntervals": "Added intervals:"
 }

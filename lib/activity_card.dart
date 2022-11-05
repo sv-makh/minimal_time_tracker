@@ -72,7 +72,7 @@ class ActivityCard extends StatelessWidget {
         ),
       ),
     ).then((value) => BlocProvider.of<ActivitiesBloc>(context)
-        .add(SaveEditedActivity(activity: activity, index: activityIndex)));
+        .add(SaveEditedActivity(activity: value, index: activityIndex)));
   }
 
   Future<void> _deleteDialog(BuildContext context) {
@@ -103,24 +103,29 @@ class ActivityCard extends StatelessWidget {
   Widget _rowOfButtons(BuildContext context) {
     return (activity.durationButtons.isEmpty)
         ? Container()
-        : Wrap(
-            spacing: 5,
-            runSpacing: 2.5,
-            children: [
-              for (var d in activity.durationButtons)
-                OutlinedButton(
-                  onPressed: () {
-                    BlocProvider.of<ActivitiesBloc>(context)
-                        .add(ActivityAddedTime(
-                      index: activityIndex,
-                      interval: TimeInterval.duration(
-                          end: DateTime.now(), duration: d),
-                    ));
-                  },
-                  child: Text('+ ${stringDuration(d, context)}'),
-                )
-            ],
-          );
+        : Column(
+          children: [
+            Text('${AppLocalizations.of(context)!.addedIntervals} ${activity.intervalsList.length}'),
+            Wrap(
+                spacing: 5,
+                runSpacing: 2.5,
+                children: [
+                  for (var d in activity.durationButtons)
+                    OutlinedButton(
+                      onPressed: () {
+                        BlocProvider.of<ActivitiesBloc>(context)
+                            .add(ActivityAddedTime(
+                          index: activityIndex,
+                          interval: TimeInterval.duration(
+                              end: DateTime.now(), duration: d),
+                        ));
+                      },
+                      child: Text('+ ${stringDuration(d, context)}'),
+                    )
+                ],
+              ),
+          ],
+        );
   }
 
   Widget _table(BuildContext context) {
