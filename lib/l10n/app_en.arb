@@ -1,6 +1,6 @@
 {
     "title": "Minimal Time Tracker",
-    "addNewActivity": "Add new activity",
+    "addNewActivity": "New activity",
     "monthShort": "M",
     "daysShort": "d",
     "hoursShort": "h",
@@ -23,5 +23,6 @@
     "leftCells": "Left:",
     "deleteActivity": "Delete Activity?",
     "deleteWarning": "All its data will will be lost.",
-    "delete": "Delete"
+    "delete": "Delete",
+    "editActivity": "Edit activity"
 }

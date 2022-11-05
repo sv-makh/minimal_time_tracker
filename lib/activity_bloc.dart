@@ -1,7 +1,3 @@
-//import 'dart:html';
-
-import 'dart:html';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 
@@ -79,6 +75,13 @@ class EditActivity extends ActivityEvent {
   Activity activity;
 
   EditActivity({required this.activity});
+}
+
+class SaveEditedActivity extends ActivityEvent {
+  Activity activity;
+  int index;
+
+  SaveEditedActivity({required this.activity, required this.index});
 }
 
 class ActivitiesState {
@@ -228,6 +231,13 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       if (presentation == Presentation.TABLE) {
         numOfCells = event.activity.maxNum!;
       }
+
+      return emitter(ActivitiesState(
+          activitiesBox, durationButtons, color, presentation, numOfCells));
+    });
+
+    on<SaveEditedActivity>((SaveEditedActivity event, Emitter<ActivitiesState> emitter) {
+      activitiesBox.putAt(event.index, event.activity);
 
       return emitter(ActivitiesState(
           activitiesBox, durationButtons, color, presentation, numOfCells));

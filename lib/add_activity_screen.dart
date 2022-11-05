@@ -15,7 +15,12 @@ import 'activity_bloc.dart';
 TextEditingController cellsNumber = TextEditingController();
 
 class AddActivityScreen extends StatelessWidget {
-  AddActivityScreen({Key? key}) : super(key: key);
+  AddActivityScreen({Key? key}) : super(key: key) {
+    editedActivity = null;
+  }
+
+  AddActivityScreen.editActivity({Key? key, required this.editedActivity})
+      : super(key: key);
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _subtitleController = TextEditingController();
@@ -23,6 +28,8 @@ class AddActivityScreen extends StatelessWidget {
   String _numOfCells = '0';
 
   int palette = 0;
+
+  Activity? editedActivity;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +50,9 @@ class AddActivityScreen extends StatelessWidget {
       return Scaffold(
         backgroundColor: palettes[palette][state.color],
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.addNewActivity),
+          title: (editedActivity == null)
+              ? Text(AppLocalizations.of(context)!.addNewActivity)
+              : Text(AppLocalizations.of(context)!.editActivity),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.save),
@@ -130,6 +139,9 @@ class AddActivityScreen extends StatelessWidget {
                   (state.presentation == Presentation.BUTTONS)
                       ? _buttonSettings(context, durations)
                       : _tableSettings(context, durations),
+                  //если эта страница открыта для редактирования существующей активности
+                  //ниже выводится виджет для редактирования запомненных интервалов
+                  (editedActivity == null) ? Container() : _editActivityData(context),
                 ],
               ),
             ),
@@ -137,6 +149,14 @@ class AddActivityScreen extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Widget _editActivityData(BuildContext context) {
+    return Column(
+      children: [
+        Text(editedActivity!.title),
+      ],
+    );
   }
 
   Widget _colorPicker(BuildContext context, int colorIndex) {

@@ -5,6 +5,7 @@ import 'package:minimal_time_tracker/activity_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/helpers/convert.dart';
 import 'package:minimal_time_tracker/themes/color_palettes.dart';
+import 'package:minimal_time_tracker/add_activity_screen.dart';
 
 class ActivityCard extends StatelessWidget {
   final Activity activity;
@@ -40,7 +41,9 @@ class ActivityCard extends StatelessWidget {
                       },
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _editActivity(context);
+                      },
                       icon: const Icon(Icons.edit),
                     )
                   ],
@@ -55,6 +58,21 @@ class ActivityCard extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _editActivity(BuildContext context) async {
+    BlocProvider.of<ActivitiesBloc>(context)
+        .add(EditActivity(activity: activity));
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddActivityScreen.editActivity(
+          editedActivity: activity,
+        ),
+      ),
+    ).then((value) => BlocProvider.of<ActivitiesBloc>(context)
+        .add(SaveEditedActivity(activity: activity, index: activityIndex)));
   }
 
   Future<void> _deleteDialog(BuildContext context) {

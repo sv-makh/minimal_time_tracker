@@ -1,6 +1,6 @@
 {
     "title": "Минимальный трекер времени",
-    "addNewActivity": "Добавить новую активность",
+    "addNewActivity": "Новая активность",
     "monthShort": "М",
     "daysShort": "д",
     "hoursShort": "ч",
@@ -23,5 +23,6 @@
     "leftCells": "Осталось:",
     "deleteActivity": "Удалить активность?",
     "deleteWarning": "Все её данные будут потеряны.",
-    "delete": "Удалить"
+    "delete": "Удалить",
+    "editActivity": "Редактировать активность"
 }
