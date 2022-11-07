@@ -7,6 +7,7 @@
     "minutesShort": "м",
     "secondsShort": "с",
     "total": "всего",
+    "totalCap": "Всего",
     "titleActivity": "Заголовок",
     "subtitleActivity": "Подзаголовок",
     "addButtons": "Настроить кнопки",
@@ -25,5 +26,6 @@
     "deleteWarning": "Все её данные будут потеряны.",
     "delete": "Удалить",
     "editActivity": "Редактировать активность",
-    "addedIntervals": "Добавлено интервалов:"
+    "addedIntervals": "Добавлено интервалов:",
+    "deleteAllIntervals": "Удалить все интервалы"
 }

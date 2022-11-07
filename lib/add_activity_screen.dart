@@ -167,7 +167,7 @@ class AddActivityScreen extends StatelessWidget {
                   //ниже выводится виджет для редактирования запомненных интервалов
                   (editedActivity == null)
                       ? Container()
-                      : _editActivityData(context),
+                      : _editActivityData(context, state.color),
                 ],
               ),
             ),
@@ -177,10 +177,40 @@ class AddActivityScreen extends StatelessWidget {
     });
   }
 
-  Widget _editActivityData(BuildContext context) {
+  Widget _editActivityData(BuildContext context, int colorIndex) {
     return Column(
       children: [
-        Text(editedActivity!.title),
+        Text(AppLocalizations.of(context)!.addedIntervals),
+        Container(
+          height: 250,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: palettesDark[palette][colorIndex],
+            )
+          ),
+          child: ListView.builder(
+            itemCount: editedActivity!.intervalsList.length,
+            itemBuilder: (context, int index) {
+              return Card(
+                child: ListTile(
+                  //substring отсекает миллисекунды
+                  title: Text('${editedActivity!.intervalsList[index].start.toString().substring(0,19)}, '
+                      '${stringDuration(editedActivity!.intervalsList[index].duration, context)}'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      BlocProvider.of<ActivitiesBloc>(context).add(DeleteIntervalEditedActivity(index: index));
+                    },
+                  ),
+                ),
+              );
+            }
+          ),
+        ),
+        Text('${AppLocalizations.of(context)!.totalCap}: ${stringDuration(editedActivity!.totalTime(), context)}'),
+        OutlinedButton(onPressed: () {
+          BlocProvider.of<ActivitiesBloc>(context).add(DeleteAllIntervalsEditedActivity());
+        }, child: Text(AppLocalizations.of(context)!.deleteAllIntervals)),
       ],
     );
   }

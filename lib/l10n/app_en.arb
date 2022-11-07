@@ -7,6 +7,7 @@
     "minutesShort": "m",
     "secondsShort": "s",
     "total": "total",
+    "totalCap": "Total",
     "titleActivity": "Title",
     "subtitleActivity": "Subtitle",
     "addButtons": "Set buttons",
@@ -25,5 +26,6 @@
     "deleteWarning": "All its data will will be lost.",
     "delete": "Delete",
     "editActivity": "Edit activity",
-    "addedIntervals": "Added intervals:"
+    "addedIntervals": "Added intervals:",
+    "deleteAllIntervals": "Delete all intervals"
 }

@@ -84,6 +84,16 @@ class SaveEditedActivity extends ActivityEvent {
   SaveEditedActivity({required this.activity, required this.index});
 }
 
+class DeleteIntervalEditedActivity extends ActivityEvent {
+  int index;
+
+  DeleteIntervalEditedActivity({required this.index});
+}
+
+class DeleteAllIntervalsEditedActivity extends ActivityEvent {
+  DeleteAllIntervalsEditedActivity();
+}
+
 class ActivitiesState {
   final Box<Activity> activitiesBox;
   Map<Duration, bool> durationButtons;
@@ -113,6 +123,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
   Presentation presentation = Presentation.BUTTONS;
 
   int numOfCells = 0;
+
+  Activity? editedActivity;
 
   ActivitiesBloc()
       : super(ActivitiesState(
@@ -231,13 +243,32 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       if (presentation == Presentation.TABLE) {
         numOfCells = event.activity.maxNum!;
       }
+      editedActivity = event.activity;
 
       return emitter(ActivitiesState(
           activitiesBox, durationButtons, color, presentation, numOfCells));
     });
 
-    on<SaveEditedActivity>((SaveEditedActivity event, Emitter<ActivitiesState> emitter) {
+    on<SaveEditedActivity>(
+        (SaveEditedActivity event, Emitter<ActivitiesState> emitter) {
       activitiesBox.putAt(event.index, event.activity);
+
+      return emitter(ActivitiesState(
+          activitiesBox, durationButtons, color, presentation, numOfCells));
+    });
+
+    on<DeleteIntervalEditedActivity>(
+        (DeleteIntervalEditedActivity event, Emitter<ActivitiesState> emitter) {
+      editedActivity!.intervalsList.removeAt(event.index);
+
+      return emitter(ActivitiesState(
+          activitiesBox, durationButtons, color, presentation, numOfCells));
+    });
+
+    on<DeleteAllIntervalsEditedActivity>(
+        (DeleteAllIntervalsEditedActivity event,
+            Emitter<ActivitiesState> emitter) {
+      editedActivity!.intervalsList.clear();
 
       return emitter(ActivitiesState(
           activitiesBox, durationButtons, color, presentation, numOfCells));
