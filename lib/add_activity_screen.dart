@@ -26,6 +26,8 @@ class AddActivityScreen extends StatelessWidget {
   final TextEditingController _subtitleController = TextEditingController();
 
   String _numOfCells = '0';
+  String _titleOfEditedActivity = '';
+  String _subtitleOfEditedActivity = '';
 
   int palette = 0;
 
@@ -43,6 +45,16 @@ class AddActivityScreen extends StatelessWidget {
         presentationValue = true;
       } else {
         presentationValue = false;
+      }
+
+      if (editedActivity != null) {
+        //заголовок у активности есть всегда
+        _titleOfEditedActivity = editedActivity!.title;
+        _titleController.text = _titleOfEditedActivity;
+
+        //подзаголовка может не быть
+        _subtitleOfEditedActivity = (editedActivity!.subtitle == null) ? '' : editedActivity!.subtitle!;
+        _subtitleController.text = _subtitleOfEditedActivity;
       }
 
       _numOfCells = state.numOfCells.toString();
@@ -111,10 +123,12 @@ class AddActivityScreen extends StatelessWidget {
                   Text(AppLocalizations.of(context)!.titleActivity),
                   TextField(
                     controller: _titleController,
+                    onChanged: (value) => _titleOfEditedActivity = value,
                   ),
                   Text(AppLocalizations.of(context)!.subtitleActivity),
                   TextField(
                     controller: _subtitleController,
+                    onChanged: (value) => _subtitleOfEditedActivity = value,
                   ),
                   Text(AppLocalizations.of(context)!.color),
                   _colorPicker(context, state.color),
