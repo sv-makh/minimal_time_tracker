@@ -53,7 +53,8 @@ class AddActivityScreen extends StatelessWidget {
         _titleController.text = _titleOfEditedActivity;
 
         //подзаголовка может не быть
-        _subtitleOfEditedActivity = (editedActivity!.subtitle == null) ? '' : editedActivity!.subtitle!;
+        _subtitleOfEditedActivity =
+            (editedActivity!.subtitle == null) ? '' : editedActivity!.subtitle!;
         _subtitleController.text = _subtitleOfEditedActivity;
       }
 
@@ -101,6 +102,15 @@ class AddActivityScreen extends StatelessWidget {
                         activity.addDurationButton(currentDuration);
                       }
                     }
+                  }
+
+                  //в случае редактирования существующей активности
+                  //заполняются недостающие поля
+                  if (editedActivity != null) {
+                    for (var interval in editedActivity!.intervalsList!) {
+                      activity.addInterval(interval);
+                    }
+                    activity.durationButtons = editedActivity!.durationButtons;
                   }
 
                   durations.clear();
@@ -155,7 +165,9 @@ class AddActivityScreen extends StatelessWidget {
                       : _tableSettings(context, durations),
                   //если эта страница открыта для редактирования существующей активности
                   //ниже выводится виджет для редактирования запомненных интервалов
-                  (editedActivity == null) ? Container() : _editActivityData(context),
+                  (editedActivity == null)
+                      ? Container()
+                      : _editActivityData(context),
                 ],
               ),
             ),
