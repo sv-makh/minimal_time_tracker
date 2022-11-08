@@ -7,10 +7,10 @@ import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/helpers/convert.dart';
-import 'package:minimal_time_tracker/duration_bottom_sheet.dart';
+import 'package:minimal_time_tracker/widgets/duration_bottom_sheet.dart';
 import 'package:minimal_time_tracker/themes/color_palettes.dart';
 
-import 'activity_bloc.dart';
+import '../data/activity_bloc.dart';
 
 TextEditingController cellsNumber = TextEditingController();
 

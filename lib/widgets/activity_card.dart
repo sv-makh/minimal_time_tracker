@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/activity_bloc.dart';
+import 'package:minimal_time_tracker/data/activity_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/helpers/convert.dart';
 import 'package:minimal_time_tracker/themes/color_palettes.dart';
-import 'package:minimal_time_tracker/add_activity_screen.dart';
+import 'package:minimal_time_tracker/screens/add_activity_screen.dart';
 
 class ActivityCard extends StatelessWidget {
   final Activity activity;
