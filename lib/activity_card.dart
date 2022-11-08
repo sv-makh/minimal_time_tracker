@@ -5,6 +5,7 @@ import 'package:minimal_time_tracker/activity_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/helpers/convert.dart';
 import 'package:minimal_time_tracker/themes/color_palettes.dart';
+import 'package:minimal_time_tracker/add_activity_screen.dart';
 
 class ActivityCard extends StatelessWidget {
   final Activity activity;
@@ -40,7 +41,9 @@ class ActivityCard extends StatelessWidget {
                       },
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _editActivity(context);
+                      },
                       icon: const Icon(Icons.edit),
                     )
                   ],
@@ -55,6 +58,21 @@ class ActivityCard extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _editActivity(BuildContext context) async {
+    BlocProvider.of<ActivitiesBloc>(context)
+        .add(EditActivity(activity: activity));
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddActivityScreen.editActivity(
+          editedActivity: activity,
+        ),
+      ),
+    ).then((value) => BlocProvider.of<ActivitiesBloc>(context)
+        .add(SaveEditedActivity(activity: value, index: activityIndex)));
   }
 
   Future<void> _deleteDialog(BuildContext context) {
@@ -85,24 +103,29 @@ class ActivityCard extends StatelessWidget {
   Widget _rowOfButtons(BuildContext context) {
     return (activity.durationButtons.isEmpty)
         ? Container()
-        : Wrap(
-            spacing: 5,
-            runSpacing: 2.5,
-            children: [
-              for (var d in activity.durationButtons)
-                OutlinedButton(
-                  onPressed: () {
-                    BlocProvider.of<ActivitiesBloc>(context)
-                        .add(ActivityAddedTime(
-                      index: activityIndex,
-                      interval: TimeInterval.duration(
-                          end: DateTime.now(), duration: d),
-                    ));
-                  },
-                  child: Text('+ ${stringDuration(d, context)}'),
-                )
-            ],
-          );
+        : Column(
+          children: [
+            Text('${AppLocalizations.of(context)!.addedIntervals} ${activity.intervalsList.length}'),
+            Wrap(
+                spacing: 5,
+                runSpacing: 2.5,
+                children: [
+                  for (var d in activity.durationButtons)
+                    OutlinedButton(
+                      onPressed: () {
+                        BlocProvider.of<ActivitiesBloc>(context)
+                            .add(ActivityAddedTime(
+                          index: activityIndex,
+                          interval: TimeInterval.duration(
+                              end: DateTime.now(), duration: d),
+                        ));
+                      },
+                      child: Text('+ ${stringDuration(d, context)}'),
+                    )
+                ],
+              ),
+          ],
+        );
   }
 
   Widget _table(BuildContext context) {

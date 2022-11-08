@@ -15,14 +15,23 @@ import 'activity_bloc.dart';
 TextEditingController cellsNumber = TextEditingController();
 
 class AddActivityScreen extends StatelessWidget {
-  AddActivityScreen({Key? key}) : super(key: key);
+  AddActivityScreen({Key? key}) : super(key: key) {
+    editedActivity = null;
+  }
+
+  AddActivityScreen.editActivity({Key? key, required this.editedActivity})
+      : super(key: key);
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _subtitleController = TextEditingController();
 
   String _numOfCells = '0';
+  String _titleOfEditedActivity = '';
+  String _subtitleOfEditedActivity = '';
 
   int palette = 0;
+
+  Activity? editedActivity;
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +47,25 @@ class AddActivityScreen extends StatelessWidget {
         presentationValue = false;
       }
 
+      if (editedActivity != null) {
+        //заголовок у активности есть всегда
+        _titleOfEditedActivity = editedActivity!.title;
+        _titleController.text = _titleOfEditedActivity;
+
+        //подзаголовка может не быть
+        _subtitleOfEditedActivity =
+            (editedActivity!.subtitle == null) ? '' : editedActivity!.subtitle!;
+        _subtitleController.text = _subtitleOfEditedActivity;
+      }
+
       _numOfCells = state.numOfCells.toString();
 
       return Scaffold(
         backgroundColor: palettes[palette][state.color],
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.addNewActivity),
+          title: (editedActivity == null)
+              ? Text(AppLocalizations.of(context)!.addNewActivity)
+              : Text(AppLocalizations.of(context)!.editActivity),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.save),
@@ -82,6 +104,15 @@ class AddActivityScreen extends StatelessWidget {
                     }
                   }
 
+                  //в случае редактирования существующей активности
+                  //заполняются недостающие поля
+                  if (editedActivity != null) {
+                    for (var interval in state.editedActivity!.intervalsList) {
+                      activity.addInterval(interval);
+                    }
+                    activity.durationButtons = editedActivity!.durationButtons;
+                  }
+
                   durations.clear();
 
                   Navigator.pop(
@@ -102,10 +133,12 @@ class AddActivityScreen extends StatelessWidget {
                   Text(AppLocalizations.of(context)!.titleActivity),
                   TextField(
                     controller: _titleController,
+                    onChanged: (value) => _titleOfEditedActivity = value,
                   ),
                   Text(AppLocalizations.of(context)!.subtitleActivity),
                   TextField(
                     controller: _subtitleController,
+                    onChanged: (value) => _subtitleOfEditedActivity = value,
                   ),
                   Text(AppLocalizations.of(context)!.color),
                   _colorPicker(context, state.color),
@@ -130,6 +163,11 @@ class AddActivityScreen extends StatelessWidget {
                   (state.presentation == Presentation.BUTTONS)
                       ? _buttonSettings(context, durations)
                       : _tableSettings(context, durations),
+                  //если эта страница открыта для редактирования существующей активности
+                  //ниже выводится виджет для редактирования запомненных интервалов
+                  (editedActivity == null)
+                      ? Container()
+                      : _editActivityData(context, state.color, state.editedActivity!),
                 ],
               ),
             ),
@@ -137,6 +175,44 @@ class AddActivityScreen extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Widget _editActivityData(BuildContext context, int colorIndex, Activity editedActivity) {
+    return Column(
+      children: [
+        Text(AppLocalizations.of(context)!.addedIntervals),
+        Container(
+          height: 250,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: palettesDark[palette][colorIndex],
+            )
+          ),
+          child: ListView.builder(
+            itemCount: editedActivity.intervalsList.length,
+            itemBuilder: (context, int index) {
+              return Card(
+                child: ListTile(
+                  //substring отсекает миллисекунды
+                  title: Text('${editedActivity.intervalsList[index].start.toString().substring(0,19)}, '
+                      '${stringDuration(editedActivity.intervalsList[index].duration, context)}'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      BlocProvider.of<ActivitiesBloc>(context).add(DeleteIntervalEditedActivity(index: index));
+                    },
+                  ),
+                ),
+              );
+            }
+          ),
+        ),
+        Text('${AppLocalizations.of(context)!.totalCap}: ${stringDuration(editedActivity.totalTime(), context)}'),
+        OutlinedButton(onPressed: () {
+          BlocProvider.of<ActivitiesBloc>(context).add(DeleteAllIntervalsEditedActivity());
+        }, child: Text(AppLocalizations.of(context)!.deleteAllIntervals)),
+      ],
+    );
   }
 
   Widget _colorPicker(BuildContext context, int colorIndex) {
