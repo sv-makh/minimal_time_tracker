@@ -107,7 +107,7 @@ class AddActivityScreen extends StatelessWidget {
                   //в случае редактирования существующей активности
                   //заполняются недостающие поля
                   if (editedActivity != null) {
-                    for (var interval in editedActivity!.intervalsList!) {
+                    for (var interval in state.editedActivity!.intervalsList) {
                       activity.addInterval(interval);
                     }
                     activity.durationButtons = editedActivity!.durationButtons;
@@ -167,7 +167,7 @@ class AddActivityScreen extends StatelessWidget {
                   //ниже выводится виджет для редактирования запомненных интервалов
                   (editedActivity == null)
                       ? Container()
-                      : _editActivityData(context, state.color),
+                      : _editActivityData(context, state.color, state.editedActivity!),
                 ],
               ),
             ),
@@ -177,7 +177,7 @@ class AddActivityScreen extends StatelessWidget {
     });
   }
 
-  Widget _editActivityData(BuildContext context, int colorIndex) {
+  Widget _editActivityData(BuildContext context, int colorIndex, Activity editedActivity) {
     return Column(
       children: [
         Text(AppLocalizations.of(context)!.addedIntervals),
@@ -189,13 +189,13 @@ class AddActivityScreen extends StatelessWidget {
             )
           ),
           child: ListView.builder(
-            itemCount: editedActivity!.intervalsList.length,
+            itemCount: editedActivity.intervalsList.length,
             itemBuilder: (context, int index) {
               return Card(
                 child: ListTile(
                   //substring отсекает миллисекунды
-                  title: Text('${editedActivity!.intervalsList[index].start.toString().substring(0,19)}, '
-                      '${stringDuration(editedActivity!.intervalsList[index].duration, context)}'),
+                  title: Text('${editedActivity.intervalsList[index].start.toString().substring(0,19)}, '
+                      '${stringDuration(editedActivity.intervalsList[index].duration, context)}'),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () {
@@ -207,7 +207,7 @@ class AddActivityScreen extends StatelessWidget {
             }
           ),
         ),
-        Text('${AppLocalizations.of(context)!.totalCap}: ${stringDuration(editedActivity!.totalTime(), context)}'),
+        Text('${AppLocalizations.of(context)!.totalCap}: ${stringDuration(editedActivity.totalTime(), context)}'),
         OutlinedButton(onPressed: () {
           BlocProvider.of<ActivitiesBloc>(context).add(DeleteAllIntervalsEditedActivity());
         }, child: Text(AppLocalizations.of(context)!.deleteAllIntervals)),

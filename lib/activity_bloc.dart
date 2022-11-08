@@ -100,9 +100,10 @@ class ActivitiesState {
   int color;
   Presentation presentation;
   int numOfCells;
+  Activity? editedActivity;
 
   ActivitiesState(this.activitiesBox, this.durationButtons, this.color,
-      this.presentation, this.numOfCells);
+      this.presentation, this.numOfCells, [this.editedActivity]);
 }
 
 class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
@@ -246,7 +247,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       editedActivity = event.activity;
 
       return emitter(ActivitiesState(
-          activitiesBox, durationButtons, color, presentation, numOfCells));
+          activitiesBox, durationButtons, color, presentation, numOfCells, editedActivity));
     });
 
     on<SaveEditedActivity>(
@@ -254,7 +255,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       activitiesBox.putAt(event.index, event.activity);
 
       return emitter(ActivitiesState(
-          activitiesBox, durationButtons, color, presentation, numOfCells));
+          activitiesBox, durationButtons, color, presentation, numOfCells, editedActivity));
     });
 
     on<DeleteIntervalEditedActivity>(
@@ -262,7 +263,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       editedActivity!.intervalsList.removeAt(event.index);
 
       return emitter(ActivitiesState(
-          activitiesBox, durationButtons, color, presentation, numOfCells));
+          activitiesBox, durationButtons, color, presentation, numOfCells, editedActivity));
     });
 
     on<DeleteAllIntervalsEditedActivity>(
@@ -271,7 +272,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       editedActivity!.intervalsList.clear();
 
       return emitter(ActivitiesState(
-          activitiesBox, durationButtons, color, presentation, numOfCells));
+          activitiesBox, durationButtons, color, presentation, numOfCells, editedActivity));
     });
   }
 }
