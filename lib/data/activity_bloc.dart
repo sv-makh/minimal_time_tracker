@@ -169,7 +169,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       durationButtons.update(event.duration, (value) => false,
           ifAbsent: () => false);
       return emitter(ActivitiesState(
-          activitiesBox, durationButtons, color, presentation, numOfCells));
+          activitiesBox, durationButtons, color, presentation, numOfCells, editedActivity));
     });
 
     on<PressedDurationButton>(
@@ -177,13 +177,13 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       durationButtons.update(event.duration, (value) => !value,
           ifAbsent: () => false);
       return emitter(ActivitiesState(
-          activitiesBox, durationButtons, color, presentation, numOfCells));
+          activitiesBox, durationButtons, color, presentation, numOfCells, editedActivity));
     });
 
     on<ChangeColor>((ChangeColor event, Emitter<ActivitiesState> emitter) {
       color = event.color;
       return emitter(ActivitiesState(
-          activitiesBox, durationButtons, color, presentation, numOfCells));
+          activitiesBox, durationButtons, color, presentation, numOfCells, editedActivity));
     });
 
     on<PressedNewActivity>(
@@ -205,7 +205,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         };
       }
       return emitter(ActivitiesState(
-          activitiesBox, durationButtons, color, presentation, numOfCells));
+          activitiesBox, durationButtons, color, presentation, numOfCells, editedActivity));
     });
 
     on<AddedDurationForTable>(
@@ -214,14 +214,14 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       durationButtons.update(event.duration, (value) => false,
           ifAbsent: () => false);
       return emitter(ActivitiesState(
-          activitiesBox, durationButtons, color, presentation, numOfCells));
+          activitiesBox, durationButtons, color, presentation, numOfCells, editedActivity));
     });
 
     on<ChangeNumOfCells>(
         (ChangeNumOfCells event, Emitter<ActivitiesState> emitter) {
       numOfCells = event.num;
       return emitter(ActivitiesState(
-          activitiesBox, durationButtons, color, presentation, numOfCells));
+          activitiesBox, durationButtons, color, presentation, numOfCells, editedActivity));
     });
 
     on<DeleteIntervalWithIndex>(
