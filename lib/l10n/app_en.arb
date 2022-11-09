@@ -27,5 +27,10 @@
     "delete": "Delete",
     "editActivity": "Edit activity",
     "addedIntervals": "Added intervals:",
-    "deleteAllIntervals": "Delete all intervals"
+    "deleteAllIntervals": "Delete all intervals",
+    "noActivities": "No activities",
+    "language": "Language",
+    "theme": "Theme",
+    "font": "Font",
+    "settings": "Settings"
 }

@@ -27,5 +27,10 @@
     "delete": "Удалить",
     "editActivity": "Редактировать активность",
     "addedIntervals": "Добавлено интервалов:",
-    "deleteAllIntervals": "Удалить все интервалы"
+    "deleteAllIntervals": "Удалить все интервалы",
+    "noActivities": "Нет активностей",
+    "language": "Язык",
+    "theme": "Тема",
+    "font": "Шрифт",
+    "settings": "Настройки"
 }
