@@ -7,8 +7,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:minimal_time_tracker/screens/add_activity_screen.dart';
 import 'package:minimal_time_tracker/widgets/activity_card.dart';
 import 'package:minimal_time_tracker/data/activity_bloc.dart';
+import 'package:minimal_time_tracker/data/language_bloc.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/screens/main_activities_view.dart';
+import 'package:minimal_time_tracker/themes/settings_data.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -26,8 +28,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ActivitiesBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ActivitiesBloc>(create: (_) => ActivitiesBloc()),
+        BlocProvider<LanguageBloc>(create: (_) => LanguageBloc()),
+      ],
       child: MaterialApp(
         title: 'Minimal Time Tracker',
         theme: ThemeData(
@@ -39,13 +44,9 @@ class MyApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: [
-          Locale('en', ''), // English, no country code
-          Locale('ru', ''), // Russian, no country code
-        ],
+        supportedLocales: supportedLocales,
         home: const MainActivitiesView(),
       ),
     );
   }
 }
-

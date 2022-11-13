@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:minimal_time_tracker/data/language_bloc.dart';
 
 import 'package:minimal_time_tracker/screens/add_activity_screen.dart';
 import 'package:minimal_time_tracker/screens/settings_screen.dart';
@@ -15,6 +18,8 @@ class MainActivitiesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
+
+    context.read<LanguageBloc>().add(SetInitialLocale(locale: Locale(Platform.localeName)));
 
     return BlocBuilder<ActivitiesBloc, ActivitiesState>(
       builder: (context, ActivitiesState state) {
