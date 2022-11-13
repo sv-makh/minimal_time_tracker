@@ -28,10 +28,8 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
 
     on<SetInitialLocale>((SetInitialLocale event, Emitter<LanguageState> emitter) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String langCode = prefs.getString('lang');
-      Locale initLocale;
-      if (langCode == null) { initLocale = event.locale; }
-      else { initLocale = Locale(langCode); }
+      String langCode = prefs.getString('lang') ?? event.locale.languageCode;
+      Locale initLocale = Locale(langCode);
 
       return emitter(LanguageState(initLocale));
     });
