@@ -1,14 +1,34 @@
 import 'dart:ui';
 
+//https://coolors.co/
+
 var palettes = [
+  pale,
   dustyRose,
   olive,
   pastel,
 ];
 var palettesDark = [
+  paleDark,
   dustyRoseDark,
   oliveDark,
   pastelDark,
+];
+
+const List<Color> pale = [
+  Color(0xFFF7F7F7),
+  Color(0xFFF7F7F7),
+  Color(0xFFF7F7F7),
+  Color(0xFFF7F7F7),
+  Color(0xFFF7F7F7),
+];
+
+const List<Color> paleDark = [
+  Color(0xFFADADAD),
+  Color(0xFFADADAD),
+  Color(0xFFADADAD),
+  Color(0xFFADADAD),
+  Color(0xFFADADAD),
 ];
 
 const List<Color> dustyRose = [

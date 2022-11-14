@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:minimal_time_tracker/data/activity_bloc.dart';
-import 'package:minimal_time_tracker/data/language_bloc.dart';
+import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/screens/main_activities_view.dart';
 import 'package:minimal_time_tracker/settings/settings_data.dart';
@@ -31,10 +31,10 @@ class MyApp extends StatelessWidget {
         BlocProvider<ActivitiesBloc>(create: (_) => ActivitiesBloc()),
         BlocProvider<LanguageBloc>(create: (_) => LanguageBloc()),
       ],
-      child: BlocBuilder<LanguageBloc, LanguageState>(
-        builder: (context, LanguageState state) {
+      child: BlocBuilder<LanguageBloc, SettingsState>(
+        builder: (context, SettingsState state) {
 
-          BlocProvider.of<LanguageBloc>(context).add(SetInitialLocale());
+          BlocProvider.of<LanguageBloc>(context).add(SetInitialSetting());
 
           return MaterialApp(
             locale: state.locale,

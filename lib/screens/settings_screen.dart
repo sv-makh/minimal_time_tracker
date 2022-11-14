@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:minimal_time_tracker/data/language_bloc.dart';
+import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 import 'package:minimal_time_tracker/settings/settings_data.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -9,8 +9,8 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LanguageBloc, LanguageState>(
-        builder: (context, LanguageState state) {
+    return BlocBuilder<LanguageBloc, SettingsState>(
+        builder: (context, SettingsState state) {
       return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.settings),
@@ -20,10 +20,11 @@ class SettingsScreen extends StatelessWidget {
             padding: EdgeInsets.all(10),
             child: SingleChildScrollView(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(AppLocalizations.of(context)!.language),
                   DropdownButton(
-                    value: state.locale.languageCode,
+                    value: state.locale!.languageCode,
                     icon: const Icon(Icons.arrow_downward),
                     items: supportedLocales.map<DropdownMenuItem<String>>((Locale value) {
                       return DropdownMenuItem<String>(
