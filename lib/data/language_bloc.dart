@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,9 +13,6 @@ class ChangeLanguage extends LanguageEvent {
 }
 
 class SetInitialLocale extends LanguageEvent {
-  Locale locale;
-
-  SetInitialLocale({required this.locale});
 }
 
 class LanguageState {
@@ -28,7 +27,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
 
     on<SetInitialLocale>((SetInitialLocale event, Emitter<LanguageState> emitter) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String langCode = prefs.getString('lang') ?? event.locale.languageCode;
+      String langCode = prefs.getString('lang') ?? Platform.localeName;
       Locale initLocale = Locale(langCode);
 
       return emitter(LanguageState(initLocale));
