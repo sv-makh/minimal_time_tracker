@@ -32,11 +32,14 @@ class LanguageBloc extends Bloc<SettingsEvent, SettingsState> {
 
   LanguageBloc() : super(SettingsState(Locale('en', ''), 'Pale')) {
 
+    Locale? currentLocale;
+
     on<SetInitialSetting>((SetInitialSetting event, Emitter<SettingsState> emitter) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String langCode = prefs.getString('lang') ?? Platform.localeName;
       String initTheme = prefs.getString('theme') ?? 'Pale';
       Locale initLocale = Locale(langCode);
+      currentLocale = initLocale;
 
       return emitter(SettingsState(initLocale, initTheme));
     });
@@ -44,9 +47,18 @@ class LanguageBloc extends Bloc<SettingsEvent, SettingsState> {
     on<ChangeLanguage>((ChangeLanguage event, Emitter<SettingsState> emitter) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       Locale newLocale = event.locale;
+      currentLocale = newLocale;
       prefs.setString('lang', newLocale.languageCode);//then Проверка
       
       return emitter(SettingsState(newLocale));
+    });
+
+    on<ChangeTheme>((ChangeTheme event, Emitter<SettingsState> emitter) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String newTheme = event.theme;
+      prefs.setString('theme', newTheme);
+
+      return emitter(SettingsState(currentLocale, newTheme));
     });
   }
 }

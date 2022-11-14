@@ -9,6 +9,7 @@ import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/screens/main_activities_view.dart';
 import 'package:minimal_time_tracker/settings/settings_data.dart';
+import 'package:minimal_time_tracker/settings/themes.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -39,9 +40,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             locale: state.locale,
             title: 'Minimal Time Tracker',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
+            theme: themeData[state.theme],
             localizationsDelegates: [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
