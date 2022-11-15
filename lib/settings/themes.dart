@@ -25,7 +25,7 @@ import 'package:minimal_time_tracker/settings/color_palettes.dart';
 
 Map<String, ThemeData> themeData = {
   'Pale' : ThemeData(
-    primaryColor: Colors.blue,
+    primarySwatch: Colors.blue,
   ),
   'Dusty Rose' : ThemeData(
     primaryColor: dustyRoseDark[2],

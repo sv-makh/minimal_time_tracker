@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 import 'package:minimal_time_tracker/settings/settings_data.dart';
+import 'package:minimal_time_tracker/settings/themes.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -26,7 +27,8 @@ class SettingsScreen extends StatelessWidget {
                   DropdownButton(
                     value: state.locale!.languageCode,
                     icon: const Icon(Icons.arrow_downward),
-                    items: supportedLocales.map<DropdownMenuItem<String>>((Locale value) {
+                    items: supportedLocales
+                        .map<DropdownMenuItem<String>>((Locale value) {
                       return DropdownMenuItem<String>(
                         value: value.languageCode,
                         child: Text(value.languageCode),
@@ -38,6 +40,21 @@ class SettingsScreen extends StatelessWidget {
                     },
                   ),
                   Text(AppLocalizations.of(context)!.theme),
+                  DropdownButton(
+                    value: state.theme,
+                    icon: const Icon(Icons.arrow_downward),
+                    items: themeData.keys
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      BlocProvider.of<LanguageBloc>(context)
+                          .add(ChangeTheme(theme: value!));
+                    },
+                  ),
                   Text(AppLocalizations.of(context)!.font),
                 ],
               ),

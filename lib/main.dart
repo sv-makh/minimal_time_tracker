@@ -37,6 +37,8 @@ class MyApp extends StatelessWidget {
 
           BlocProvider.of<LanguageBloc>(context).add(SetInitialSetting());
 
+          print('main theme: ${state.theme}');
+
           return MaterialApp(
             locale: state.locale,
             title: 'Minimal Time Tracker',
