@@ -1,39 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:minimal_time_tracker/settings/color_palettes.dart';
 
-// enum AppTheme {
-//   LightAppTheme,
-//   DarkAppTheme,
-// }
-//
-// final appThemeData = {
-//   AppTheme.DarkAppTheme: ThemeData(
-//     scaffoldBackgroundColor: Colors.black,
-//     primaryColor: Colors.redAccent,
-//     textTheme: TextTheme(
-//       headline3: TextStyle().copyWith(color: Colors.white),
-//     ),
-//   ),
-//   AppTheme.LightAppTheme: ThemeData(
-//     scaffoldBackgroundColor: Colors.white,
-//     primaryColor: Colors.greenAccent,
-//     textTheme: TextTheme(
-//       headline3: TextStyle().copyWith(color: Colors.black),
-//     ),
-//   ),
-// };
-
 Map<String, ThemeData> themeData = {
   'Pale' : ThemeData(
     primarySwatch: Colors.blue,
   ),
   'Dusty Rose' : ThemeData(
-    primaryColor: dustyRoseDark[2],
+    primarySwatch: Colors.pink,
   ),
   'Olive' : ThemeData(
-    primaryColor: oliveDark[2],
+    primarySwatch: Colors.teal,
   ),
   'Pastel' : ThemeData(
-    primaryColor: pastelDark[2],
+    primaryColor: Colors.purple,
   ),
+};
+
+Map<String, List<List<Color>>> themePalettes = {
+  'Pale' : [ pale, paleDark ],
+  'Dusty Rose' : [ dustyRose, dustyRoseDark ],
+  'Olive' : [ olive, oliveDark ],
+  'Pastel' : [ pastel, pastelDark ],
 };

@@ -57,7 +57,6 @@ class LanguageBloc extends Bloc<SettingsEvent, SettingsState> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String newTheme = event.theme;
       prefs.setString('theme', newTheme);
-      print('bloc change theme: $newTheme');
 
       return emitter(SettingsState(currentLocale, newTheme));
     });

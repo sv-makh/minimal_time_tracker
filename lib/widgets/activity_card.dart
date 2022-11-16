@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/data/activity_bloc.dart';
+import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/helpers/convert.dart';
 import 'package:minimal_time_tracker/settings/color_palettes.dart';
+import 'package:minimal_time_tracker/settings/themes.dart';
 import 'package:minimal_time_tracker/screens/add_activity_screen.dart';
 
 class ActivityCard extends StatelessWidget {
@@ -19,44 +21,52 @@ class ActivityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ActivitiesBloc, ActivitiesState>(
-      builder: (context, ActivitiesState state) {
-        return Card(
-          color: palettes[palette][activity.color ?? 0],
-          child: Column(children: [
-            ListTile(
-                title: Text(
-                    '${activity.title}, ${AppLocalizations.of(context)!.total} = '
-                    '${stringDuration(activity.totalTime(), context)}'),
-                subtitle: (activity.subtitle != null)
-                    ? Text(activity.subtitle!)
-                    : Container(),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () {
-                        _deleteDialog(context);
-                      },
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        _editActivity(context);
-                      },
-                      icon: const Icon(Icons.edit),
-                    )
-                  ],
-                )),
-            //добавление времени к активности происходит в виджетах
-            //в зависимости от того, какое представление для этой активности
-            //выбрано
-            (activity.presentation == Presentation.BUTTONS)
-                ? _rowOfButtons(context)
-                : _table(context)
-          ]),
+    return BlocBuilder<LanguageBloc, SettingsState>(
+      builder: (context, SettingsState settingsState) {
+
+        List<Color> paletteList = themePalettes[settingsState.theme]![0];
+        List<Color> paletteDarkList = themePalettes[settingsState.theme]![1];
+
+        return BlocBuilder<ActivitiesBloc, ActivitiesState>(
+          builder: (context, ActivitiesState state) {
+            return Card(
+              color: paletteList[activity.color ?? 0],
+              child: Column(children: [
+                ListTile(
+                    title: Text(
+                        '${activity.title}, ${AppLocalizations.of(context)!.total} = '
+                        '${stringDuration(activity.totalTime(), context)}'),
+                    subtitle: (activity.subtitle != null)
+                        ? Text(activity.subtitle!)
+                        : Container(),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            _deleteDialog(context);
+                          },
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            _editActivity(context);
+                          },
+                          icon: const Icon(Icons.edit),
+                        )
+                      ],
+                    )),
+                //добавление времени к активности происходит в виджетах
+                //в зависимости от того, какое представление для этой активности
+                //выбрано
+                (activity.presentation == Presentation.BUTTONS)
+                    ? _rowOfButtons(context)
+                    : _table(context)
+              ]),
+            );
+          },
         );
-      },
+      }
     );
   }
 
