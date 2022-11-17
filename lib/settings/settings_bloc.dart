@@ -21,11 +21,18 @@ class ChangeTheme extends SettingsEvent {
   ChangeTheme({required this.theme});
 }
 
+class ChangeFontSize extends SettingsEvent {
+  int fontSize;
+
+  ChangeFontSize({required this.fontSize});
+}
+
 class SettingsState {
   Locale? locale;
   String? theme;
+  int? fontSize;
 
-  SettingsState([this.locale, this.theme]);
+  SettingsState([this.locale, this.theme, this.fontSize]);
 }
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
@@ -33,11 +40,13 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   SettingsBloc() : super(SettingsState(Locale('en', ''), 'Pale')) {
 
     Locale? currentLocale;
+    String? currentTheme;
 
     on<SetInitialSetting>((SetInitialSetting event, Emitter<SettingsState> emitter) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String langCode = prefs.getString('lang') ?? Platform.localeName;
       String initTheme = prefs.getString('theme') ?? 'Pale';
+      int initFont = prefs.getInt('fontSize') ?? 12;
       Locale initLocale = Locale(langCode);
       currentLocale = initLocale;
 
@@ -56,9 +65,18 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<ChangeTheme>((ChangeTheme event, Emitter<SettingsState> emitter) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String newTheme = event.theme;
+      currentTheme = newTheme;
       prefs.setString('theme', newTheme);
 
       return emitter(SettingsState(currentLocale, newTheme));
+    });
+
+    on<ChangeFontSize>((ChangeFontSize event, Emitter<SettingsState> emitter) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      int newFontSize = event.fontSize;
+      prefs.setInt('fontSize', newFontSize);
+
+      return emitter(SettingsState(currentLocale, currentTheme, newFontSize));
     });
   }
 }
