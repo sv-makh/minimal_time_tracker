@@ -19,7 +19,7 @@ class MainActivitiesView extends StatelessWidget {
   Widget build(BuildContext context) {
     Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
 
-    return BlocBuilder<LanguageBloc, SettingsState>(
+    return BlocBuilder<SettingsBloc, SettingsState>(
       builder: (context, SettingsState settingsState) {
         return BlocBuilder<ActivitiesBloc, ActivitiesState>(
           builder: (context, ActivitiesState state) {

@@ -28,9 +28,9 @@ class SettingsState {
   SettingsState([this.locale, this.theme]);
 }
 
-class LanguageBloc extends Bloc<SettingsEvent, SettingsState> {
+class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
-  LanguageBloc() : super(SettingsState(Locale('en', ''), 'Pale')) {
+  SettingsBloc() : super(SettingsState(Locale('en', ''), 'Pale')) {
 
     Locale? currentLocale;
 

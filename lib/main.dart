@@ -30,12 +30,12 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ActivitiesBloc>(create: (_) => ActivitiesBloc()),
-        BlocProvider<LanguageBloc>(create: (_) => LanguageBloc()),
+        BlocProvider<SettingsBloc>(create: (_) => SettingsBloc()),
       ],
-      child: BlocBuilder<LanguageBloc, SettingsState>(
+      child: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, SettingsState state) {
 
-          BlocProvider.of<LanguageBloc>(context).add(SetInitialSetting());
+          BlocProvider.of<SettingsBloc>(context).add(SetInitialSetting());
 
           return MaterialApp(
             locale: state.locale,

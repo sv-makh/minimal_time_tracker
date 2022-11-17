@@ -10,7 +10,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LanguageBloc, SettingsState>(
+    return BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, SettingsState state) {
       return Scaffold(
         appBar: AppBar(
@@ -35,7 +35,7 @@ class SettingsScreen extends StatelessWidget {
                       );
                     }).toList(),
                     onChanged: (String? value) {
-                      BlocProvider.of<LanguageBloc>(context)
+                      BlocProvider.of<SettingsBloc>(context)
                           .add(ChangeLanguage(locale: Locale(value!)));
                     },
                   ),
@@ -51,7 +51,7 @@ class SettingsScreen extends StatelessWidget {
                       );
                     }).toList(),
                     onChanged: (String? value) {
-                      BlocProvider.of<LanguageBloc>(context)
+                      BlocProvider.of<SettingsBloc>(context)
                           .add(ChangeTheme(theme: value!));
                     },
                   ),
