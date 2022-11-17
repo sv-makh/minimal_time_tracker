@@ -12,7 +12,7 @@ Map<String, ThemeData> themeData = {
     primarySwatch: Colors.teal,
   ),
   'Pastel' : ThemeData(
-    primaryColor: Colors.purple,
+    primarySwatch: Colors.purple,
   ),
 };
 
