@@ -57,6 +57,21 @@ class SettingsScreen extends StatelessWidget {
                     },
                   ),
                   Text(AppLocalizations.of(context)!.font),
+                  DropdownButton(
+                    value: state.fontSize,
+                    icon: const Icon(Icons.arrow_downward),
+                    items:
+                        fontSizes.map<DropdownMenuItem<String>>((int value) {
+                      return DropdownMenuItem<String>(
+                        value: value.toString(),
+                        child: Text(value.toString()),
+                      );
+                    }).toList(),
+                    onChanged: (int? value) {
+                      BlocProvider.of<SettingsBloc>(context)
+                          .add(ChangeFontSize(fontSize: value));
+                    },
+                  ),
                 ],
               ),
             ),
