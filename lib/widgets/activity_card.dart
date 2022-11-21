@@ -33,7 +33,9 @@ class ActivityCard extends StatelessWidget {
             ListTile(
                 title: Text(
                     '${activity.title}, ${AppLocalizations.of(context)!.total} = '
-                    '${stringDuration(activity.totalTime(), context)}'),
+                    '${stringDuration(activity.totalTime(), context)}',
+
+                ),
                 subtitle: (activity.subtitle != null)
                     ? Text(activity.subtitle!)
                     : Container(),
