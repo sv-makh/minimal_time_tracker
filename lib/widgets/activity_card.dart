@@ -5,66 +5,68 @@ import 'package:minimal_time_tracker/data/activity_bloc.dart';
 import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/helpers/convert.dart';
-import 'package:minimal_time_tracker/settings/color_palettes.dart';
 import 'package:minimal_time_tracker/settings/themes.dart';
 import 'package:minimal_time_tracker/screens/add_activity_screen.dart';
 
 class ActivityCard extends StatelessWidget {
   final Activity activity;
   final int activityIndex;
-  final String theme;
 
   const ActivityCard({
     Key? key,
     required this.activity,
     required this.activityIndex,
-    required this.theme,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    List<Color> palette = themePalettes[theme]![0];
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      builder: (context, SettingsState settingsState) {
+        List<Color> palette = themePalettes[settingsState.theme]![0];
+        List<Color> paletteDark = themePalettes[settingsState.theme]![1];
 
-    return BlocBuilder<ActivitiesBloc, ActivitiesState>(
-      builder: (context, ActivitiesState state) {
-        return Card(
-          color: palette[activity.color ?? 0],
-          child: Column(children: [
-            ListTile(
-                title: Text(
-                    '${activity.title}, ${AppLocalizations.of(context)!.total} = '
-                    '${stringDuration(activity.totalTime(), context)}',
+        return BlocBuilder<ActivitiesBloc, ActivitiesState>(
+          builder: (context, ActivitiesState state) {
+            return Card(
+              color: palette[activity.color ?? 0],
+              child: Column(children: [
+                ListTile(
+                    title: Text(
+                        '${activity.title}, ${AppLocalizations.of(context)!.total} = '
+                        '${stringDuration(activity.totalTime(), context)}',
 
-                ),
-                subtitle: (activity.subtitle != null)
-                    ? Text(activity.subtitle!)
-                    : Container(),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () {
-                        _deleteDialog(context);
-                      },
                     ),
-                    IconButton(
-                      onPressed: () {
-                        _editActivity(context);
-                      },
-                      icon: const Icon(Icons.edit),
-                    )
-                  ],
-                )),
-            //добавление времени к активности происходит в виджетах
-            //в зависимости от того, какое представление для этой активности
-            //выбрано
-            (activity.presentation == Presentation.BUTTONS)
-                ? _rowOfButtons(context)
-                : _table(context)
-          ]),
+                    subtitle: (activity.subtitle != null)
+                        ? Text(activity.subtitle!)
+                        : Container(),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            _deleteDialog(context);
+                          },
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            _editActivity(context);
+                          },
+                          icon: const Icon(Icons.edit),
+                        )
+                      ],
+                    )),
+                //добавление времени к активности происходит в виджетах
+                //в зависимости от того, какое представление для этой активности
+                //выбрано
+                (activity.presentation == Presentation.BUTTONS)
+                    ? _rowOfButtons(context)
+                    : _table(context, settingsState.theme!)
+              ]),
+            );
+          },
         );
-      },
+      }
     );
   }
 
@@ -137,7 +139,7 @@ class ActivityCard extends StatelessWidget {
           );
   }
 
-  Widget _table(BuildContext context) {
+  Widget _table(BuildContext context, String theme) {
     //кнопку в таблице можно нажать, только если это первая кнопка после всех нажатых,
     //(т.е. после всего списка intervalsList )
     bool isInactive(int index) {

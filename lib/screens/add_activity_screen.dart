@@ -3,13 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/helpers/convert.dart';
 import 'package:minimal_time_tracker/widgets/duration_bottom_sheet.dart';
 
-//import 'package:minimal_time_tracker/settings/color_palettes.dart';
 import 'package:minimal_time_tracker/settings/themes.dart';
 import '../data/activity_bloc.dart';
 import 'package:minimal_time_tracker/settings/settings_bloc.dart';
@@ -30,8 +28,6 @@ class AddActivityScreen extends StatelessWidget {
   String _numOfCells = '0';
   String _titleOfEditedActivity = '';
   String _subtitleOfEditedActivity = '';
-
-  int palette = 0;
 
   Activity? editedActivity;
 

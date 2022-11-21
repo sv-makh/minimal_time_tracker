@@ -48,7 +48,6 @@ class MainActivitiesView extends StatelessWidget {
                           return ActivityCard(
                             activity: state.activitiesBox.getAt(index)!,
                             activityIndex: index,
-                            theme: settingsState.theme!,
                           );
                         },
                       ),
