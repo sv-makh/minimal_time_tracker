@@ -37,10 +37,11 @@ class SettingsState {
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
-  SettingsBloc() : super(SettingsState(Locale('en', ''), 'Pale')) {
+  SettingsBloc() : super(SettingsState(Locale('en', ''), 'Pale', 12)) {
 
     Locale? currentLocale;
     String? currentTheme;
+    int? currentFont;
 
     on<SetInitialSetting>((SetInitialSetting event, Emitter<SettingsState> emitter) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -49,8 +50,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       int initFont = prefs.getInt('fontSize') ?? 12;
       Locale initLocale = Locale(langCode);
       currentLocale = initLocale;
+      currentFont = initFont;
 
-      return emitter(SettingsState(initLocale, initTheme));
+      return emitter(SettingsState(initLocale, initTheme, initFont));
     });
 
     on<ChangeLanguage>((ChangeLanguage event, Emitter<SettingsState> emitter) async {
@@ -59,7 +61,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       currentLocale = newLocale;
       prefs.setString('lang', newLocale.languageCode);//then Проверка
       
-      return emitter(SettingsState(newLocale));
+      return emitter(SettingsState(newLocale, currentTheme, currentFont));
     });
 
     on<ChangeTheme>((ChangeTheme event, Emitter<SettingsState> emitter) async {
@@ -68,7 +70,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       currentTheme = newTheme;
       prefs.setString('theme', newTheme);
 
-      return emitter(SettingsState(currentLocale, newTheme));
+      return emitter(SettingsState(currentLocale, newTheme, currentFont));
     });
 
     on<ChangeFontSize>((ChangeFontSize event, Emitter<SettingsState> emitter) async {

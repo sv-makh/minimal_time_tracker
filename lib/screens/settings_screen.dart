@@ -11,7 +11,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
-        builder: (context, SettingsState state) {
+        builder: (context, SettingsState settingsState) {
       return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.settings),
@@ -24,9 +24,13 @@ class SettingsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(AppLocalizations.of(context)!.language),
+                  Text(
+                    AppLocalizations.of(context)!.language,
+                    style:
+                        TextStyle(fontSize: settingsState.fontSize!.toDouble()),
+                  ),
                   DropdownButton(
-                    value: state.locale!.languageCode,
+                    value: settingsState.locale!.languageCode,
                     icon: const Icon(Icons.arrow_downward),
                     items: supportedLocales
                         .map<DropdownMenuItem<String>>((Locale value) {
@@ -40,9 +44,11 @@ class SettingsScreen extends StatelessWidget {
                           .add(ChangeLanguage(locale: Locale(value!)));
                     },
                   ),
-                  Text(AppLocalizations.of(context)!.theme),
+                  Text(AppLocalizations.of(context)!.theme,
+                    style:
+                    TextStyle(fontSize: settingsState.fontSize!.toDouble()),),
                   DropdownButton(
-                    value: state.theme,
+                    value: settingsState.theme,
                     icon: const Icon(Icons.arrow_downward),
                     items: themeData.keys
                         .map<DropdownMenuItem<String>>((String value) {
@@ -56,9 +62,11 @@ class SettingsScreen extends StatelessWidget {
                           .add(ChangeTheme(theme: value!));
                     },
                   ),
-                  Text(AppLocalizations.of(context)!.font),
+                  Text(AppLocalizations.of(context)!.font,
+                    style:
+                    TextStyle(fontSize: settingsState.fontSize!.toDouble()),),
                   DropdownButton(
-                    value: state.fontSize,
+                    value: settingsState.fontSize,
                     icon: const Icon(Icons.arrow_downward),
                     items: fontSizes.map<DropdownMenuItem<int>>((int value) {
                       return DropdownMenuItem<int>(
