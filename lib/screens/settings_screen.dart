@@ -12,8 +12,6 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, SettingsState settingsState) {
-          print('value ${settingsState.locale!.languageCode.substring(0,2)}');
-          print('supportedLocales ${supportedLocales}');
       return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.settings),
@@ -46,7 +44,7 @@ class SettingsScreen extends StatelessWidget {
                           .add(ChangeLanguage(locale: Locale(value!)));
                     },
                   ),
-                  /*Text(AppLocalizations.of(context)!.theme,
+                  Text(AppLocalizations.of(context)!.theme,
                     style:
                     TextStyle(fontSize: settingsState.fontSize!.toDouble()),),
                   DropdownButton(
@@ -64,7 +62,7 @@ class SettingsScreen extends StatelessWidget {
                           .add(ChangeTheme(theme: value!));
                     },
                   ),
-                  Text(AppLocalizations.of(context)!.font,
+                  /*Text(AppLocalizations.of(context)!.font,
                     style:
                     TextStyle(fontSize: settingsState.fontSize!.toDouble()),),
                   DropdownButton(

@@ -13,6 +13,9 @@ import '../data/activity_bloc.dart';
 import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 
 TextEditingController cellsNumber = TextEditingController();
+TextEditingController _titleController = TextEditingController();
+TextEditingController _subtitleController = TextEditingController();
+
 
 class AddActivityScreen extends StatelessWidget {
   AddActivityScreen({Key? key}) : super(key: key) {
@@ -22,8 +25,8 @@ class AddActivityScreen extends StatelessWidget {
   AddActivityScreen.editActivity({Key? key, required this.editedActivity})
       : super(key: key);
 
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _subtitleController = TextEditingController();
+  //final TextEditingController _titleController = TextEditingController();
+  //final TextEditingController _subtitleController = TextEditingController();
 
   String _numOfCells = '0';
   String _titleOfEditedActivity = '';
