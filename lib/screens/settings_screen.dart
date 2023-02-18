@@ -62,7 +62,7 @@ class SettingsScreen extends StatelessWidget {
                           .add(ChangeTheme(theme: value!));
                     },
                   ),
-                  /*Text(AppLocalizations.of(context)!.font,
+                  Text(AppLocalizations.of(context)!.font,
                     style:
                     TextStyle(fontSize: settingsState.fontSize!.toDouble()),),
                   DropdownButton(
@@ -78,7 +78,7 @@ class SettingsScreen extends StatelessWidget {
                       BlocProvider.of<SettingsBloc>(context)
                           .add(ChangeFontSize(fontSize: value!));
                     },
-                  ),*/
+                  ),
                 ],
               ),
             ),

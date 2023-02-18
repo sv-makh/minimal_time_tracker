@@ -9,5 +9,5 @@ List<int> fontSizes = [
   10,
   12,
   14,
-  16
+  16,
 ];

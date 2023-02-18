@@ -45,12 +45,15 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
     on<SetInitialSetting>((SetInitialSetting event, Emitter<SettingsState> emitter) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
+
       String langCode = prefs.getString('lang') ?? Platform.localeName;
       String initTheme = prefs.getString('theme') ?? 'Pale';
       int initFont = prefs.getInt('fontSize') ?? 12;
       Locale initLocale = Locale(langCode);
+
       currentLocale = initLocale;
       currentFont = initFont;
+      currentTheme = initTheme;
 
       return emitter(SettingsState(initLocale, initTheme, initFont));
     });
@@ -59,7 +62,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       Locale newLocale = event.locale;
       currentLocale = newLocale;
-      prefs.setString('lang', newLocale.languageCode);//then Проверка
+      prefs.setString('lang', newLocale.languageCode);
       
       return emitter(SettingsState(newLocale, currentTheme, currentFont));
     });
@@ -76,6 +79,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<ChangeFontSize>((ChangeFontSize event, Emitter<SettingsState> emitter) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       int newFontSize = event.fontSize;
+      currentFont = newFontSize;
       prefs.setInt('fontSize', newFontSize);
 
       return emitter(SettingsState(currentLocale, currentTheme, newFontSize));

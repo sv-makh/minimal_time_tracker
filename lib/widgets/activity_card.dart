@@ -21,53 +21,55 @@ class ActivityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
-      builder: (context, SettingsState settingsState) {
-        List<Color> palette = themePalettes[settingsState.theme]![0];
-        List<Color> paletteDark = themePalettes[settingsState.theme]![1];
+        builder: (context, SettingsState settingsState) {
+      List<Color> palette = themePalettes[settingsState.theme]![0];
+      List<Color> paletteDark = themePalettes[settingsState.theme]![1];
 
-        return BlocBuilder<ActivitiesBloc, ActivitiesState>(
-          builder: (context, ActivitiesState state) {
-            return Card(
-              color: palette[activity.color ?? 0],
-              child: Column(children: [
-                ListTile(
-                    title: Text(
-                        '${activity.title}, ${AppLocalizations.of(context)!.total} = '
-                        '${stringDuration(activity.totalTime(), context)}',
-
-                    ),
-                    subtitle: (activity.subtitle != null)
-                        ? Text(activity.subtitle!)
-                        : Container(),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            _deleteDialog(context);
-                          },
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            _editActivity(context);
-                          },
-                          icon: const Icon(Icons.edit),
+      return BlocBuilder<ActivitiesBloc, ActivitiesState>(
+        builder: (context, ActivitiesState state) {
+          return Card(
+            color: palette[activity.color ?? 0],
+            child: Column(children: [
+              ListTile(
+                  title: Text(
+                    '${activity.title}, ${AppLocalizations.of(context)!.total} = '
+                    '${stringDuration(activity.totalTime(), context)}',
+                    style:
+                        TextStyle(fontSize: settingsState.fontSize!.toDouble()),
+                  ),
+                  subtitle: (activity.subtitle != null)
+                      ? Text(
+                          activity.subtitle!,
                         )
-                      ],
-                    )),
-                //добавление времени к активности происходит в виджетах
-                //в зависимости от того, какое представление для этой активности
-                //выбрано
-                (activity.presentation == Presentation.BUTTONS)
-                    ? _rowOfButtons(context)
-                    : _table(context, settingsState.theme!)
-              ]),
-            );
-          },
-        );
-      }
-    );
+                      : Container(),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          _deleteDialog(context);
+                        },
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          _editActivity(context);
+                        },
+                        icon: const Icon(Icons.edit),
+                      )
+                    ],
+                  )),
+              //добавление времени к активности происходит в виджетах
+              //в зависимости от того, какое представление для этой активности
+              //выбрано
+              (activity.presentation == Presentation.BUTTONS)
+                  ? _rowOfButtons(context)
+                  : _table(context, settingsState.theme!)
+            ]),
+          );
+        },
+      );
+    });
   }
 
   Future<void> _editActivity(BuildContext context) async {
