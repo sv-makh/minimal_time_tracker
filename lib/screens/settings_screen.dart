@@ -3,14 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 import 'package:minimal_time_tracker/settings/settings_data.dart';
+import 'package:minimal_time_tracker/settings/themes.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LanguageBloc, SettingsState>(
-        builder: (context, SettingsState state) {
+    return BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, SettingsState settingsState) {
       return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.settings),
@@ -21,24 +22,68 @@ class SettingsScreen extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(AppLocalizations.of(context)!.language),
+                  Text(
+                    AppLocalizations.of(context)!.language,
+                    //style:
+                    //    TextStyle(fontSize: settingsState.fontSize!.toDouble()),
+                  ),
                   DropdownButton(
-                    value: state.locale!.languageCode,
+                    value: settingsState.locale!.languageCode.substring(0,2),
                     icon: const Icon(Icons.arrow_downward),
-                    items: supportedLocales.map<DropdownMenuItem<String>>((Locale value) {
+                    items: supportedLocales
+                        .map<DropdownMenuItem<String>>((Locale value) {
                       return DropdownMenuItem<String>(
                         value: value.languageCode,
-                        child: Text(value.languageCode),
+                        child: Text(value.languageCode,
+                        style: Theme.of(context).textTheme.bodyMedium,),
                       );
                     }).toList(),
                     onChanged: (String? value) {
-                      BlocProvider.of<LanguageBloc>(context)
+                      BlocProvider.of<SettingsBloc>(context)
                           .add(ChangeLanguage(locale: Locale(value!)));
                     },
                   ),
-                  Text(AppLocalizations.of(context)!.theme),
-                  Text(AppLocalizations.of(context)!.font),
+                  Text(AppLocalizations.of(context)!.theme,
+                    //style:
+                    //TextStyle(fontSize: settingsState.fontSize!.toDouble()),
+                  ),
+                  DropdownButton(
+                    value: settingsState.theme,
+                    icon: const Icon(Icons.arrow_downward),
+                    items: themePalettes.keys
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value,
+                          style: Theme.of(context).textTheme.bodyMedium,),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      BlocProvider.of<SettingsBloc>(context)
+                          .add(ChangeTheme(theme: value!));
+                    },
+                  ),
+                  Text(AppLocalizations.of(context)!.font,
+                    //style:
+                    //TextStyle(fontSize: settingsState.fontSize!.toDouble()),
+                  ),
+                  DropdownButton(
+                    value: settingsState.fontSize,
+                    icon: const Icon(Icons.arrow_downward),
+                    items: fontSizes.map<DropdownMenuItem<int>>((int value) {
+                      return DropdownMenuItem<int>(
+                        value: value,
+                        child: Text(value.toString(),
+                          style: Theme.of(context).textTheme.bodyMedium,),
+                      );
+                    }).toList(),
+                    onChanged: (int? value) {
+                      BlocProvider.of<SettingsBloc>(context)
+                          .add(ChangeFontSize(fontSize: value!));
+                    },
+                  ),
                 ],
               ),
             ),

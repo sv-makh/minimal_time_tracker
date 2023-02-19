@@ -9,6 +9,7 @@ import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/screens/main_activities_view.dart';
 import 'package:minimal_time_tracker/settings/settings_data.dart';
+import 'package:minimal_time_tracker/settings/themes.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -29,19 +30,17 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ActivitiesBloc>(create: (_) => ActivitiesBloc()),
-        BlocProvider<LanguageBloc>(create: (_) => LanguageBloc()),
+        BlocProvider<SettingsBloc>(create: (_) => SettingsBloc()),
       ],
-      child: BlocBuilder<LanguageBloc, SettingsState>(
+      child: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, SettingsState state) {
 
-          BlocProvider.of<LanguageBloc>(context).add(SetInitialSetting());
+          BlocProvider.of<SettingsBloc>(context).add(SetInitialSetting());
 
           return MaterialApp(
             locale: state.locale,
             title: 'Minimal Time Tracker',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
+            theme: appTheme(state.theme!, state.fontSize!),//themeData[state.theme],
             localizationsDelegates: [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,

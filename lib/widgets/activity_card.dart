@@ -2,62 +2,78 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/data/activity_bloc.dart';
+import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/helpers/convert.dart';
-import 'package:minimal_time_tracker/settings/color_palettes.dart';
+import 'package:minimal_time_tracker/settings/themes.dart';
 import 'package:minimal_time_tracker/screens/add_activity_screen.dart';
 
 class ActivityCard extends StatelessWidget {
   final Activity activity;
   final int activityIndex;
 
-  const ActivityCard(
-      {Key? key, required this.activity, required this.activityIndex})
-      : super(key: key);
-
-  final int palette = 0;
+  const ActivityCard({
+    Key? key,
+    required this.activity,
+    required this.activityIndex,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ActivitiesBloc, ActivitiesState>(
-      builder: (context, ActivitiesState state) {
-        return Card(
-          color: palettes[palette][activity.color ?? 0],
-          child: Column(children: [
-            ListTile(
-                title: Text(
+    return BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, SettingsState settingsState) {
+      List<Color> palette = themePalettes[settingsState.theme]![0];
+      List<Color> paletteDark = themePalettes[settingsState.theme]![1];
+
+      return BlocBuilder<ActivitiesBloc, ActivitiesState>(
+        builder: (context, ActivitiesState state) {
+          return Card(
+            color: palette[activity.color ?? 0],
+            child: Column(children: [
+              ListTile(
+                  title: Text(
                     '${activity.title}, ${AppLocalizations.of(context)!.total} = '
-                    '${stringDuration(activity.totalTime(), context)}'),
-                subtitle: (activity.subtitle != null)
-                    ? Text(activity.subtitle!)
-                    : Container(),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () {
-                        _deleteDialog(context);
-                      },
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        _editActivity(context);
-                      },
-                      icon: const Icon(Icons.edit),
-                    )
-                  ],
-                )),
-            //добавление времени к активности происходит в виджетах
-            //в зависимости от того, какое представление для этой активности
-            //выбрано
-            (activity.presentation == Presentation.BUTTONS)
-                ? _rowOfButtons(context)
-                : _table(context)
-          ]),
-        );
-      },
-    );
+                    '${stringDuration(activity.totalTime(), context)}',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    //style:
+                    //    TextStyle(fontSize: settingsState.fontSize!.toDouble()),
+                  ),
+                  subtitle: (activity.subtitle != null)
+                      ? Text(
+                          activity.subtitle!,
+                    style: Theme.of(context).textTheme.bodySmall,
+                    //style:
+                    //TextStyle(fontSize: settingsState.fontSize!.toDouble() - 1),
+                        )
+                      : Container(),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          _deleteDialog(context);
+                        },
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          _editActivity(context);
+                        },
+                        icon: const Icon(Icons.edit),
+                      )
+                    ],
+                  )),
+              //добавление времени к активности происходит в виджетах
+              //в зависимости от того, какое представление для этой активности
+              //выбрано
+              (activity.presentation == Presentation.BUTTONS)
+                  ? _rowOfButtons(context)
+                  : _table(context, settingsState.theme!)
+            ]),
+          );
+        },
+      );
+    });
   }
 
   Future<void> _editActivity(BuildContext context) async {
@@ -104,9 +120,11 @@ class ActivityCard extends StatelessWidget {
     return (activity.durationButtons.isEmpty)
         ? Container()
         : Column(
-          children: [
-            Text('${AppLocalizations.of(context)!.addedIntervals} ${activity.intervalsList.length}'),
-            Wrap(
+            children: [
+              Text(
+                  '${AppLocalizations.of(context)!.addedIntervals} ${activity.intervalsList.length}',
+              ),
+              Wrap(
                 spacing: 5,
                 runSpacing: 2.5,
                 children: [
@@ -124,11 +142,11 @@ class ActivityCard extends StatelessWidget {
                     )
                 ],
               ),
-          ],
-        );
+            ],
+          );
   }
 
-  Widget _table(BuildContext context) {
+  Widget _table(BuildContext context, String theme) {
     //кнопку в таблице можно нажать, только если это первая кнопка после всех нажатых,
     //(т.е. после всего списка intervalsList )
     bool isInactive(int index) {
@@ -153,6 +171,9 @@ class ActivityCard extends StatelessWidget {
       }
     }
 
+    List<Color> palette = themePalettes[theme]![0];
+    List<Color> paletteDark = themePalettes[theme]![1];
+
     return (activity.durationButtons.isEmpty)
         ? Container()
         : Column(
@@ -171,12 +192,12 @@ class ActivityCard extends StatelessWidget {
                     OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         backgroundColor: wasPressed(i)
-                            ? palettesDark[palette][activity.color!]
-                            : palettes[palette][activity.color!],
+                            ? paletteDark[activity.color!]
+                            : palette[activity.color!],
                         side: isInactive(i)
                             ? null
                             : BorderSide(
-                                color: palettesDark[palette][activity.color!],
+                                color: paletteDark[activity.color!],
                                 width: 3.0),
                       ),
                       onPressed: isInactive(i)

@@ -3,16 +3,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:minimal_time_tracker/data/mock_data.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/helpers/convert.dart';
 import 'package:minimal_time_tracker/widgets/duration_bottom_sheet.dart';
-import 'package:minimal_time_tracker/settings/color_palettes.dart';
 
+import 'package:minimal_time_tracker/settings/themes.dart';
 import '../data/activity_bloc.dart';
+import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 
 TextEditingController cellsNumber = TextEditingController();
+TextEditingController _titleController = TextEditingController();
+TextEditingController _subtitleController = TextEditingController();
+
 
 class AddActivityScreen extends StatelessWidget {
   AddActivityScreen({Key? key}) : super(key: key) {
@@ -22,215 +25,232 @@ class AddActivityScreen extends StatelessWidget {
   AddActivityScreen.editActivity({Key? key, required this.editedActivity})
       : super(key: key);
 
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _subtitleController = TextEditingController();
+  //final TextEditingController _titleController = TextEditingController();
+  //final TextEditingController _subtitleController = TextEditingController();
 
   String _numOfCells = '0';
   String _titleOfEditedActivity = '';
   String _subtitleOfEditedActivity = '';
 
-  int palette = 0;
-
   Activity? editedActivity;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ActivitiesBloc, ActivitiesState>(
-        builder: (context, ActivitiesState state) {
-      Map<Duration, bool> durations = state.durationButtons;
+    return BlocBuilder<SettingsBloc, SettingsState>(
+        builder: (context, SettingsState settingsState) {
+      return BlocBuilder<ActivitiesBloc, ActivitiesState>(
+          builder: (context, ActivitiesState state) {
+        Map<Duration, bool> durations = state.durationButtons;
 
-      bool presentationValue;
+        bool presentationValue;
 
-      if (state.presentation == Presentation.BUTTONS) {
-        presentationValue = true;
-      } else {
-        presentationValue = false;
-      }
+        if (state.presentation == Presentation.BUTTONS) {
+          presentationValue = true;
+        } else {
+          presentationValue = false;
+        }
 
-      if (editedActivity != null) {
-        //заголовок у активности есть всегда
-        _titleOfEditedActivity = editedActivity!.title;
-        _titleController.text = _titleOfEditedActivity;
+        if (editedActivity != null) {
+          //заголовок у активности есть всегда
+          _titleOfEditedActivity = editedActivity!.title;
+          _titleController.text = _titleOfEditedActivity;
 
-        //подзаголовка может не быть
-        _subtitleOfEditedActivity =
-            (editedActivity!.subtitle == null) ? '' : editedActivity!.subtitle!;
-        _subtitleController.text = _subtitleOfEditedActivity;
-      }
+          //подзаголовка может не быть
+          _subtitleOfEditedActivity = (editedActivity!.subtitle == null)
+              ? ''
+              : editedActivity!.subtitle!;
+          _subtitleController.text = _subtitleOfEditedActivity;
+        }
 
-      _numOfCells = state.numOfCells.toString();
+        _numOfCells = state.numOfCells.toString();
 
-      return Scaffold(
-        backgroundColor: palettes[palette][state.color],
-        appBar: AppBar(
-          title: (editedActivity == null)
-              ? Text(AppLocalizations.of(context)!.addNewActivity)
-              : Text(AppLocalizations.of(context)!.editActivity),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.save),
-              onPressed: () {
-                if (_titleController.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(AppLocalizations.of(context)!.enterTitle),
-                    duration: const Duration(seconds: 3),
-                    //backgroundColor: messageColor,
-                    action: SnackBarAction(
-                      label: 'Ok',
-                      textColor: Colors.black,
-                      onPressed: () {},
-                    ),
-                  ));
-                } else {
-                  Activity activity = Activity(
-                    title: _titleController.text,
-                    subtitle: _subtitleController.text,
-                    color: state.color,
-                    presentation: state.presentation,
-                  );
-
-                  if (state.presentation == Presentation.BUTTONS) {
-                    for (MapEntry<Duration, bool> d in durations.entries) {
-                      if (d.value) activity.addDurationButton(d.key);
-                    }
+        return Scaffold(
+          backgroundColor: themePalettes[settingsState.theme]![0][state.color],
+          appBar: AppBar(
+            title: (editedActivity == null)
+                ? Text(AppLocalizations.of(context)!.addNewActivity)
+                : Text(AppLocalizations.of(context)!.editActivity),
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.save),
+                onPressed: () {
+                  if (_titleController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(AppLocalizations.of(context)!.enterTitle),
+                      duration: const Duration(seconds: 3),
+                      //backgroundColor: messageColor,
+                      action: SnackBarAction(
+                        label: 'Ok',
+                        textColor: Colors.black,
+                        onPressed: () {},
+                      ),
+                    ));
                   } else {
-                    int currentNum = int.tryParse(_numOfCells) ?? 0;
-                    activity.maxNum = currentNum;
-                    if (currentNum != 0) {
-                      Duration currentDuration = durations.keys.toList().first;
-                      for (int i = 0; i < currentNum; i++) {
-                        activity.addDurationButton(currentDuration);
+                    Activity activity = Activity(
+                      title: _titleController.text,
+                      subtitle: _subtitleController.text,
+                      color: state.color,
+                      presentation: state.presentation,
+                    );
+
+                    if (state.presentation == Presentation.BUTTONS) {
+                      for (MapEntry<Duration, bool> d in durations.entries) {
+                        if (d.value) activity.addDurationButton(d.key);
+                      }
+                    } else {
+                      int currentNum = int.tryParse(_numOfCells) ?? 0;
+                      activity.maxNum = currentNum;
+                      if (currentNum != 0) {
+                        Duration currentDuration =
+                            durations.keys.toList().first;
+                        for (int i = 0; i < currentNum; i++) {
+                          activity.addDurationButton(currentDuration);
+                        }
                       }
                     }
-                  }
 
-                  //в случае редактирования существующей активности
-                  //заполняются недостающие поля
-                  if (editedActivity != null) {
-                    for (var interval in state.editedActivity!.intervalsList) {
-                      activity.addInterval(interval);
+                    //в случае редактирования существующей активности
+                    //заполняются недостающие поля
+                    if (editedActivity != null) {
+                      for (var interval
+                          in state.editedActivity!.intervalsList) {
+                        activity.addInterval(interval);
+                      }
+                      activity.durationButtons =
+                          editedActivity!.durationButtons;
                     }
-                    activity.durationButtons = editedActivity!.durationButtons;
+
+                    durations.clear();
+
+                    Navigator.pop(
+                      context,
+                      activity,
+                    );
                   }
-
-                  durations.clear();
-
-                  Navigator.pop(
-                    context,
-                    activity,
-                  );
-                }
-              },
-            ),
-          ],
-        ),
-        body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Text(AppLocalizations.of(context)!.titleActivity),
-                  TextField(
-                    controller: _titleController,
-                    onChanged: (value) => _titleOfEditedActivity = value,
-                  ),
-                  Text(AppLocalizations.of(context)!.subtitleActivity),
-                  TextField(
-                    controller: _subtitleController,
-                    onChanged: (value) => _subtitleOfEditedActivity = value,
-                  ),
-                  Text(AppLocalizations.of(context)!.color),
-                  _colorPicker(context, state.color),
-                  Text(AppLocalizations.of(context)!.addNewIntervals),
-                  Row(
-                    children: [
-                      Text(AppLocalizations.of(context)!.presentaionTable),
-                      Switch(
-                          value: presentationValue,
-                          onChanged: (bool value) {
-                            Presentation p = value
-                                ? Presentation.BUTTONS
-                                : Presentation.TABLE;
-                            BlocProvider.of<ActivitiesBloc>(context)
-                                .add(ChangePresentation(presentation: p));
-                          }),
-                      Text(AppLocalizations.of(context)!.presentationIntervals),
-                    ],
-                  ),
-                  //виджет для настройки того как будет добавляться время к активности
-                  //с помощью кнопок либо таблицы
-                  (state.presentation == Presentation.BUTTONS)
-                      ? _buttonSettings(context, durations)
-                      : _tableSettings(context, durations),
-                  //если эта страница открыта для редактирования существующей активности
-                  //ниже выводится виджет для редактирования запомненных интервалов
-                  (editedActivity == null)
-                      ? Container()
-                      : _editActivityData(context, state.color, state.editedActivity!),
-                ],
+                },
+              ),
+            ],
+          ),
+          body: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Text(AppLocalizations.of(context)!.titleActivity),
+                    TextField(
+                      controller: _titleController,
+                      onChanged: (value) => _titleOfEditedActivity = value,
+                    ),
+                    Text(AppLocalizations.of(context)!.subtitleActivity),
+                    TextField(
+                      controller: _subtitleController,
+                      onChanged: (value) => _subtitleOfEditedActivity = value,
+                    ),
+                    Text(AppLocalizations.of(context)!.color),
+                    _colorPicker(context, state.color, settingsState.theme!),
+                    Text(AppLocalizations.of(context)!.addNewIntervals),
+                    Row(
+                      children: [
+                        Text(AppLocalizations.of(context)!.presentaionTable),
+                        Switch(
+                            value: presentationValue,
+                            onChanged: (bool value) {
+                              Presentation p = value
+                                  ? Presentation.BUTTONS
+                                  : Presentation.TABLE;
+                              BlocProvider.of<ActivitiesBloc>(context)
+                                  .add(ChangePresentation(presentation: p));
+                            }),
+                        Text(AppLocalizations.of(context)!
+                            .presentationIntervals),
+                      ],
+                    ),
+                    //виджет для настройки того как будет добавляться время к активности
+                    //с помощью кнопок либо таблицы
+                    (state.presentation == Presentation.BUTTONS)
+                        ? _buttonSettings(context, durations)
+                        : _tableSettings(context, durations),
+                    //если эта страница открыта для редактирования существующей активности
+                    //ниже выводится виджет для редактирования запомненных интервалов
+                    (editedActivity == null)
+                        ? Container()
+                        : _editActivityData(context, state.color,
+                            settingsState.theme!, state.editedActivity!),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      );
+        );
+      });
     });
   }
 
-  Widget _editActivityData(BuildContext context, int colorIndex, Activity editedActivity) {
+  Widget _editActivityData(BuildContext context, int colorIndex, String theme,
+      Activity editedActivity) {
+    List<Color> paletteDark = themePalettes[theme]![1];
+
     return Column(
       children: [
         Text(AppLocalizations.of(context)!.addedIntervals),
         Container(
           height: 250,
           decoration: BoxDecoration(
-            border: Border.all(
-              color: palettesDark[palette][colorIndex],
-            )
-          ),
+              border: Border.all(
+            color: paletteDark[colorIndex],
+          )),
           child: ListView.builder(
-            itemCount: editedActivity.intervalsList.length,
-            itemBuilder: (context, int index) {
-              return Card(
-                child: ListTile(
-                  //substring отсекает миллисекунды
-                  title: Text('${editedActivity.intervalsList[index].start.toString().substring(0,19)}, '
-                      '${stringDuration(editedActivity.intervalsList[index].duration, context)}'),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      BlocProvider.of<ActivitiesBloc>(context).add(DeleteIntervalEditedActivity(index: index));
-                    },
+              itemCount: editedActivity.intervalsList.length,
+              itemBuilder: (context, int index) {
+                return Card(
+                  child: ListTile(
+                    //substring отсекает миллисекунды
+                    title: Text(
+                        '${editedActivity.intervalsList[index].start.toString().substring(0, 19)}, '
+                        '${stringDuration(editedActivity.intervalsList[index].duration, context)}'),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        BlocProvider.of<ActivitiesBloc>(context)
+                            .add(DeleteIntervalEditedActivity(index: index));
+                      },
+                    ),
                   ),
-                ),
-              );
-            }
-          ),
+                );
+              }),
         ),
-        Text('${AppLocalizations.of(context)!.totalCap}: ${stringDuration(editedActivity.totalTime(), context)}'),
-        OutlinedButton(onPressed: () {
-          BlocProvider.of<ActivitiesBloc>(context).add(DeleteAllIntervalsEditedActivity());
-        }, child: Text(AppLocalizations.of(context)!.deleteAllIntervals)),
+        Text(
+            '${AppLocalizations.of(context)!.totalCap}: ${stringDuration(editedActivity.totalTime(), context)}'),
+        OutlinedButton(
+            onPressed: () {
+              BlocProvider.of<ActivitiesBloc>(context)
+                  .add(DeleteAllIntervalsEditedActivity());
+            },
+            child: Text(AppLocalizations.of(context)!.deleteAllIntervals)),
       ],
     );
   }
 
-  Widget _colorPicker(BuildContext context, int colorIndex) {
+  Widget _colorPicker(BuildContext context, int colorIndex, String theme) {
+    List<Color> palette = themePalettes[theme]![0];
+    List<Color> paletteDark = themePalettes[theme]![1];
+
     return Wrap(spacing: 5, runSpacing: 2.5, children: [
-      for (int i = 0; i < palettes[palette].length; i++)
+      for (int i = 0; i < palette.length; i++)
         InkWell(
           child: Container(
             width: 30,
             height: 30,
             decoration: (i == colorIndex)
                 ? BoxDecoration(
-                    color: palettes[palette][i],
+                    color: palette[i],
                     border: Border.all(
-                      color: palettesDark[palette][i],
+                      color: paletteDark[i],
                       width: 3.0,
                     ))
                 : BoxDecoration(
-                    color: palettes[palette][i],
+                    color: palette[i],
                   ),
           ),
           onTap: () {

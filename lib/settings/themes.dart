@@ -1,39 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:minimal_time_tracker/settings/color_palettes.dart';
 
-// enum AppTheme {
-//   LightAppTheme,
-//   DarkAppTheme,
-// }
-//
-// final appThemeData = {
-//   AppTheme.DarkAppTheme: ThemeData(
-//     scaffoldBackgroundColor: Colors.black,
-//     primaryColor: Colors.redAccent,
-//     textTheme: TextTheme(
-//       headline3: TextStyle().copyWith(color: Colors.white),
-//     ),
-//   ),
-//   AppTheme.LightAppTheme: ThemeData(
-//     scaffoldBackgroundColor: Colors.white,
-//     primaryColor: Colors.greenAccent,
-//     textTheme: TextTheme(
-//       headline3: TextStyle().copyWith(color: Colors.black),
-//     ),
-//   ),
-// };
+ThemeData appTheme(String themeName, int fontSize) {
+  return ThemeData(
+    colorSchemeSeed: primarySwatches[themeName],
+    //primarySwatch: primarySwatches[themeName],
+    textTheme: TextTheme(
+      bodyMedium: TextStyle(
+        fontSize: fontSize.toDouble(),
+      ),
+      bodySmall: TextStyle(
+        fontSize: fontSize.toDouble() - 1,
+      )
+    ),
+    appBarTheme: AppBarTheme(),
+    useMaterial3: true,
+  );
+}
 
-Map<String, ThemeData> themeData = {
-  'Pale' : ThemeData(
-    primaryColor: Colors.blue,
-  ),
-  'Dusty Rose' : ThemeData(
-    primaryColor: dustyRoseDark[2],
-  ),
-  'Olive' : ThemeData(
-    primaryColor: oliveDark[2],
-  ),
-  'Pastel' : ThemeData(
-    primaryColor: pastelDark[2],
-  ),
+Map<String, MaterialColor> primarySwatches = {
+  'Pale' : Colors.blue,
+  'Dusty Rose' : Colors.pink,
+  'Olive' : Colors.teal,
+  'Pastel' : Colors.purple,
+};
+
+Map<String, List<List<Color>>> themePalettes = {
+  'Pale' : [ pale, paleDark ],
+  'Dusty Rose' : [ dustyRose, dustyRoseDark ],
+  'Olive' : [ olive, oliveDark ],
+  'Pastel' : [ pastel, pastelDark ],
 };
