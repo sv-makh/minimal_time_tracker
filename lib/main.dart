@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             locale: state.locale,
             title: 'Minimal Time Tracker',
-            theme: themeData[state.theme],
+            theme: appTheme(state.theme!, state.fontSize!),//themeData[state.theme],
             localizationsDelegates: [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,

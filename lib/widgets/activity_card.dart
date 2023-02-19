@@ -34,12 +34,16 @@ class ActivityCard extends StatelessWidget {
                   title: Text(
                     '${activity.title}, ${AppLocalizations.of(context)!.total} = '
                     '${stringDuration(activity.totalTime(), context)}',
-                    style:
-                        TextStyle(fontSize: settingsState.fontSize!.toDouble()),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    //style:
+                    //    TextStyle(fontSize: settingsState.fontSize!.toDouble()),
                   ),
                   subtitle: (activity.subtitle != null)
                       ? Text(
                           activity.subtitle!,
+                    style: Theme.of(context).textTheme.bodySmall,
+                    //style:
+                    //TextStyle(fontSize: settingsState.fontSize!.toDouble() - 1),
                         )
                       : Container(),
                   trailing: Row(
@@ -118,7 +122,8 @@ class ActivityCard extends StatelessWidget {
         : Column(
             children: [
               Text(
-                  '${AppLocalizations.of(context)!.addedIntervals} ${activity.intervalsList.length}'),
+                  '${AppLocalizations.of(context)!.addedIntervals} ${activity.intervalsList.length}',
+              ),
               Wrap(
                 spacing: 5,
                 runSpacing: 2.5,
