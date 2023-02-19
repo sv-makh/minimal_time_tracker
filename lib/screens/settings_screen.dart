@@ -26,18 +26,18 @@ class SettingsScreen extends StatelessWidget {
                 children: [
                   Text(
                     AppLocalizations.of(context)!.language,
-                    //style:
-                    //    TextStyle(fontSize: settingsState.fontSize!.toDouble()),
                   ),
                   DropdownButton(
-                    value: settingsState.locale!.languageCode.substring(0,2),
+                    value: settingsState.locale!.languageCode.substring(0, 2),
                     icon: const Icon(Icons.arrow_downward),
                     items: supportedLocales
                         .map<DropdownMenuItem<String>>((Locale value) {
                       return DropdownMenuItem<String>(
                         value: value.languageCode,
-                        child: Text(value.languageCode,
-                        style: Theme.of(context).textTheme.bodyMedium,),
+                        child: Text(
+                          value.languageCode,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       );
                     }).toList(),
                     onChanged: (String? value) {
@@ -45,9 +45,8 @@ class SettingsScreen extends StatelessWidget {
                           .add(ChangeLanguage(locale: Locale(value!)));
                     },
                   ),
-                  Text(AppLocalizations.of(context)!.theme,
-                    //style:
-                    //TextStyle(fontSize: settingsState.fontSize!.toDouble()),
+                  Text(
+                    AppLocalizations.of(context)!.theme,
                   ),
                   DropdownButton(
                     value: settingsState.theme,
@@ -56,8 +55,10 @@ class SettingsScreen extends StatelessWidget {
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value,
-                          style: Theme.of(context).textTheme.bodyMedium,),
+                        child: Text(
+                          value,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       );
                     }).toList(),
                     onChanged: (String? value) {
@@ -65,9 +66,8 @@ class SettingsScreen extends StatelessWidget {
                           .add(ChangeTheme(theme: value!));
                     },
                   ),
-                  Text(AppLocalizations.of(context)!.font,
-                    //style:
-                    //TextStyle(fontSize: settingsState.fontSize!.toDouble()),
+                  Text(
+                    AppLocalizations.of(context)!.font,
                   ),
                   DropdownButton(
                     value: settingsState.fontSize,
@@ -75,8 +75,10 @@ class SettingsScreen extends StatelessWidget {
                     items: fontSizes.map<DropdownMenuItem<int>>((int value) {
                       return DropdownMenuItem<int>(
                         value: value,
-                        child: Text(value.toString(),
-                          style: Theme.of(context).textTheme.bodyMedium,),
+                        child: Text(
+                          value.toString(),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       );
                     }).toList(),
                     onChanged: (int? value) {

@@ -33,25 +33,23 @@ class MyApp extends StatelessWidget {
         BlocProvider<SettingsBloc>(create: (_) => SettingsBloc()),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
-        builder: (context, SettingsState state) {
+          builder: (context, SettingsState state) {
+        BlocProvider.of<SettingsBloc>(context).add(SetInitialSetting());
 
-          BlocProvider.of<SettingsBloc>(context).add(SetInitialSetting());
-
-          return MaterialApp(
-            locale: state.locale,
-            title: 'Minimal Time Tracker',
-            theme: appTheme(state.theme!, state.fontSize!),//themeData[state.theme],
-            localizationsDelegates: [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: supportedLocales,
-            home: const MainActivitiesView(),
-          );
-        }
-      ),
+        return MaterialApp(
+          locale: state.locale,
+          title: 'Minimal Time Tracker',
+          theme: appTheme(state.theme!, state.fontSize!),
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: supportedLocales,
+          home: const MainActivitiesView(),
+        );
+      }),
     );
   }
 }
