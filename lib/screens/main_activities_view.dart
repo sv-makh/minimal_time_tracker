@@ -17,56 +17,85 @@ class MainActivitiesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
+    //Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
 
     return BlocBuilder<SettingsBloc, SettingsState>(
-      builder: (context, SettingsState settingsState) {
-        return BlocBuilder<ActivitiesBloc, ActivitiesState>(
-          builder: (context, ActivitiesState state) {
-            return Scaffold(
-              appBar: AppBar(
-                title: Text(AppLocalizations.of(context)!.title),
-                actions: [
-                  IconButton(
-                    onPressed: () {
-                      _goToSettings(context);
-                    },
-                    icon: const Icon(Icons.settings),
-                  )
-                ],
-              ),
-              body: activitiesBox.values.isEmpty
-                  ? SafeArea(
-                      child: Center(
-                        child: Text(AppLocalizations.of(context)!.noActivities),
-                      ),
-                    )
-                  : SafeArea(
-                      child: ListView.builder(
-                        itemCount: state.activitiesBox.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ActivityCard(
-                            activity: state.activitiesBox.getAt(index)!,
-                            activityIndex: index,
-                          );
-                        },
-                      ),
+        builder: (context, SettingsState settingsState) {
+      return BlocBuilder<ActivitiesBloc, ActivitiesState>(
+        builder: (context, ActivitiesState state) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(AppLocalizations.of(context)!.title),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    _goToSettings(context);
+                  },
+                  icon: const Icon(Icons.settings),
+                )
+              ],
+            ),
+            body: (state.activitiesBox.values.isEmpty &&
+                    state.archiveBox.values.isEmpty)
+                ? SafeArea(
+                    child: Center(
+                      child: Text(AppLocalizations.of(context)!.noActivities),
                     ),
-              floatingActionButton: FloatingActionButton(
-                child: Icon(Icons.add),
-                onPressed: () {
-                  _addActivity(context);
-                },
-              ),
-            );
-          },
-        );
-      }
-    );
+                  )
+                : SafeArea(
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: state.activitiesBox.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ActivityCard(
+                              activity: state.activitiesBox.getAt(index)!,
+                              activityIndex: index,
+                              archived: false,
+                            );
+                          },
+                        ),
+                        settingsState.showArchive!
+                            ? SizedBox(
+                                height: 20,
+                              )
+                            : Container(),
+                        settingsState.showArchive!
+                            ? Text(AppLocalizations.of(context)!
+                                .archivedActivities)
+                            : Container(),
+                        settingsState.showArchive!
+                            ? ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: state.archiveBox.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return ActivityCard(
+                                    activity: state.archiveBox.getAt(index)!,
+                                    activityIndex: index,
+                                    archived: true,
+                                  );
+                                },
+                              )
+                            : Container(),
+                      ],
+                    ),
+                  ),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () {
+                _addActivity(context);
+              },
+            ),
+          );
+        },
+      );
+    });
   }
 
   void _goToSettings(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsScreen()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SettingsScreen()));
   }
 
   Future<void> _addActivity(BuildContext context) async {

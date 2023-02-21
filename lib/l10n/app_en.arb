@@ -22,7 +22,7 @@
     "timeOfCell": "Time of one cell",
     "checkedCells": "Checked cells:",
     "leftCells": "Left:",
-    "deleteActivity": "Delete Activity?",
+    "deleteActivity": "Delete activity?",
     "deleteWarning": "All its data will will be lost.",
     "delete": "Delete",
     "editActivity": "Edit activity",
@@ -32,5 +32,11 @@
     "language": "Language",
     "theme": "Theme",
     "font": "Font",
-    "settings": "Settings"
+    "settings": "Settings",
+    "moveToArchive": "Move activity to archive?",
+    "archiveWarning": "You can't change archived activity.",
+    "restoreActivity": "Restore activity?",
+    "archive": "Archive",
+    "archivedActivities": "Archived activities",
+    "showArchivedActivities": "Show archived activities"
 }

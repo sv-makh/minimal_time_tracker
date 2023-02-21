@@ -26,19 +26,27 @@ class ChangeFontSize extends SettingsEvent {
   ChangeFontSize({required this.fontSize});
 }
 
+class ChangeArchiveVisibility extends SettingsEvent {
+  bool showArchive;
+
+  ChangeArchiveVisibility({required this.showArchive});
+}
+
 class SettingsState {
   Locale? locale;
   String? theme;
   int? fontSize;
+  bool?  showArchive;
 
-  SettingsState([this.locale, this.theme, this.fontSize]);
+  SettingsState([this.locale, this.theme, this.fontSize, this.showArchive]);
 }
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
-  SettingsBloc() : super(SettingsState(Locale('en', ''), 'Pale', 12)) {
+  SettingsBloc() : super(SettingsState(Locale('en', ''), 'Pale', 12, false)) {
     Locale? currentLocale;
     String? currentTheme;
     int? currentFont;
+    bool? currentArchive;
 
     on<SetInitialSetting>(
         (SetInitialSetting event, Emitter<SettingsState> emitter) async {
@@ -48,12 +56,14 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       String initTheme = prefs.getString('theme') ?? 'Pale';
       int initFont = prefs.getInt('fontSize') ?? 12;
       Locale initLocale = Locale(langCode);
+      bool initArchive = prefs.getBool('showArchive') ?? false;
 
       currentLocale = initLocale;
       currentFont = initFont;
       currentTheme = initTheme;
+      currentArchive = initArchive;
 
-      return emitter(SettingsState(initLocale, initTheme, initFont));
+      return emitter(SettingsState(initLocale, initTheme, initFont, initArchive));
     });
 
     on<ChangeLanguage>(
@@ -63,7 +73,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       currentLocale = newLocale;
       prefs.setString('lang', newLocale.languageCode);
 
-      return emitter(SettingsState(newLocale, currentTheme, currentFont));
+      return emitter(SettingsState(newLocale, currentTheme, currentFont, currentArchive));
     });
 
     on<ChangeTheme>((ChangeTheme event, Emitter<SettingsState> emitter) async {
@@ -72,7 +82,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       currentTheme = newTheme;
       prefs.setString('theme', newTheme);
 
-      return emitter(SettingsState(currentLocale, newTheme, currentFont));
+      return emitter(SettingsState(currentLocale, newTheme, currentFont, currentArchive));
     });
 
     on<ChangeFontSize>(
@@ -82,7 +92,16 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       currentFont = newFontSize;
       prefs.setInt('fontSize', newFontSize);
 
-      return emitter(SettingsState(currentLocale, currentTheme, newFontSize));
+      return emitter(SettingsState(currentLocale, currentTheme, newFontSize, currentArchive));
+    });
+
+    on<ChangeArchiveVisibility>((ChangeArchiveVisibility event, Emitter<SettingsState> emitter) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      bool newShowArchive = event.showArchive;
+      currentArchive = newShowArchive;
+      prefs.setBool('showArchive', newShowArchive);
+
+      return emitter(SettingsState(currentLocale, currentTheme, currentFont, newShowArchive));
     });
   }
 }

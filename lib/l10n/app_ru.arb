@@ -32,5 +32,11 @@
     "language": "Язык",
     "theme": "Тема",
     "font": "Шрифт",
-    "settings": "Настройки"
+    "settings": "Настройки",
+    "moveToArchive": "Переместить активность в архив?",
+    "archiveWarning": "Вы не сможете изменять активность в архиве.",
+    "restoreActivity": "Восстановить активность?",
+    "archive": "Архивировать",
+    "archivedActivities": "Архивированные активности",
+    "showArchivedActivities": "Показывать архивированные активности"
 }

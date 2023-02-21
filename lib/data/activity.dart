@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 part 'activity.g.dart';
 
 const String boxName = 'activitiesBox';
+const String archiveName = 'archiveBox';
 
 @HiveType(typeId: 1)
 class Activity {

@@ -18,6 +18,7 @@ void main() async {
   Hive.registerAdapter(DurationAdapter());
   Hive.registerAdapter(PresentationAdapter());
   await Hive.openBox<Activity>(boxName);
+  await Hive.openBox<Activity>(archiveName);
 
   runApp(const MyApp());
 }

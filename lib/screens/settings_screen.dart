@@ -86,6 +86,14 @@ class SettingsScreen extends StatelessWidget {
                           .add(ChangeFontSize(fontSize: value!));
                     },
                   ),
+                  Text(AppLocalizations.of(context)!.showArchivedActivities),
+                  Switch(
+                    value: settingsState.showArchive!,
+                    onChanged: (bool value) {
+                      BlocProvider.of<SettingsBloc>(context)
+                          .add(ChangeArchiveVisibility(showArchive: value));
+                    },
+                  ),
                 ],
               ),
             ),

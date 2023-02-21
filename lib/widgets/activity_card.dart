@@ -11,11 +11,13 @@ import 'package:minimal_time_tracker/screens/add_activity_screen.dart';
 class ActivityCard extends StatelessWidget {
   final Activity activity;
   final int activityIndex;
+  final bool archived;
 
   const ActivityCard({
     Key? key,
     required this.activity,
     required this.activityIndex,
+    required this.archived,
   }) : super(key: key);
 
   @override
@@ -51,20 +53,35 @@ class ActivityCard extends StatelessWidget {
                           _deleteDialog(context);
                         },
                       ),
-                      IconButton(
-                        onPressed: () {
-                          _editActivity(context);
-                        },
-                        icon: const Icon(Icons.edit),
-                      )
+                      archived
+                          ? Container()
+                          : IconButton(
+                              onPressed: () {
+                                _editActivity(context);
+                              },
+                              icon: const Icon(Icons.edit),
+                            ),
+                      archived
+                          ? IconButton(
+                              onPressed: () {
+                                _unarchiveActivity(context);
+                              },
+                              icon: const Icon(Icons.unarchive),
+                            )
+                          : IconButton(
+                              onPressed: () {
+                                _archiveActivity(context);
+                              },
+                              icon: const Icon(Icons.archive),
+                            ),
                     ],
                   )),
               //добавление времени к активности происходит в виджетах
               //в зависимости от того, какое представление для этой активности
               //выбрано
               (activity.presentation == Presentation.BUTTONS)
-                  ? _rowOfButtons(context)
-                  : _table(context, settingsState.theme!)
+                  ? _rowOfButtons(context, settingsState.showArchive!)
+                  : _table(context, settingsState.theme!, settingsState.showArchive!)
             ]),
           );
         },
@@ -85,6 +102,37 @@ class ActivityCard extends StatelessWidget {
       ),
     ).then((value) => BlocProvider.of<ActivitiesBloc>(context)
         .add(SaveEditedActivity(activity: value, index: activityIndex)));
+  }
+
+  void _unarchiveActivity(BuildContext context) {
+    BlocProvider.of<ActivitiesBloc>(context)
+        .add(ActivityUnarchived(index: activityIndex));
+  }
+
+  Future<void> _archiveActivity(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.moveToArchive),
+          content: Text(AppLocalizations.of(context)!.archiveWarning),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(AppLocalizations.of(context)!.cancel)),
+            TextButton(
+                onPressed: () {
+                  BlocProvider.of<ActivitiesBloc>(context)
+                      .add(ActivityArchived(index: activityIndex));
+                  Navigator.of(context).pop();
+                },
+                child: Text(AppLocalizations.of(context)!.archive)),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _deleteDialog(BuildContext context) {
@@ -112,7 +160,7 @@ class ActivityCard extends StatelessWidget {
         });
   }
 
-  Widget _rowOfButtons(BuildContext context) {
+  Widget _rowOfButtons(BuildContext context, bool showArchive) {
     return (activity.durationButtons.isEmpty)
         ? Container()
         : Column(
@@ -126,14 +174,14 @@ class ActivityCard extends StatelessWidget {
                 children: [
                   for (var d in activity.durationButtons)
                     OutlinedButton(
-                      onPressed: () {
+                      onPressed: showArchive ? () {
                         BlocProvider.of<ActivitiesBloc>(context)
                             .add(ActivityAddedTime(
                           index: activityIndex,
                           interval: TimeInterval.duration(
                               end: DateTime.now(), duration: d),
                         ));
-                      },
+                      } : null,
                       child: Text('+ ${stringDuration(d, context)}'),
                     )
                 ],
@@ -142,7 +190,7 @@ class ActivityCard extends StatelessWidget {
           );
   }
 
-  Widget _table(BuildContext context, String theme) {
+  Widget _table(BuildContext context, String theme, bool showArchive) {
     //кнопку в таблице можно нажать, только если это первая кнопка после всех нажатых,
     //(т.е. после всего списка intervalsList )
     bool isInactive(int index) {
@@ -196,7 +244,7 @@ class ActivityCard extends StatelessWidget {
                                 color: paletteDark[activity.color!],
                                 width: 3.0),
                       ),
-                      onPressed: isInactive(i)
+                      onPressed: isInactive(i) && (showArchive!)
                           ? null
                           : () {
                               BlocProvider.of<ActivitiesBloc>(context)
@@ -207,7 +255,7 @@ class ActivityCard extends StatelessWidget {
                                     duration: activity.durationButtons[i]),
                               ));
                             },
-                      onLongPress: wasPressed(i)
+                      onLongPress: wasPressed(i) && showArchive
                           ? () {
                               //здесь индекс i кнопки из durationButtons можно использовать
                               //как индекс интервала из intervalsList, т.к.
