@@ -24,8 +24,8 @@ Map<String, MaterialColor> primarySwatches = {
 };
 
 Map<String, List<List<Color>>> themePalettes = {
-  'Pale': [pale, paleDark],
-  'Dusty Rose': [dustyRose, dustyRoseDark],
-  'Olive': [olive, oliveDark],
-  'Pastel': [pastel, pastelDark],
+  'Pale': [pale, paleDark, paleInactive],
+  'Dusty Rose': [dustyRose, dustyRoseDark, dustyRoseInactive],
+  'Olive': [olive, oliveDark, oliveInactive],
+  'Pastel': [pastel, pastelDark, pastelInactive],
 };

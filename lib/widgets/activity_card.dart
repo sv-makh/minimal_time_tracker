@@ -26,11 +26,12 @@ class ActivityCard extends StatelessWidget {
         builder: (context, SettingsState settingsState) {
       List<Color> palette = themePalettes[settingsState.theme]![0];
       List<Color> paletteDark = themePalettes[settingsState.theme]![1];
+      List<Color> paletteInactive = themePalettes[settingsState.theme]![2];
 
       return BlocBuilder<ActivitiesBloc, ActivitiesState>(
         builder: (context, ActivitiesState state) {
           return Card(
-            color: palette[activity.color ?? 0],
+            color: !archived ? palette[activity.color ?? 0] : paletteInactive[activity.color ?? 0],
             child: Column(children: [
               ListTile(
                   title: Text(
@@ -80,8 +81,8 @@ class ActivityCard extends StatelessWidget {
               //в зависимости от того, какое представление для этой активности
               //выбрано
               (activity.presentation == Presentation.BUTTONS)
-                  ? _rowOfButtons(context, settingsState.showArchive!)
-                  : _table(context, settingsState.theme!, settingsState.showArchive!)
+                  ? _rowOfButtons(context)
+                  : _table(context, settingsState.theme!)
             ]),
           );
         },
@@ -160,7 +161,7 @@ class ActivityCard extends StatelessWidget {
         });
   }
 
-  Widget _rowOfButtons(BuildContext context, bool showArchive) {
+  Widget _rowOfButtons(BuildContext context) {
     return (activity.durationButtons.isEmpty)
         ? Container()
         : Column(
@@ -174,7 +175,7 @@ class ActivityCard extends StatelessWidget {
                 children: [
                   for (var d in activity.durationButtons)
                     OutlinedButton(
-                      onPressed: showArchive ? () {
+                      onPressed: !archived ? () {
                         BlocProvider.of<ActivitiesBloc>(context)
                             .add(ActivityAddedTime(
                           index: activityIndex,
@@ -190,7 +191,7 @@ class ActivityCard extends StatelessWidget {
           );
   }
 
-  Widget _table(BuildContext context, String theme, bool showArchive) {
+  Widget _table(BuildContext context, String theme) {
     //кнопку в таблице можно нажать, только если это первая кнопка после всех нажатых,
     //(т.е. после всего списка intervalsList )
     bool isInactive(int index) {
@@ -238,13 +239,13 @@ class ActivityCard extends StatelessWidget {
                         backgroundColor: wasPressed(i)
                             ? paletteDark[activity.color!]
                             : palette[activity.color!],
-                        side: isInactive(i)
+                        side: isInactive(i) || archived
                             ? null
                             : BorderSide(
                                 color: paletteDark[activity.color!],
                                 width: 3.0),
                       ),
-                      onPressed: isInactive(i) && (showArchive!)
+                      onPressed: isInactive(i) || archived
                           ? null
                           : () {
                               BlocProvider.of<ActivitiesBloc>(context)
@@ -255,7 +256,7 @@ class ActivityCard extends StatelessWidget {
                                     duration: activity.durationButtons[i]),
                               ));
                             },
-                      onLongPress: wasPressed(i) && showArchive
+                      onLongPress: wasPressed(i) && !archived
                           ? () {
                               //здесь индекс i кнопки из durationButtons можно использовать
                               //как индекс интервала из intervalsList, т.к.

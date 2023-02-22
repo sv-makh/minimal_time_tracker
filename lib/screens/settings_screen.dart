@@ -17,11 +17,12 @@ class SettingsScreen extends StatelessWidget {
           title: Text(AppLocalizations.of(context)!.settings),
         ),
         body: SafeArea(
-          child: Padding(
+          child: Container(
             padding: EdgeInsets.all(10),
+            width: MediaQuery.of(context).size.width,
             child: SingleChildScrollView(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                //mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
@@ -45,6 +46,7 @@ class SettingsScreen extends StatelessWidget {
                           .add(ChangeLanguage(locale: Locale(value!)));
                     },
                   ),
+                  SizedBox(height: 10),
                   Text(
                     AppLocalizations.of(context)!.theme,
                   ),
@@ -66,6 +68,7 @@ class SettingsScreen extends StatelessWidget {
                           .add(ChangeTheme(theme: value!));
                     },
                   ),
+                  SizedBox(height: 10),
                   Text(
                     AppLocalizations.of(context)!.font,
                   ),
@@ -86,6 +89,7 @@ class SettingsScreen extends StatelessWidget {
                           .add(ChangeFontSize(fontSize: value!));
                     },
                   ),
+                  SizedBox(height: 10),
                   Text(AppLocalizations.of(context)!.showArchivedActivities),
                   Switch(
                     value: settingsState.showArchive!,

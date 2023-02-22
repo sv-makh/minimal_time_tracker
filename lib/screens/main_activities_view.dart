@@ -56,7 +56,7 @@ class MainActivitiesView extends StatelessWidget {
                             );
                           },
                         ),
-                        settingsState.showArchive!
+                        (settingsState.showArchive! && state.activitiesBox.values.isNotEmpty)
                             ? SizedBox(
                                 height: 20,
                               )

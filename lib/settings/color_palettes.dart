@@ -8,11 +8,19 @@ var palettes = [
   olive,
   pastel,
 ];
+
 var palettesDark = [
   paleDark,
   dustyRoseDark,
   oliveDark,
   pastelDark,
+];
+
+var palettesInactive = [
+  paleInactive,
+  dustyRoseInactive,
+  oliveInactive,
+  pastelInactive,
 ];
 
 const List<Color> pale = [
@@ -31,6 +39,14 @@ const List<Color> paleDark = [
   Color(0xFFADADAD),
 ];
 
+const List<Color> paleInactive = [
+  Color(0xFFE1E1E1),
+  Color(0xFFE1E1E1),
+  Color(0xFFE1E1E1),
+  Color(0xFFE1E1E1),
+  Color(0xFFE1E1E1),
+];
+
 const List<Color> dustyRose = [
   Color(0xFF8B575C),
   Color(0xFFC98986),
@@ -45,6 +61,14 @@ const List<Color> dustyRoseDark = [
   Color(0xFFEB6C98),
   Color(0xFFDD9ADD),
   Color(0xFFC1C1C1),
+];
+
+const List<Color> dustyRoseInactive = [
+  Color(0xFF7d6366),
+  Color(0xFFb99998),
+  Color(0xFFe7cad4),
+  Color(0xFFf2e9f2),
+  Color(0xFFf5f5f5),
 ];
 
 const List<Color> olive = [
@@ -63,6 +87,14 @@ const List<Color> oliveDark = [
   Color(0xFF5FE8A8),
 ];
 
+const List<Color> oliveInactive = [
+  Color(0xFF4E493B),
+  Color(0xFF595546),
+  Color(0xFF526B60),
+  Color(0xFF7EA59C),
+  Color(0xFFD8EDE4),
+];
+
 const List<Color> pastel = [
   Color(0xFFE9A2A2),
   Color(0xFFD1E9A2),
@@ -77,4 +109,12 @@ const List<Color> pastelDark = [
   Color(0xFF624382),
   Color(0xFF469C94),
   Color(0xFFCABF7E),
+];
+
+const List<Color> pastelInactive = [
+  Color(0xFFD7B2B2),
+  Color(0xFFCAD7B2),
+  Color(0xFF857198),
+  Color(0xFF86ACA9),
+  Color(0xFFE5E3D7),
 ];
