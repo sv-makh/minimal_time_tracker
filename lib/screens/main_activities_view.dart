@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:minimal_time_tracker/screens/add_activity_screen.dart';
@@ -10,7 +9,6 @@ import 'package:minimal_time_tracker/screens/settings_screen.dart';
 import 'package:minimal_time_tracker/widgets/activity_card.dart';
 import 'package:minimal_time_tracker/data/activity_bloc.dart';
 import 'package:minimal_time_tracker/settings/settings_bloc.dart';
-import 'package:minimal_time_tracker/data/activity.dart';
 
 class MainActivitiesView extends StatelessWidget {
   const MainActivitiesView({Key? key}) : super(key: key);
@@ -53,7 +51,7 @@ class MainActivitiesView extends StatelessWidget {
                       },
                     ),
                     (settingsState.showArchive! && state.activitiesBox.values.isNotEmpty)
-                        ? SizedBox(
+                        ? const SizedBox(
                             height: 20,
                           )
                         : Container(),
@@ -77,7 +75,7 @@ class MainActivitiesView extends StatelessWidget {
                   ],
                 ),
             floatingActionButton: FloatingActionButton(
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
               onPressed: () {
                 _addActivity(context);
               },

@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 import 'package:minimal_time_tracker/settings/settings_data.dart';
 import 'package:minimal_time_tracker/settings/themes.dart';
+import '../widgets/spacer_box.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -18,11 +19,10 @@ class SettingsScreen extends StatelessWidget {
         ),
         body: SafeArea(
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             width: MediaQuery.of(context).size.width,
             child: SingleChildScrollView(
               child: Column(
-                //mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
@@ -46,7 +46,7 @@ class SettingsScreen extends StatelessWidget {
                           .add(ChangeLanguage(locale: Locale(value!)));
                     },
                   ),
-                  SizedBox(height: 10),
+                  const SpacerBox(),
                   Text(
                     AppLocalizations.of(context)!.theme,
                   ),
@@ -68,7 +68,7 @@ class SettingsScreen extends StatelessWidget {
                           .add(ChangeTheme(theme: value!));
                     },
                   ),
-                  SizedBox(height: 10),
+                  const SpacerBox(),
                   Text(
                     AppLocalizations.of(context)!.font,
                   ),
@@ -89,7 +89,7 @@ class SettingsScreen extends StatelessWidget {
                           .add(ChangeFontSize(fontSize: value!));
                     },
                   ),
-                  SizedBox(height: 10),
+                  const SpacerBox(),
                   Text(AppLocalizations.of(context)!.showArchivedActivities),
                   Switch(
                     value: settingsState.showArchive!,
@@ -107,3 +107,4 @@ class SettingsScreen extends StatelessWidget {
     });
   }
 }
+

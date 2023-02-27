@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 
 import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/data/mock_data.dart';
 
 class ActivityEvent {}
 
