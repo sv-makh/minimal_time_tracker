@@ -17,7 +17,6 @@ class MainActivitiesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
 
     return BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, SettingsState settingsState) {
@@ -37,50 +36,46 @@ class MainActivitiesView extends StatelessWidget {
             ),
             body: (state.activitiesBox.values.isEmpty &&
                     state.archiveBox.values.isEmpty)
-                ? SafeArea(
-                    child: Center(
-                      child: Text(AppLocalizations.of(context)!.noActivities),
+                ? Center(
+                  child: Text(AppLocalizations.of(context)!.noActivities),
+                )
+                : Column(
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: state.activitiesBox.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ActivityCard(
+                          activity: state.activitiesBox.getAt(index)!,
+                          activityIndex: index,
+                          archived: false,
+                        );
+                      },
                     ),
-                  )
-                : SafeArea(
-                    child: Column(
-                      children: [
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: state.activitiesBox.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return ActivityCard(
-                              activity: state.activitiesBox.getAt(index)!,
-                              activityIndex: index,
-                              archived: false,
-                            );
-                          },
-                        ),
-                        (settingsState.showArchive! && state.activitiesBox.values.isNotEmpty)
-                            ? SizedBox(
-                                height: 20,
-                              )
-                            : Container(),
-                        settingsState.showArchive!
-                            ? Text(AppLocalizations.of(context)!
-                                .archivedActivities)
-                            : Container(),
-                        settingsState.showArchive!
-                            ? ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: state.archiveBox.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return ActivityCard(
-                                    activity: state.archiveBox.getAt(index)!,
-                                    activityIndex: index,
-                                    archived: true,
-                                  );
-                                },
-                              )
-                            : Container(),
-                      ],
-                    ),
-                  ),
+                    (settingsState.showArchive! && state.activitiesBox.values.isNotEmpty)
+                        ? SizedBox(
+                            height: 20,
+                          )
+                        : Container(),
+                    settingsState.showArchive!
+                        ? Text(AppLocalizations.of(context)!
+                            .archivedActivities)
+                        : Container(),
+                    settingsState.showArchive!
+                        ? ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: state.archiveBox.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return ActivityCard(
+                                activity: state.archiveBox.getAt(index)!,
+                                activityIndex: index,
+                                archived: true,
+                              );
+                            },
+                          )
+                        : Container(),
+                  ],
+                ),
             floatingActionButton: FloatingActionButton(
               child: Icon(Icons.add),
               onPressed: () {

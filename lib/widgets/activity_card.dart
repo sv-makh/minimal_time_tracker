@@ -28,10 +28,20 @@ class ActivityCard extends StatelessWidget {
       List<Color> paletteDark = themePalettes[settingsState.theme]![1];
       List<Color> paletteInactive = themePalettes[settingsState.theme]![2];
 
+      //цвет фона карточки активности берётся из разных палитр
+      //в зависимости от того, находится ли эта активность в архиве
+      Color _cardColor(bool activityArchived) {
+        if (activityArchived) {
+          return paletteInactive[activity.color ?? 0];
+        } else {
+          return palette[activity.color ?? 0];
+        }
+      }
+
       return BlocBuilder<ActivitiesBloc, ActivitiesState>(
         builder: (context, ActivitiesState state) {
           return Card(
-            color: !archived ? palette[activity.color ?? 0] : paletteInactive[activity.color ?? 0],
+            color: _cardColor(archived),
             child: Column(children: [
               ListTile(
                   title: Text(
@@ -194,20 +204,20 @@ class ActivityCard extends StatelessWidget {
   Widget _table(BuildContext context, String theme) {
     //кнопку в таблице можно нажать, только если это первая кнопка после всех нажатых,
     //(т.е. после всего списка intervalsList )
-    bool isInactive(int index) {
+    bool _isInactive(int index) {
       if (index != activity.intervalsList.length) return true;
       return false;
     }
 
     //проверка была ли нажата кнопка
     //(т.е. в intervalsList был занес>н интервал)
-    bool wasPressed(int index) {
+    bool _wasPressed(int index) {
       if (index < activity.intervalsList.length) return true;
       return false;
     }
 
     //количество ненажатых кнопок в таблице
-    int numOfLeftCells() {
+    int _numOfLeftCells() {
       int num = activity.maxNum! - activity.intervalsList.length;
       if (num >= 0) {
         return num;
@@ -228,7 +238,7 @@ class ActivityCard extends StatelessWidget {
               Text('${AppLocalizations.of(context)!.checkedCells} '
                   '${activity.intervalsList.length}'),
               Text('${AppLocalizations.of(context)!.leftCells} '
-                  '${numOfLeftCells()}'),
+                  '${_numOfLeftCells()}'),
               Wrap(
                 spacing: 5,
                 runSpacing: 2.5,
@@ -236,16 +246,16 @@ class ActivityCard extends StatelessWidget {
                   for (int i = 0; i < activity.durationButtons.length; i++)
                     OutlinedButton(
                       style: OutlinedButton.styleFrom(
-                        backgroundColor: wasPressed(i)
+                        backgroundColor: _wasPressed(i)
                             ? paletteDark[activity.color!]
                             : palette[activity.color!],
-                        side: isInactive(i) || archived
+                        side: _isInactive(i) || archived
                             ? null
                             : BorderSide(
                                 color: paletteDark[activity.color!],
                                 width: 3.0),
                       ),
-                      onPressed: isInactive(i) || archived
+                      onPressed: _isInactive(i) || archived
                           ? null
                           : () {
                               BlocProvider.of<ActivitiesBloc>(context)
@@ -256,7 +266,7 @@ class ActivityCard extends StatelessWidget {
                                     duration: activity.durationButtons[i]),
                               ));
                             },
-                      onLongPress: wasPressed(i) && !archived
+                      onLongPress: _wasPressed(i) && !archived
                           ? () {
                               //здесь индекс i кнопки из durationButtons можно использовать
                               //как индекс интервала из intervalsList, т.к.
