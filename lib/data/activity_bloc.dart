@@ -3,6 +3,8 @@ import 'package:hive/hive.dart';
 
 import 'package:minimal_time_tracker/data/activity.dart';
 
+//import 'hive_data.dart';
+
 class ActivityEvent {}
 
 class ActivityDeleted extends ActivityEvent {
@@ -120,8 +122,11 @@ class ActivitiesState {
 }
 
 class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
-  Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
-  Box<Activity> archiveBox = Hive.box<Activity>(archiveName);
+  String boxName;
+  String archiveName;
+
+  //Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
+  //Box<Activity> archiveBox = Hive.box<Activity>(archiveName);
 
   Map<Duration, bool> defaultDurationButtons = {
     Duration(hours: 1): false,
@@ -141,7 +146,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
 
   Activity? editedActivity;
 
-  ActivitiesBloc()
+  ActivitiesBloc(this.boxName, this.archiveName)
       : super(ActivitiesState(
           Hive.box<Activity>(boxName),
           Hive.box<Activity>(archiveName),
@@ -153,6 +158,9 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           Presentation.BUTTONS,
           0,
         )) {
+    Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
+    Box<Activity> archiveBox = Hive.box<Activity>(archiveName);
+
     on<ActivityDeleted>(
         (ActivityDeleted event, Emitter<ActivitiesState> emitter) {
       activitiesBox.deleteAt(event.index);

@@ -117,4 +117,18 @@ void main() {
         );
         expect(find.text('0m'), findsOneWidget);
       });
+
+  Duration testDuration3 = Duration(minutes: 0, seconds: 40);
+  testWidgets('return 0m for duration for en locale',
+          (widgetTester) async {
+        await widgetTester.pumpWidget(
+          TestMaterialApp(
+            locale: enLocale,
+            child: LocalizedText(
+              d: testDuration3,
+            ),
+          ),
+        );
+        expect(find.text('40s'), findsOneWidget);
+      });
 }

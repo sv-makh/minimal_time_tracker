@@ -42,7 +42,7 @@ class SettingsState {
 }
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
-  SettingsBloc() : super(SettingsState(Locale('en', ''), 'Pale', 12, false)) {
+  SettingsBloc() : super(SettingsState(Locale('en', ''), 'Pale', 12, true)) {
     Locale? currentLocale;
     String? currentTheme;
     int? currentFont;
@@ -56,7 +56,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       String initTheme = prefs.getString('theme') ?? 'Pale';
       int initFont = prefs.getInt('fontSize') ?? 12;
       Locale initLocale = Locale(langCode);
-      bool initArchive = prefs.getBool('showArchive') ?? false;
+      bool initArchive = prefs.getBool('showArchive') ?? true;
 
       currentLocale = initLocale;
       currentFont = initFont;

@@ -11,6 +11,8 @@ import 'package:minimal_time_tracker/screens/main_activities_view.dart';
 import 'package:minimal_time_tracker/settings/settings_data.dart';
 import 'package:minimal_time_tracker/settings/themes.dart';
 
+import 'data/hive_data.dart';
+
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(ActivityAdapter());
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ActivitiesBloc>(create: (_) => ActivitiesBloc()),
+        BlocProvider<ActivitiesBloc>(create: (_) => ActivitiesBloc(boxName, archiveName)),
         BlocProvider<SettingsBloc>(create: (_) => SettingsBloc()),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
