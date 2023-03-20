@@ -5,19 +5,11 @@ import 'package:hive/hive.dart';
 import 'package:hive_test/hive_test.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/data/activity_bloc.dart';
-import 'package:minimal_time_tracker/screens/settings_screen.dart';
-
-//import 'package:minimal_time_tracker/data/hive_data.dart';
 import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 import 'package:minimal_time_tracker/widgets/activity_card.dart';
-import 'package:mockito/mockito.dart';
-import 'package:mockito/annotations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:minimal_time_tracker/screens/main_activities_view.dart';
-
-class MockRoute extends Mock implements Route<dynamic> {}
 
 class TestMaterialApp extends StatelessWidget {
   final Widget child;
