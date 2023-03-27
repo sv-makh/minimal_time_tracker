@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 
 void main() {
-  SharedPreferences? prefs;
 
   test('testing default values for Settings', () {
     SettingsBloc settingsBloc = SettingsBloc();
