@@ -120,6 +120,10 @@ void main() {
       testArchiveBox = await Hive.openBox<Activity>(archiveName);
     });
 
+    tearDown(() async {
+      await tearDownTestHive();
+    });
+
     test('testing stubbing the bloc stream and emitting one state', () async {
       when(() => settingsBloc.state)
           .thenReturn(SettingsState(Locale('en', ''), 'Pale', 12, true));
