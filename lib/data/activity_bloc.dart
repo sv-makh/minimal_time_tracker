@@ -117,8 +117,12 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           Duration(minutes: 30): false,
         };
       }
-      return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
-          color, presentation, numOfCells, editedActivity));
+      ActivitiesState state = ActivitiesState(activitiesBox, archiveBox, durationButtons,
+          color, presentation, numOfCells, editedActivity);
+/*      print('ChangePresentation durationButtons = $durationButtons ; color = $color ; presentation = $presentation ; numOfCells = $numOfCells ; editedActivity = $editedActivity');
+      print('ChangePresentation hash = ${state.hashCode}');
+      print('ChangePresentation durationButtons length = ${durationButtons.length}');*/
+      return emitter(state);
     });
 
     on<AddedDurationForTable>(

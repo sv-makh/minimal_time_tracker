@@ -23,6 +23,9 @@ void main() {
     int defaultNumOfCells = 0;
 
     late ActivitiesState testActivitiesState;
+    late ActivitiesState testActivitiesState1;
+
+    late Activity testActivity;
 
     setUpAll(() {
       Hive.registerAdapter(ActivityAdapter());
@@ -79,6 +82,176 @@ void main() {
         Activity activity = testActivitiesBox.getAt(0)!;
         expect(activity.intervalsList.length, 1);
       },
+    );
+
+    blocTest<ActivitiesBloc, ActivitiesState>(
+      'adding activity',
+      build: () => ActivitiesBloc(boxName, archiveName),
+      act: (bloc) =>
+          bloc.add(ActivityAdded(activity: Activity(title: 'title1'))),
+      expect: () => [testActivitiesState],
+      verify: (_) {
+        expect(testActivitiesBox.length, 2);
+        expect(testActivitiesBox.getAt(0)!.title, 'title0');
+        expect(testActivitiesBox.getAt(1)!.title, 'title1');
+      },
+    );
+
+    blocTest<ActivitiesBloc, ActivitiesState>(
+      'adding duration buttons',
+      build: () => ActivitiesBloc(boxName, archiveName),
+      act: (bloc) =>
+          bloc.add(AddedDurationButton(duration: Duration(minutes: 15))),
+      expect: () => [
+        ActivitiesState(
+            testActivitiesBox,
+            testArchiveBox,
+            {
+              Duration(hours: 1): false,
+              Duration(minutes: 30): false,
+              Duration(minutes: 15): false,
+            },
+            defaultColor,
+            defaultPresentation,
+            defaultNumOfCells)
+      ],
+    );
+
+    blocTest<ActivitiesBloc, ActivitiesState>(
+      'pressing duration button',
+      build: () => ActivitiesBloc(boxName, archiveName),
+      act: (bloc) =>
+          bloc.add(PressedDurationButton(duration: Duration(minutes: 30))),
+      expect: () => [
+        ActivitiesState(
+            testActivitiesBox,
+            testArchiveBox,
+            {
+              Duration(hours: 1): false,
+              Duration(minutes: 30): true,
+            },
+            defaultColor,
+            defaultPresentation,
+            defaultNumOfCells)
+      ],
+    );
+
+    blocTest<ActivitiesBloc, ActivitiesState>(
+      'changing color',
+      build: () => ActivitiesBloc(boxName, archiveName),
+      act: (bloc) => bloc.add(ChangeColor(color: 1)),
+      expect: () => [
+        ActivitiesState(testActivitiesBox, testArchiveBox,
+            defaultDurationButtons, 1, defaultPresentation, defaultNumOfCells)
+      ],
+    );
+
+    blocTest<ActivitiesBloc, ActivitiesState>(
+      'creating new activity',
+      build: () => ActivitiesBloc(boxName, archiveName),
+      act: (bloc) => bloc.add(PressedNewActivity()),
+      expect: () => [testActivitiesState],
+    );
+
+    blocTest<ActivitiesBloc, ActivitiesState>(
+      'changing presentation for buttons',
+      build: () => ActivitiesBloc(boxName, archiveName),
+      act: (bloc) =>
+          bloc.add(ChangePresentation(presentation: Presentation.BUTTONS)),
+      expect: () => [testActivitiesState],
+    );
+
+/*    blocTest<ActivitiesBloc, ActivitiesState>(
+      'changing presentation for buttons',
+      setUp: () {
+        defaultPresentation = Presentation.TABLE;
+        if (defaultPresentation == Presentation.TABLE) {
+          defaultDurationButtons.clear();
+        } else {
+          defaultNumOfCells = 0;
+          defaultDurationButtons = {
+            Duration(hours: 1): false,
+            Duration(minutes: 30): false,
+          };
+        }
+
+        testActivitiesState1 = ActivitiesState(testActivitiesBox, testArchiveBox,
+            defaultDurationButtons, defaultColor,
+            defaultPresentation, defaultNumOfCells);
+        print('testActivitiesState1 durationButtons = $defaultDurationButtons ; color = $defaultColor ; presentation = Presentation.TABLE ; numOfCells = $defaultNumOfCells ; editedActivity = null');
+        print('testActivitiesState1 hash = ${testActivitiesState1.hashCode}');
+        print('testActivitiesState1 durationButtons length = ${defaultDurationButtons.length}');
+      },
+      build: () => ActivitiesBloc(boxName, archiveName),
+      act: (bloc) =>
+          bloc.add(ChangePresentation(presentation: Presentation.TABLE)),
+      expect: () => [ActivitiesState(
+          testActivitiesBox,
+          testArchiveBox,
+          defaultDurationButtons,
+          defaultColor,
+          Presentation.TABLE,
+          defaultNumOfCells)],
+    );*/
+
+    blocTest<ActivitiesBloc, ActivitiesState>(
+      'adding duration button',
+      build: () => ActivitiesBloc(boxName, archiveName),
+      act: (bloc) =>
+          bloc.add(AddedDurationForTable(duration: Duration(minutes: 15))),
+      expect: () => [
+        ActivitiesState(
+            testActivitiesBox,
+            testArchiveBox,
+            {Duration(minutes: 15): false},
+            defaultColor,
+            defaultPresentation,
+            defaultNumOfCells)
+      ],
+    );
+
+    blocTest<ActivitiesBloc, ActivitiesState>('deleting interval from activity',
+        setUp: () async {
+          Activity newActivity = Activity(title: 'title1');
+          newActivity.addInterval(TimeInterval.duration(
+              end: DateTime.now(), duration: Duration(hours: 1)));
+          newActivity.addInterval(TimeInterval.duration(
+              end: DateTime.now(), duration: Duration(minutes: 30)));
+          await testActivitiesBox.add(newActivity);
+        },
+        build: () => ActivitiesBloc(boxName, archiveName),
+        act: (bloc) => bloc
+            .add(DeleteIntervalWithIndex(activityIndex: 1, intervalIndex: 1)),
+        expect: () => [testActivitiesState],
+        verify: (_) {
+          Activity newActivity = testActivitiesBox.getAt(1)!;
+          expect(newActivity.intervalsList.length, 1);
+        });
+
+    blocTest<ActivitiesBloc, ActivitiesState>(
+      'editing activity',
+      setUp: () {
+        testActivity = Activity(
+          title: 'title1',
+          subtitle: 'subtitle1',
+          durationButtons: [Duration(minutes: 10), Duration(minutes: 1)],
+          color: 1,
+          presentation: Presentation.BUTTONS,
+        );
+      },
+      build: () => ActivitiesBloc(boxName, archiveName),
+      act: (bloc) => bloc.add(EditActivity(activity: testActivity)),
+      expect: () => [
+        ActivitiesState(
+          testActivitiesBox,
+          testArchiveBox,
+          {Duration(minutes: 10): true, Duration(minutes: 1): true},
+          1,
+          Presentation.BUTTONS,
+          defaultNumOfCells,
+          testActivity,
+        )
+      ],
     );
   });
 }
