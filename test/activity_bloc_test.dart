@@ -161,38 +161,20 @@ void main() {
       expect: () => [testActivitiesState],
     );
 
-/*    blocTest<ActivitiesBloc, ActivitiesState>(
-      'changing presentation for buttons',
-      setUp: () {
-        defaultPresentation = Presentation.TABLE;
-        if (defaultPresentation == Presentation.TABLE) {
-          defaultDurationButtons.clear();
-        } else {
-          defaultNumOfCells = 0;
-          defaultDurationButtons = {
-            Duration(hours: 1): false,
-            Duration(minutes: 30): false,
-          };
-        }
-
-        testActivitiesState1 = ActivitiesState(testActivitiesBox, testArchiveBox,
-            defaultDurationButtons, defaultColor,
-            defaultPresentation, defaultNumOfCells);
-        print('testActivitiesState1 durationButtons = $defaultDurationButtons ; color = $defaultColor ; presentation = Presentation.TABLE ; numOfCells = $defaultNumOfCells ; editedActivity = null');
-        print('testActivitiesState1 hash = ${testActivitiesState1.hashCode}');
-        print('testActivitiesState1 durationButtons length = ${defaultDurationButtons.length}');
-      },
+    blocTest<ActivitiesBloc, ActivitiesState>(
+      'changing presentation',
       build: () => ActivitiesBloc(boxName, archiveName),
       act: (bloc) =>
           bloc.add(ChangePresentation(presentation: Presentation.TABLE)),
       expect: () => [ActivitiesState(
-          testActivitiesBox,
-          testArchiveBox,
-          defaultDurationButtons,
-          defaultColor,
-          Presentation.TABLE,
-          defaultNumOfCells)],
-    );*/
+        testActivitiesBox,
+        testArchiveBox,
+        {},
+        defaultColor,
+        Presentation.TABLE,
+        defaultNumOfCells,
+      )],
+    );
 
     blocTest<ActivitiesBloc, ActivitiesState>(
       'adding duration button',
@@ -293,10 +275,9 @@ void main() {
                 testActivity,
               )
             ],
-      verify: (_) {
+        verify: (_) {
           expect(testActivity.intervalsList.length, 1);
-      }
-    );
+        });
 
     blocTest<ActivitiesBloc, ActivitiesState>(
         'delete all intervals from edited activity',
@@ -318,19 +299,39 @@ void main() {
           ..add(EditActivity(activity: testActivity))
           ..add(DeleteAllIntervalsEditedActivity()),
         expect: () => [
-          ActivitiesState(
-            testActivitiesBox,
-            testArchiveBox,
-            {Duration(minutes: 10): true, Duration(minutes: 1): true},
-            1,
-            Presentation.BUTTONS,
-            defaultNumOfCells,
-            testActivity,
-          )
-        ],
+              ActivitiesState(
+                testActivitiesBox,
+                testArchiveBox,
+                {Duration(minutes: 10): true, Duration(minutes: 1): true},
+                1,
+                Presentation.BUTTONS,
+                defaultNumOfCells,
+                testActivity,
+              )
+            ],
         verify: (_) {
           expect(testActivity.intervalsList.length, 0);
-        }
-    );
+        });
+
+    blocTest<ActivitiesBloc, ActivitiesState>('archiving activity',
+        build: () => ActivitiesBloc(boxName, archiveName),
+        act: (bloc) => bloc.add(ActivityArchived(index: 0)),
+        expect: () => [testActivitiesState],
+        verify: (_) {
+          expect(testActivitiesBox.length, 0);
+          expect(testArchiveBox.length, 1);
+        });
+
+    blocTest<ActivitiesBloc, ActivitiesState>('unarchiving activity',
+        setUp: () async {
+          await testArchiveBox.add(Activity(title: 'title1'));
+        },
+        build: () => ActivitiesBloc(boxName, archiveName),
+        act: (bloc) => bloc.add(ActivityUnarchived(index: 0)),
+        expect: () => [testActivitiesState],
+        verify: (_) {
+          expect(testActivitiesBox.length, 2);
+          expect(testArchiveBox.length, 0);
+        });
   });
 }

@@ -16,14 +16,17 @@ class ActivitiesState {
   @override
   bool operator ==(Object other) {
     bool result = false;
-    if ((other is ActivitiesState) &&
-        (durationButtons.length == other.durationButtons.length)) {
-      for (var k in durationButtons.keys) {
-        if (durationButtons[k] == other.durationButtons[k]) {
-          result = true;
-        } else {
-          result = false;
-          break;
+    if (other is ActivitiesState) {
+      if (durationButtons.isEmpty && other.durationButtons.isEmpty) {
+        result = true;
+      } else if (durationButtons.length == other.durationButtons.length) {
+        for (var k in durationButtons.keys) {
+          if (durationButtons[k] == other.durationButtons[k]) {
+            result = true;
+          } else {
+            result = false;
+            break;
+          }
         }
       }
     }
@@ -48,12 +51,12 @@ class ActivitiesState {
       mapHash ^= durationButtons[k].hashCode;
     }
     int result = activitiesBox.hashCode ^
-    archiveBox.hashCode ^
-    mapHash ^
-    color.hashCode ^
-    presentation.hashCode ^
-    numOfCells.hashCode ^
-    editedActivity.hashCode;
+        archiveBox.hashCode ^
+        mapHash ^
+        color.hashCode ^
+        presentation.hashCode ^
+        numOfCells.hashCode ^
+        editedActivity.hashCode;
     return result;
   }
 }

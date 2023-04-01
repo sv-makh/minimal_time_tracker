@@ -119,9 +119,6 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       }
       ActivitiesState state = ActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells, editedActivity);
-/*      print('ChangePresentation durationButtons = $durationButtons ; color = $color ; presentation = $presentation ; numOfCells = $numOfCells ; editedActivity = $editedActivity');
-      print('ChangePresentation hash = ${state.hashCode}');
-      print('ChangePresentation durationButtons length = ${durationButtons.length}');*/
       return emitter(state);
     });
 
