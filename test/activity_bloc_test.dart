@@ -253,5 +253,84 @@ void main() {
         )
       ],
     );
+
+    blocTest<ActivitiesBloc, ActivitiesState>('saving activity',
+        build: () => ActivitiesBloc(boxName, archiveName),
+        act: (bloc) => bloc.add(
+            SaveEditedActivity(activity: Activity(title: 'title1'), index: 0)),
+        expect: () => [testActivitiesState],
+        verify: (_) {
+          expect(testActivitiesBox.getAt(0)!.title, 'title1');
+        });
+
+    blocTest<ActivitiesBloc, ActivitiesState>(
+        'delete interval from edited activity',
+        setUp: () {
+          testActivity = Activity(
+            title: 'title1',
+            subtitle: 'subtitle1',
+            durationButtons: [Duration(minutes: 10), Duration(minutes: 1)],
+            color: 1,
+            presentation: Presentation.BUTTONS,
+          );
+          testActivity.addInterval(TimeInterval.duration(
+              end: DateTime.now(), duration: Duration(hours: 1)));
+          testActivity.addInterval(TimeInterval.duration(
+              end: DateTime.now(), duration: Duration(minutes: 30)));
+        },
+        build: () => ActivitiesBloc(boxName, archiveName),
+        act: (bloc) => bloc
+          ..add(EditActivity(activity: testActivity))
+          ..add(DeleteIntervalEditedActivity(index: 1)),
+        expect: () => [
+              ActivitiesState(
+                testActivitiesBox,
+                testArchiveBox,
+                {Duration(minutes: 10): true, Duration(minutes: 1): true},
+                1,
+                Presentation.BUTTONS,
+                defaultNumOfCells,
+                testActivity,
+              )
+            ],
+      verify: (_) {
+          expect(testActivity.intervalsList.length, 1);
+      }
+    );
+
+    blocTest<ActivitiesBloc, ActivitiesState>(
+        'delete all intervals from edited activity',
+        setUp: () {
+          testActivity = Activity(
+            title: 'title1',
+            subtitle: 'subtitle1',
+            durationButtons: [Duration(minutes: 10), Duration(minutes: 1)],
+            color: 1,
+            presentation: Presentation.BUTTONS,
+          );
+          testActivity.addInterval(TimeInterval.duration(
+              end: DateTime.now(), duration: Duration(hours: 1)));
+          testActivity.addInterval(TimeInterval.duration(
+              end: DateTime.now(), duration: Duration(minutes: 30)));
+        },
+        build: () => ActivitiesBloc(boxName, archiveName),
+        act: (bloc) => bloc
+          ..add(EditActivity(activity: testActivity))
+          ..add(DeleteAllIntervalsEditedActivity()),
+        expect: () => [
+          ActivitiesState(
+            testActivitiesBox,
+            testArchiveBox,
+            {Duration(minutes: 10): true, Duration(minutes: 1): true},
+            1,
+            Presentation.BUTTONS,
+            defaultNumOfCells,
+            testActivity,
+          )
+        ],
+        verify: (_) {
+          expect(testActivity.intervalsList.length, 0);
+        }
+    );
   });
 }
