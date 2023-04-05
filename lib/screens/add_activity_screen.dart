@@ -14,8 +14,8 @@ import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 import 'package:minimal_time_tracker/widgets/spacer_box.dart';
 
 TextEditingController cellsNumber = TextEditingController();
-TextEditingController _titleController = TextEditingController();
-TextEditingController _subtitleController = TextEditingController();
+TextEditingController titleController = TextEditingController();
+TextEditingController subtitleController = TextEditingController();
 
 class AddActivityScreen extends StatelessWidget {
   AddActivityScreen({Key? key}) : super(key: key) {
@@ -50,13 +50,13 @@ class AddActivityScreen extends StatelessWidget {
         if (editedActivity != null) {
           //заголовок у активности есть всегда
           _titleOfEditedActivity = editedActivity!.title;
-          _titleController.text = _titleOfEditedActivity;
+          titleController.text = _titleOfEditedActivity;
 
           //подзаголовка может не быть
           _subtitleOfEditedActivity = (editedActivity!.subtitle == null)
               ? ''
               : editedActivity!.subtitle!;
-          _subtitleController.text = _subtitleOfEditedActivity;
+          subtitleController.text = _subtitleOfEditedActivity;
         }
 
         _numOfCells = state.numOfCells.toString();
@@ -71,8 +71,9 @@ class AddActivityScreen extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.save),
                 onPressed: () {
-                  if (_titleController.text.isEmpty) {
+                  if (titleController.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      key: Key('noTitleSnackBar'),
                       content: Text(AppLocalizations.of(context)!.enterTitle),
                       duration: const Duration(seconds: 3),
                       //backgroundColor: messageColor,
@@ -84,8 +85,8 @@ class AddActivityScreen extends StatelessWidget {
                     ));
                   } else {
                     Activity activity = Activity(
-                      title: _titleController.text,
-                      subtitle: _subtitleController.text,
+                      title: titleController.text,
+                      subtitle: subtitleController.text,
                       color: state.color,
                       presentation: state.presentation,
                     );
@@ -136,13 +137,13 @@ class AddActivityScreen extends StatelessWidget {
                   children: [
                     Text(AppLocalizations.of(context)!.titleActivity),
                     TextField(
-                      controller: _titleController,
+                      controller: titleController,
                       onChanged: (value) => _titleOfEditedActivity = value,
                     ),
                     const SpacerBox(),
                     Text(AppLocalizations.of(context)!.subtitleActivity),
                     TextField(
-                      controller: _subtitleController,
+                      controller: subtitleController,
                       onChanged: (value) => _subtitleOfEditedActivity = value,
                     ),
                     const SpacerBox(),
@@ -264,6 +265,7 @@ class AddActivityScreen extends StatelessWidget {
 
   Widget _buttonSettings(BuildContext context, Map<Duration, bool> durations) {
     return Column(
+      key: Key('_buttonSettings'),
       children: [
         Text(AppLocalizations.of(context)!.addButtons),
         Wrap(
@@ -282,6 +284,7 @@ class AddActivityScreen extends StatelessWidget {
                 },
               ),
             OutlinedButton(
+              key: Key('buttonsShowModalBottomSheet'),
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
@@ -306,6 +309,7 @@ class AddActivityScreen extends StatelessWidget {
 
   Widget _tableSettings(BuildContext context, Map<Duration, bool> durations) {
     return Column(
+      key: Key('_tableSettings'),
       children: [
         Text(AppLocalizations.of(context)!.numberOfCellsInTable),
         TextField(
@@ -326,6 +330,7 @@ class AddActivityScreen extends StatelessWidget {
         ),
         Text(AppLocalizations.of(context)!.timeOfCell),
         OutlinedButton(
+          key: Key('tableShowModalBottomSheet'),
           onPressed: () {
             showModalBottomSheet(
               context: context,

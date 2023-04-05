@@ -1,5 +1,6 @@
 //import 'dart:html';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:equatable/equatable.dart';
@@ -89,6 +90,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         (PressedDurationButton event, Emitter<ActivitiesState> emitter) {
       durationButtons.update(event.duration, (value) => !value,
           ifAbsent: () => false);
+      print(durationButtons);
       return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells, editedActivity));
     });

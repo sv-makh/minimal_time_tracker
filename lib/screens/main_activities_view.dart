@@ -39,48 +39,51 @@ class MainActivitiesView extends StatelessWidget {
                       key: Key('noActivitiesText'),
                     ),
                   )
-                : Column(
-                    children: [
-                      ListView.builder(
-                        key: Key('activitiesBoxListView.builder'),
-                        shrinkWrap: true,
-                        itemCount: state.activitiesBox.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ActivityCard(
-                            activity: state.activitiesBox.getAt(index)!,
-                            activityIndex: index,
-                            archived: false,
-                          );
-                        },
-                      ),
-                      (settingsState.showArchive! &&
-                              state.activitiesBox.values.isNotEmpty)
-                          ? const SizedBox(
-                              height: 20,
-                            )
-                          : Container(),
-                      settingsState.showArchive!
-                          ? Text(
-                              AppLocalizations.of(context)!.archivedActivities,
-                              key: Key('archivedActivitiesText'),
-                            )
-                          : Container(),
-                      settingsState.showArchive!
-                          ? ListView.builder(
-                              key: Key('archiveListView.builder'),
-                              shrinkWrap: true,
-                              itemCount: state.archiveBox.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ActivityCard(
-                                  activity: state.archiveBox.getAt(index)!,
-                                  activityIndex: index,
-                                  archived: true,
-                                );
-                              },
-                            )
-                          : Container(),
-                    ],
-                  ),
+                : SingleChildScrollView(
+                  child: Column(
+                      children: [
+                        ListView.builder(
+                          key: Key('activitiesBoxListView.builder'),
+                          shrinkWrap: true,
+                          itemCount: state.activitiesBox.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ActivityCard(
+                              key: UniqueKey(),
+                              activity: state.activitiesBox.getAt(index)!,
+                              activityIndex: index,
+                              archived: false,
+                            );
+                          },
+                        ),
+                        (settingsState.showArchive! &&
+                                state.activitiesBox.values.isNotEmpty)
+                            ? const SizedBox(
+                                height: 20,
+                              )
+                            : Container(),
+                        settingsState.showArchive!
+                            ? Text(
+                                AppLocalizations.of(context)!.archivedActivities,
+                                key: Key('archivedActivitiesText'),
+                              )
+                            : Container(),
+                        settingsState.showArchive!
+                            ? ListView.builder(
+                                key: Key('archiveListView.builder'),
+                                shrinkWrap: true,
+                                itemCount: state.archiveBox.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return ActivityCard(
+                                    activity: state.archiveBox.getAt(index)!,
+                                    activityIndex: index,
+                                    archived: true,
+                                  );
+                                },
+                              )
+                            : Container(),
+                      ],
+                    ),
+                ),
             floatingActionButton: FloatingActionButton(
               child: const Icon(Icons.add),
               onPressed: () {

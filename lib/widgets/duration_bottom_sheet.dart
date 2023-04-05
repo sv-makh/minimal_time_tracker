@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/data/activity_bloc.dart';
+import 'package:minimal_time_tracker/widgets/spacer_box.dart';
 
 class DurationBottomSheet extends StatefulWidget {
   final BuildContext context;
@@ -37,10 +38,12 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
           padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: SizedBox(
-            height: 200,
+            height: 150,
+            width: MediaQuery.of(context).size.width,
             child: Center(
               child: Column(
                 children: [
+                  const SpacerBox(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -79,7 +82,9 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
                       Text(AppLocalizations.of(context)!.minutesShort),
                     ],
                   ),
+                  const SpacerBox(),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       OutlinedButton(
                         onPressed: () {

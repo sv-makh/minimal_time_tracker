@@ -13,34 +13,17 @@ class ActivitiesState {
       this.color, this.presentation, this.numOfCells,
       [this.editedActivity]);
 
-  @override
+/*  @override
   bool operator ==(Object other) {
-    bool result = false;
-    if (other is ActivitiesState) {
-      if (durationButtons.isEmpty && other.durationButtons.isEmpty) {
-        result = true;
-      } else if (durationButtons.length == other.durationButtons.length) {
-        for (var k in durationButtons.keys) {
-          if (durationButtons[k] == other.durationButtons[k]) {
-            result = true;
-          } else {
-            result = false;
-            break;
-          }
-        }
-      }
-    }
-
-    result = identical(this, other) ||
+    return identical(this, other) ||
         other is ActivitiesState &&
             activitiesBox == other.activitiesBox &&
             archiveBox == other.archiveBox &&
-            result &&
+            mapEquals(durationButtons, other.durationButtons) &&//result &&
             color == other.color &&
             presentation == other.presentation &&
             numOfCells == other.numOfCells &&
             editedActivity == other.editedActivity;
-    return result;
   }
 
   @override
@@ -58,5 +41,5 @@ class ActivitiesState {
         numOfCells.hashCode ^
         editedActivity.hashCode;
     return result;
-  }
+  }*/
 }

@@ -1,49 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_test/hive_test.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/data/activity_bloc.dart';
 import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 import 'package:minimal_time_tracker/widgets/activity_card.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/screens/main_activities_view.dart';
-
-class TestMaterialApp extends StatelessWidget {
-  final Widget child;
-  final String boxName;
-  final String archiveName;
-
-  const TestMaterialApp({
-    Key? key,
-    required this.child,
-    required this.boxName,
-    required this.archiveName,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      localizationsDelegates: [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: [Locale('en', '')],
-      home: MultiBlocProvider(
-        providers: [
-          BlocProvider<ActivitiesBloc>(
-              create: (_) => ActivitiesBloc(boxName, archiveName)),
-          BlocProvider<SettingsBloc>(create: (_) => SettingsBloc()),
-        ],
-        child: child,
-      ),
-    );
-  }
-}
+import 'test_material_app.dart';
 
 void main() {
   group('MainActivitiesScreen tests', () {
@@ -57,10 +20,13 @@ void main() {
     Hive.registerAdapter(DurationAdapter());
     Hive.registerAdapter(PresentationAdapter());
 
+    late SettingsBloc settingsBloc;
+
     setUp(() async {
       await setUpTestHive();
       testActivitiesBox = await Hive.openBox<Activity>(boxName);
       testArchiveBox = await Hive.openBox<Activity>(archiveName);
+      settingsBloc = SettingsBloc();
     });
 
     tearDown(() async {
@@ -74,6 +40,7 @@ void main() {
           child: MainActivitiesView(),
           boxName: boxName,
           archiveName: archiveName,
+          settingsBloc: settingsBloc,
         ),
       );
 
@@ -93,6 +60,7 @@ void main() {
           child: MainActivitiesView(),
           boxName: boxName,
           archiveName: archiveName,
+          settingsBloc: settingsBloc,
         ),
       );
 
@@ -117,11 +85,11 @@ void main() {
           child: MainActivitiesView(),
           boxName: boxName,
           archiveName: archiveName,
+          settingsBloc: settingsBloc,
         ),
       );
 
       //проверка, что по умолчанию архивные активности показываются
-      SettingsBloc settingsBloc = SettingsBloc();
       SettingsState settingsState = settingsBloc.state;
       expect(settingsState.showArchive, equals(true));
 
