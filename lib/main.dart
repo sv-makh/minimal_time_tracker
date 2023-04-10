@@ -4,8 +4,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:minimal_time_tracker/data/activity_bloc.dart';
-import 'package:minimal_time_tracker/settings/settings_bloc.dart';
+import 'package:minimal_time_tracker/data/bloc/activity_bloc.dart';
+import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/screens/main_activities_view.dart';
 import 'package:minimal_time_tracker/settings/settings_data.dart';

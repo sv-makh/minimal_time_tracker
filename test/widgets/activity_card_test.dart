@@ -2,11 +2,11 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/settings/settings_bloc.dart';
+import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
 import 'package:minimal_time_tracker/widgets/activity_card.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_test/hive_test.dart';
-import 'test_material_app.dart';
+import '../test_material_app.dart';
 import 'package:mocktail/mocktail.dart';
 
 //файндер, ищущий кнопки OutlinedButton заданного цвета

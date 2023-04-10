@@ -34,12 +34,12 @@ class ActivitiesState {
       mapHash ^= durationButtons[k].hashCode;
     }
     int result = activitiesBox.hashCode ^
-        archiveBox.hashCode ^
-        mapHash ^
-        color.hashCode ^
-        presentation.hashCode ^
-        numOfCells.hashCode ^
-        editedActivity.hashCode;
+    archiveBox.hashCode ^
+    mapHash ^
+    color.hashCode ^
+    presentation.hashCode ^
+    numOfCells.hashCode ^
+    editedActivity.hashCode;
     return result;
   }
 }

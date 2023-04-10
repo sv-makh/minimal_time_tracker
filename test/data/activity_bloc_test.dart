@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/data/activity_bloc.dart';
+import 'package:minimal_time_tracker/data/bloc/activity_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_test/hive_test.dart';
 

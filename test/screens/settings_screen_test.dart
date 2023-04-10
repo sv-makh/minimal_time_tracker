@@ -4,11 +4,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_test/hive_test.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/data/activity_bloc.dart';
+import 'package:minimal_time_tracker/data/bloc/activity_bloc.dart';
 import 'package:minimal_time_tracker/screens/settings_screen.dart';
-import 'package:minimal_time_tracker/settings/settings_bloc.dart';
+import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
 import 'package:mocktail/mocktail.dart';
-import 'test_material_app.dart';
+import '../test_material_app.dart';
 
 class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
     implements SettingsBloc {}

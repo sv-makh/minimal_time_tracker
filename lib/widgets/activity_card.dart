@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/data/activity_bloc.dart';
-import 'package:minimal_time_tracker/settings/settings_bloc.dart';
+import 'package:minimal_time_tracker/data/bloc/activity_bloc.dart';
+import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/helpers/convert.dart';
 import 'package:minimal_time_tracker/settings/themes.dart';

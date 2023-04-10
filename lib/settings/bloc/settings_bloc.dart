@@ -4,60 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsEvent {}
-
-class ChangeLanguage extends SettingsEvent {
-  Locale locale;
-
-  ChangeLanguage({required this.locale});
-}
-
-class SetInitialSetting extends SettingsEvent {}
-
-class ChangeTheme extends SettingsEvent {
-  String theme;
-
-  ChangeTheme({required this.theme});
-}
-
-class ChangeFontSize extends SettingsEvent {
-  int fontSize;
-
-  ChangeFontSize({required this.fontSize});
-}
-
-class ChangeArchiveVisibility extends SettingsEvent {
-  bool showArchive;
-
-  ChangeArchiveVisibility({required this.showArchive});
-}
-
-class SettingsState {
-  Locale? locale;
-  String? theme;
-  int? fontSize;
-  bool? showArchive;
-
-  SettingsState([this.locale, this.theme, this.fontSize, this.showArchive]);
-
-  //переопределено == и hashCode для возможности тестирования
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SettingsState &&
-          runtimeType == other.runtimeType &&
-          locale == other.locale &&
-          theme == other.theme &&
-          fontSize == other.fontSize &&
-          showArchive == other.showArchive;
-
-  @override
-  int get hashCode =>
-      locale.hashCode ^
-      theme.hashCode ^
-      fontSize.hashCode ^
-      showArchive.hashCode;
-}
+part 'settings_state.dart';
+part 'settings_event.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   SettingsBloc() : super(SettingsState(Locale('en', ''), 'Pale', 12, true)) {
