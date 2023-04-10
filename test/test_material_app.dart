@@ -10,6 +10,7 @@ class TestMaterialApp extends StatelessWidget {
   final String boxName;
   final String archiveName;
   final SettingsBloc settingsBloc;
+  final ActivitiesBloc? activitiesBloc;
 
   const TestMaterialApp({
     Key? key,
@@ -17,6 +18,7 @@ class TestMaterialApp extends StatelessWidget {
     required this.boxName,
     required this.archiveName,
     required this.settingsBloc,
+    ActivitiesBloc? this.activitiesBloc,
   }) : super(key: key);
 
   @override
@@ -31,7 +33,8 @@ class TestMaterialApp extends StatelessWidget {
       supportedLocales: [Locale('en', '')],
       home: MultiBlocProvider(
         providers: [
-          BlocProvider<ActivitiesBloc>(
+          if (activitiesBloc != null) BlocProvider.value(value: activitiesBloc!)
+          else BlocProvider<ActivitiesBloc>(
               create: (_) => ActivitiesBloc(boxName, archiveName)),
           BlocProvider.value(value: settingsBloc),
         ],

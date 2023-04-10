@@ -1,9 +1,12 @@
+//import 'dart:html';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_test/hive_test.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
+import 'package:minimal_time_tracker/data/activity_bloc.dart';
 import 'package:minimal_time_tracker/screens/add_activity_screen.dart';
 import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 import 'package:mocktail/mocktail.dart';
@@ -11,6 +14,9 @@ import 'test_material_app.dart';
 
 class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
     implements SettingsBloc {}
+
+class MockActivitiesBloc extends MockBloc<ActivityEvent, ActivitiesState>
+    implements ActivitiesBloc {}
 
 class BoxDecorationColoredFinder extends MatchFinder {
   Color color;
@@ -43,6 +49,7 @@ void main() {
     late Box<Activity> testActivitiesBox;
     late Box<Activity> testArchiveBox;
     late SettingsBloc settingsBloc;
+    late ActivitiesBloc activitiesBloc;
 
     setUpAll(() {
       Hive.registerAdapter(ActivityAdapter());
@@ -62,8 +69,7 @@ void main() {
       await tearDownTestHive();
     });
 
-    testWidgets('default new activity screen',
-        (widgetTester) async {
+    testWidgets('default new activity screen', (widgetTester) async {
       when(() => settingsBloc.state)
           .thenReturn(SettingsState(Locale('en', ''), 'Olive', 12, true));
 
@@ -98,7 +104,7 @@ void main() {
       final states = <MaterialState>{};
       final buttonFinder = find.byWidgetPredicate((widget) =>
           widget is OutlinedButton &&
-          (widget.style?.backgroundColor?.resolve(states) == Colors.white));
+          (widget.style?.backgroundColor?.resolve(states) == Colors.white12));
       expect(buttonFinder, findsNWidgets(2));
       expect(find.text('1h'), findsOneWidget);
       expect(find.text('30m'), findsOneWidget);
@@ -120,29 +126,94 @@ void main() {
       expect(find.byKey(Key('noTitleSnackBar')), findsOneWidget);
     });
 
-    testWidgets('switch to table buttons',
-            (widgetTester) async {
-          when(() => settingsBloc.state)
-              .thenReturn(SettingsState(Locale('en', ''), 'Olive', 12, true));
+    testWidgets('switch to table buttons', (widgetTester) async {
+      when(() => settingsBloc.state)
+          .thenReturn(SettingsState(Locale('en', ''), 'Olive', 12, true));
 
-          await widgetTester.pumpWidget(TestMaterialApp(
-              child: AddActivityScreen(),
-              boxName: boxName,
-              archiveName: archiveName,
-              settingsBloc: settingsBloc));
+      await widgetTester.pumpWidget(TestMaterialApp(
+          child: AddActivityScreen(),
+          boxName: boxName,
+          archiveName: archiveName,
+          settingsBloc: settingsBloc));
 
-          await widgetTester.tap(find.byType(Switch));
-          await widgetTester.pump();
-          expect(find.text('+'), findsOneWidget);
+      await widgetTester.tap(find.byType(Switch));
+      await widgetTester.pump();
+      expect(find.text('+'), findsOneWidget);
 
-          final states = <MaterialState>{};
-          final buttonFinder = find.byWidgetPredicate((widget) =>
+      final states = <MaterialState>{};
+      final buttonFinder = find.byWidgetPredicate((widget) =>
           widget is OutlinedButton &&
-              (widget.style?.backgroundColor?.resolve(states) == Colors.white));
-          expect(buttonFinder, findsNothing);
-          expect(find.text('1h'), findsNothing);
-          expect(find.text('30m'), findsNothing);
-          expect(find.text('0'), findsOneWidget);
-        });
+          (widget.style?.backgroundColor?.resolve(states) == Colors.white12));
+      expect(buttonFinder, findsNothing);
+      expect(find.text('1h'), findsNothing);
+      expect(find.text('30m'), findsNothing);
+      expect(find.text('0'), findsOneWidget);
+    });
+
+    testWidgets('screen with edited activity', (widgetTester) async {
+
+      when(() => settingsBloc.state)
+          .thenReturn(SettingsState(Locale('en', ''), 'Olive', 12, true));
+
+      int testColor = 1;
+      Presentation testPresentation = Presentation.BUTTONS;
+      Map<Duration, bool> testDurationButtons = {
+        Duration(minutes: 15): true,
+        Duration(minutes: 10): true
+      };
+      Activity testActivity = Activity(
+        title: 'test title',
+        subtitle: 'test subtitle',
+        durationButtons: [Duration(minutes: 15), Duration(minutes: 10)],
+        presentation: testPresentation,
+        color: testColor,
+      );
+
+      activitiesBloc = MockActivitiesBloc();
+      when(() => activitiesBloc.state).thenReturn(ActivitiesState(
+        testActivitiesBox,
+        testArchiveBox,
+        testDurationButtons,
+        testColor,
+        testPresentation,
+        2,
+        testActivity,
+      ));
+
+      testActivity.addInterval(TimeInterval.duration(
+          end: DateTime.now(), duration: Duration(minutes: 15)));
+      testActivity.addInterval(TimeInterval.duration(
+          end: DateTime.now(), duration: Duration(minutes: 10)));
+      testActivity.addInterval(TimeInterval.duration(
+          end: DateTime.now(), duration: Duration(minutes: 10)));
+
+      await widgetTester.pumpWidget(TestMaterialApp(
+        child: AddActivityScreen.editActivity(editedActivity: testActivity),
+        boxName: boxName,
+        archiveName: archiveName,
+        settingsBloc: settingsBloc,
+        activitiesBloc: activitiesBloc,
+      ));
+
+      expect(titleController.text, 'test title');
+      expect(subtitleController.text, 'test subtitle');
+
+      final states = <MaterialState>{};
+      final buttonFinder = find.byWidgetPredicate((widget) =>
+          widget is OutlinedButton &&
+          (widget.style?.backgroundColor?.resolve(states) == Colors.black12));
+      expect(buttonFinder, findsNWidgets(2));
+      expect(find.text('15m'), findsOneWidget);
+      expect(find.text('10m'), findsOneWidget);
+
+      expect(find.byKey(Key('editActivityData')), findsOneWidget);
+      expect(find.byKey(Key('editActivityDataCard')), findsNWidgets(3));
+      expect(find.byKey(Key('editActivityDataButton')), findsOneWidget);
+      expect(find.text('Total: 35m'), findsOneWidget);
+
+      final Finder deleteButtonFinder =
+          find.byKey(Key('editActivityDataButton'));
+
+    });
   });
 }

@@ -195,6 +195,7 @@ class AddActivityScreen extends StatelessWidget {
     List<Color> paletteDark = themePalettes[theme]![1];
 
     return Column(
+      key: Key('editActivityData'),
       children: [
         Text(AppLocalizations.of(context)!.addedIntervals),
         Container(
@@ -207,6 +208,7 @@ class AddActivityScreen extends StatelessWidget {
               itemCount: editedActivity.intervalsList.length,
               itemBuilder: (context, int index) {
                 return Card(
+                  key: Key('editActivityDataCard'),
                   child: ListTile(
                     //substring отсекает миллисекунды
                     title: Text(
@@ -226,6 +228,7 @@ class AddActivityScreen extends StatelessWidget {
         Text(
             '${AppLocalizations.of(context)!.totalCap}: ${stringDuration(editedActivity.totalTime(), context)}'),
         OutlinedButton(
+            key: Key('editActivityDataButton'),
             onPressed: () {
               BlocProvider.of<ActivitiesBloc>(context)
                   .add(DeleteAllIntervalsEditedActivity());
@@ -275,7 +278,7 @@ class AddActivityScreen extends StatelessWidget {
             for (MapEntry<Duration, bool> d in durations.entries)
               OutlinedButton(
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: d.value ? Colors.black12 : Colors.white,
+                  backgroundColor: d.value ? Colors.black12 : Colors.white12,
                 ),
                 child: Text(stringDuration(d.key, context)),
                 onPressed: () {
