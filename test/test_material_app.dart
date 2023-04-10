@@ -5,6 +5,8 @@ import 'package:minimal_time_tracker/settings/settings_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+//вспомогательная обёртка для тестируемых виджетов
+
 class TestMaterialApp extends StatelessWidget {
   final Widget child;
   final String boxName;

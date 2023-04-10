@@ -29,6 +29,7 @@ class SettingsScreen extends StatelessWidget {
                     AppLocalizations.of(context)!.language,
                   ),
                   DropdownButton(
+                    key: Key('languageCodeDropdownButton'),
                     value: settingsState.locale!.languageCode.substring(0, 2),
                     icon: const Icon(Icons.arrow_downward),
                     items: supportedLocales
@@ -51,6 +52,7 @@ class SettingsScreen extends StatelessWidget {
                     AppLocalizations.of(context)!.theme,
                   ),
                   DropdownButton(
+                    key: Key('themeDropdownButton'),
                     value: settingsState.theme,
                     icon: const Icon(Icons.arrow_downward),
                     items: themePalettes.keys
@@ -73,6 +75,7 @@ class SettingsScreen extends StatelessWidget {
                     AppLocalizations.of(context)!.font,
                   ),
                   DropdownButton(
+                    key: Key('fontDropdownButton'),
                     value: settingsState.fontSize,
                     icon: const Icon(Icons.arrow_downward),
                     items: fontSizes.map<DropdownMenuItem<int>>((int value) {
@@ -92,6 +95,7 @@ class SettingsScreen extends StatelessWidget {
                   const SpacerBox(),
                   Text(AppLocalizations.of(context)!.showArchivedActivities),
                   Switch(
+                    key: Key('archiveSwitch'),
                     value: settingsState.showArchive!,
                     onChanged: (bool value) {
                       BlocProvider.of<SettingsBloc>(context)

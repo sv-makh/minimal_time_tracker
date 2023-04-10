@@ -13,7 +13,7 @@ class ActivitiesState {
       this.color, this.presentation, this.numOfCells,
       [this.editedActivity]);
 
-/*  @override
+  @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is ActivitiesState &&
@@ -41,5 +41,5 @@ class ActivitiesState {
         numOfCells.hashCode ^
         editedActivity.hashCode;
     return result;
-  }*/
+  }
 }

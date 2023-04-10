@@ -5,7 +5,6 @@ import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/data/activity_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_test/hive_test.dart';
-import 'package:mocktail/mocktail.dart';
 
 void main() {
   group('ActivitiesBloc tests', () {
@@ -60,7 +59,6 @@ void main() {
 
     blocTest<ActivitiesBloc, ActivitiesState>(
       'deleting activity',
-      //setUp: () => testActivitiesBox.add(Activity(title: 'title')),
       build: () => ActivitiesBloc(boxName, archiveName),
       act: (bloc) => bloc.add(ActivityDeleted(index: 0)),
       expect: () => [testActivitiesState],

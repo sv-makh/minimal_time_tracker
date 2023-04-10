@@ -1,5 +1,3 @@
-//import 'dart:html';
-
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -210,9 +208,6 @@ void main() {
       expect(find.byKey(Key('editActivityDataCard')), findsNWidgets(3));
       expect(find.byKey(Key('editActivityDataButton')), findsOneWidget);
       expect(find.text('Total: 35m'), findsOneWidget);
-
-      final Finder deleteButtonFinder =
-          find.byKey(Key('editActivityDataButton'));
 
     });
   });
