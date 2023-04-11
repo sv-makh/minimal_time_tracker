@@ -38,7 +38,7 @@ void main() {
       testActivitiesBox = await Hive.openBox<Activity>(boxName);
       testArchiveBox = await Hive.openBox<Activity>(archiveName);
       await testActivitiesBox.add(Activity(title: 'title0'));
-      testActivitiesState = ActivitiesState(
+      testActivitiesState = NormalActivitiesState(
           testActivitiesBox,
           testArchiveBox,
           defaultDurationButtons,
@@ -101,7 +101,7 @@ void main() {
       act: (bloc) =>
           bloc.add(AddedDurationButton(duration: Duration(minutes: 15))),
       expect: () => [
-        ActivitiesState(
+        NormalActivitiesState(
             testActivitiesBox,
             testArchiveBox,
             {
@@ -121,7 +121,7 @@ void main() {
       act: (bloc) =>
           bloc.add(PressedDurationButton(duration: Duration(minutes: 30))),
       expect: () => [
-        ActivitiesState(
+        NormalActivitiesState(
             testActivitiesBox,
             testArchiveBox,
             {
@@ -139,7 +139,7 @@ void main() {
       build: () => ActivitiesBloc(boxName, archiveName),
       act: (bloc) => bloc.add(ChangeColor(color: 1)),
       expect: () => [
-        ActivitiesState(testActivitiesBox, testArchiveBox,
+        NormalActivitiesState(testActivitiesBox, testArchiveBox,
             defaultDurationButtons, 1, defaultPresentation, defaultNumOfCells)
       ],
     );
@@ -164,7 +164,7 @@ void main() {
       build: () => ActivitiesBloc(boxName, archiveName),
       act: (bloc) =>
           bloc.add(ChangePresentation(presentation: Presentation.TABLE)),
-      expect: () => [ActivitiesState(
+      expect: () => [NormalActivitiesState(
         testActivitiesBox,
         testArchiveBox,
         {},
@@ -180,7 +180,7 @@ void main() {
       act: (bloc) =>
           bloc.add(AddedDurationForTable(duration: Duration(minutes: 15))),
       expect: () => [
-        ActivitiesState(
+        NormalActivitiesState(
             testActivitiesBox,
             testArchiveBox,
             {Duration(minutes: 15): false},
@@ -222,7 +222,7 @@ void main() {
       build: () => ActivitiesBloc(boxName, archiveName),
       act: (bloc) => bloc.add(EditActivity(activity: testActivity)),
       expect: () => [
-        ActivitiesState(
+        NormalActivitiesState(
           testActivitiesBox,
           testArchiveBox,
           {Duration(minutes: 10): true, Duration(minutes: 1): true},
@@ -263,7 +263,7 @@ void main() {
           ..add(EditActivity(activity: testActivity))
           ..add(DeleteIntervalEditedActivity(index: 1)),
         expect: () => [
-              ActivitiesState(
+          NormalActivitiesState(
                 testActivitiesBox,
                 testArchiveBox,
                 {Duration(minutes: 10): true, Duration(minutes: 1): true},
@@ -297,7 +297,7 @@ void main() {
           ..add(EditActivity(activity: testActivity))
           ..add(DeleteAllIntervalsEditedActivity()),
         expect: () => [
-              ActivitiesState(
+          NormalActivitiesState(
                 testActivitiesBox,
                 testArchiveBox,
                 {Duration(minutes: 10): true, Duration(minutes: 1): true},

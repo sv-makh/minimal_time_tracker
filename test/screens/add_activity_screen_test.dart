@@ -168,7 +168,7 @@ void main() {
       );
 
       activitiesBloc = MockActivitiesBloc();
-      when(() => activitiesBloc.state).thenReturn(ActivitiesState(
+      when(() => activitiesBloc.state).thenReturn(NormalActivitiesState(
         testActivitiesBox,
         testArchiveBox,
         testDurationButtons,

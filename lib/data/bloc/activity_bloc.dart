@@ -34,7 +34,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
   Activity? editedActivity;
 
   ActivitiesBloc(this.boxName, this.archiveName)
-      : super(ActivitiesState(
+      : super(NormalActivitiesState(
           Hive.box<Activity>(boxName),
           Hive.box<Activity>(archiveName),
           {
@@ -51,7 +51,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
     on<ActivityDeleted>(
         (ActivityDeleted event, Emitter<ActivitiesState> emitter) {
         activitiesBox.deleteAt(event.index);
-        return emitter(ActivitiesState(activitiesBox, archiveBox,
+        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
             durationButtons, color, presentation, numOfCells));
     });
 
@@ -60,7 +60,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       Activity activity = activitiesBox.getAt(event.index)!;
       activity.addInterval(event.interval);
       activitiesBox.putAt(event.index, activity);
-      return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
+      return emitter(NormalActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells));
     });
 
@@ -70,7 +70,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         Duration(hours: 1): false,
         Duration(minutes: 30): false,
       };
-      return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
+      return emitter(NormalActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells));
     });
 
@@ -78,7 +78,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         (AddedDurationButton event, Emitter<ActivitiesState> emitter) {
       durationButtons.update(event.duration, (value) => false,
           ifAbsent: () => false);
-      return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
+      return emitter(NormalActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells, editedActivity));
     });
 
@@ -86,19 +86,19 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         (PressedDurationButton event, Emitter<ActivitiesState> emitter) {
       durationButtons.update(event.duration, (value) => !value,
           ifAbsent: () => false);
-      return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
+      return emitter(NormalActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells, editedActivity));
     });
 
     on<ChangeColor>((ChangeColor event, Emitter<ActivitiesState> emitter) {
       color = event.color;
-      return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
+      return emitter(NormalActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells, editedActivity));
     });
 
     on<PressedNewActivity>(
         (PressedNewActivity event, Emitter<ActivitiesState> emitter) {
-      return emitter(ActivitiesState(activitiesBox, archiveBox,
+      return emitter(NormalActivitiesState(activitiesBox, archiveBox,
           defaultDurationButtons, 0, Presentation.BUTTONS, numOfCells));
     });
 
@@ -114,7 +114,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           Duration(minutes: 30): false,
         };
       }
-      ActivitiesState state = ActivitiesState(activitiesBox, archiveBox, durationButtons,
+      ActivitiesState state = NormalActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells, editedActivity);
       return emitter(state);
     });
@@ -124,14 +124,14 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       durationButtons.clear();
       durationButtons.update(event.duration, (value) => false,
           ifAbsent: () => false);
-      return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
+      return emitter(NormalActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells, editedActivity));
     });
 
     on<ChangeNumOfCells>(
         (ChangeNumOfCells event, Emitter<ActivitiesState> emitter) {
       numOfCells = event.num;
-      return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
+      return emitter(NormalActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells, editedActivity));
     });
 
@@ -141,7 +141,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       activity.intervalsList.removeAt(event.intervalIndex);
       activitiesBox.putAt(event.activityIndex, activity);
 
-      return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
+      return emitter(NormalActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells));
     });
 
@@ -157,7 +157,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       }
       editedActivity = event.activity;
 
-      return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
+      return emitter(NormalActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells, editedActivity));
     });
 
@@ -165,7 +165,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         (SaveEditedActivity event, Emitter<ActivitiesState> emitter) {
       activitiesBox.putAt(event.index, event.activity);
 
-      return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
+      return emitter(NormalActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells, editedActivity));
     });
 
@@ -173,7 +173,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         (DeleteIntervalEditedActivity event, Emitter<ActivitiesState> emitter) {
       editedActivity!.intervalsList.removeAt(event.index);
 
-      return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
+      return emitter(NormalActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells, editedActivity));
     });
 
@@ -182,7 +182,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
             Emitter<ActivitiesState> emitter) {
       editedActivity!.intervalsList.clear();
 
-      return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
+      return emitter(NormalActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells, editedActivity));
     });
 
@@ -192,7 +192,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       archiveBox.add(activity);
       activitiesBox.deleteAt(event.index);
 
-      return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
+      return emitter(NormalActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells, editedActivity));
     });
 
@@ -202,7 +202,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       activitiesBox.add(activity);
       archiveBox.deleteAt(event.index);
 
-      return emitter(ActivitiesState(activitiesBox, archiveBox, durationButtons,
+      return emitter(NormalActivitiesState(activitiesBox, archiveBox, durationButtons,
           color, presentation, numOfCells, editedActivity));
     });
   }

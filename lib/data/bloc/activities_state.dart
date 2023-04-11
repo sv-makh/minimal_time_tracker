@@ -1,19 +1,34 @@
 part of 'activity_bloc.dart';
 
-class ActivitiesState {
+abstract class ActivitiesState extends Equatable {
+  const ActivitiesState();
+}
+
+class NormalActivitiesState extends ActivitiesState {
   final Box<Activity> activitiesBox;
   final Box<Activity> archiveBox;
-  Map<Duration, bool> durationButtons;
-  int color;
-  Presentation presentation;
-  int numOfCells;
-  Activity? editedActivity;
+  final Map<Duration, bool> durationButtons;
+  final int color;
+  final Presentation presentation;
+  final int numOfCells;
+  final Activity? editedActivity;
 
-  ActivitiesState(this.activitiesBox, this.archiveBox, this.durationButtons,
-      this.color, this.presentation, this.numOfCells,
+  NormalActivitiesState(this.activitiesBox, this.archiveBox,
+      this.durationButtons, this.color, this.presentation, this.numOfCells,
       [this.editedActivity]);
 
   @override
+  List<Object?> get props => [
+        activitiesBox,
+        archiveBox,
+        durationButtons,
+        color,
+        presentation,
+        numOfCells,
+        editedActivity,
+      ];
+
+/*  @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is ActivitiesState &&
@@ -41,5 +56,10 @@ class ActivitiesState {
     numOfCells.hashCode ^
     editedActivity.hashCode;
     return result;
-  }
+  }*/
+}
+
+class ActivitiesError extends ActivitiesState {
+  @override
+  List<Object?> get props => [];
 }

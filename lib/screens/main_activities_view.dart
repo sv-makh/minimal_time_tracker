@@ -31,7 +31,7 @@ class MainActivitiesView extends StatelessWidget {
                 )
               ],
             ),
-            body: (state.activitiesBox.values.isEmpty &&
+            body: ((state as NormalActivitiesState).activitiesBox.values.isEmpty &&
                     state.archiveBox.values.isEmpty)
                 ? Center(
                     child: Text(
