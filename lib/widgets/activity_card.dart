@@ -23,80 +23,83 @@ class ActivityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
-      builder: (context, SettingsState settingsState) {
-        List<Color> palette = themePalettes[settingsState.theme]![0];
-        List<Color> paletteDark = themePalettes[settingsState.theme]![1];
-        List<Color> paletteInactive = themePalettes[settingsState.theme]![2];
+        builder: (context, SettingsState settingsState) {
+      return BlocBuilder<ActivitiesBloc, ActivitiesState>(
+        builder: (context, ActivitiesState state) {
+          List<Color> palette = themePalettes[settingsState.theme]![0];
+          List<Color> paletteDark = themePalettes[settingsState.theme]![1];
+          List<Color> paletteInactive = themePalettes[settingsState.theme]![2];
 
-        //цвет фона карточки активности берётся из разных палитр
-        //в зависимости от того, находится ли эта активность в архиве
-        Color _cardColor(bool activityArchived) {
-          if (activityArchived) {
-            return paletteInactive[activity.color ?? 0];
-          } else {
-            return palette[activity.color ?? 0];
+          //цвет фона карточки активности берётся из разных палитр
+          //в зависимости от того, находится ли эта активность в архиве
+          Color _cardColor(bool activityArchived) {
+            if (activityArchived) {
+              return paletteInactive[activity.color ?? 0];
+            } else {
+              return palette[activity.color ?? 0];
+            }
           }
-        }
 
-        return Card(
-          color: _cardColor(archived),
-          child: Column(children: [
-            ListTile(
-                title: Text(
-                  key: Key('title of activity'),
-                  '${activity.title}, ${AppLocalizations.of(context)!.total} = '
-                  '${stringDuration(activity.totalTime(), context)}',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                subtitle: (activity.subtitle != null)
-                    ? Text(
-                        key: Key('subtitle of activity'),
-                        activity.subtitle!,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      )
-                    : Container(),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () {
-                        _deleteDialog(context);
-                      },
-                    ),
-                    archived
-                        ? Container()
-                        : IconButton(
-                            onPressed: () {
-                              _editActivity(context);
-                            },
-                            icon: const Icon(Icons.edit),
-                          ),
-                    archived
-                        ? IconButton(
-                            onPressed: () {
-                              _unarchiveActivity(context);
-                            },
-                            icon: const Icon(Icons.unarchive),
-                          )
-                        : IconButton(
-                            onPressed: () {
-                              _archiveActivity(context);
-                            },
-                            icon: const Icon(Icons.archive),
-                          ),
-                  ],
-                )),
-            //добавление времени к активности происходит в виджетах
-            //в зависимости от того, какое представление для этой активности
-            //выбрано
-            (activity.presentation == Presentation.BUTTONS)
-                ? _rowOfButtons(context)
-                : _table(context, settingsState.theme!)
-          ]),
-        );
-      },
-    );
+          return Card(
+            color: _cardColor(archived),
+            child: Column(children: [
+              ListTile(
+                  title: Text(
+                    key: Key('title of activity'),
+                    '${activity.title}, ${AppLocalizations.of(context)!.total} = '
+                    '${stringDuration(activity.totalTime(), context)}',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  subtitle: (activity.subtitle != null)
+                      ? Text(
+                          key: Key('subtitle of activity'),
+                          activity.subtitle!,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        )
+                      : Container(),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          _deleteDialog(context);
+                        },
+                      ),
+                      archived
+                          ? Container()
+                          : IconButton(
+                              onPressed: () {
+                                _editActivity(context);
+                              },
+                              icon: const Icon(Icons.edit),
+                            ),
+                      archived
+                          ? IconButton(
+                              onPressed: () {
+                                _unarchiveActivity(context);
+                              },
+                              icon: const Icon(Icons.unarchive),
+                            )
+                          : IconButton(
+                              onPressed: () {
+                                _archiveActivity(context);
+                              },
+                              icon: const Icon(Icons.archive),
+                            ),
+                    ],
+                  )),
+              //добавление времени к активности происходит в виджетах
+              //в зависимости от того, какое представление для этой активности
+              //выбрано
+              (activity.presentation == Presentation.BUTTONS)
+                  ? _rowOfButtons(context)
+                  : _table(context, settingsState.theme!)
+            ]),
+          );
+        },
+      );
+    });
   }
 
   Future<void> _editActivity(BuildContext context) async {
@@ -171,36 +174,39 @@ class ActivityCard extends StatelessWidget {
   }
 
   Widget _rowOfButtons(BuildContext context) {
-    return (activity.durationButtons.isEmpty)
-        ? Container()
-        : Column(
-            key: Key('rowOfButtons'),
-            children: [
-              Text(
-                '${AppLocalizations.of(context)!.addedIntervals} ${activity.intervalsList.length}',
-              ),
-              Wrap(
-                spacing: 5,
-                runSpacing: 2.5,
-                children: [
-                  for (var d in activity.durationButtons)
-                    OutlinedButton(
-                      onPressed: !archived
-                          ? () {
-                              BlocProvider.of<ActivitiesBloc>(context)
-                                  .add(ActivityAddedTime(
-                                index: activityIndex,
-                                interval: TimeInterval.duration(
-                                    end: DateTime.now(), duration: d),
-                              ));
-                            }
-                          : null,
-                      child: Text('+ ${stringDuration(d, context)}'),
-                    )
-                ],
-              ),
-            ],
-          );
+    return BlocBuilder<ActivitiesBloc, ActivitiesState>(
+        builder: (context, ActivitiesState state) {
+      return (activity.durationButtons.isEmpty)
+          ? Container()
+          : Column(
+              key: Key('rowOfButtons'),
+              children: [
+                Text(
+                  '${AppLocalizations.of(context)!.addedIntervals} ${activity.intervalsList.length}',
+                ),
+                Wrap(
+                  spacing: 5,
+                  runSpacing: 2.5,
+                  children: [
+                    for (var d in activity.durationButtons)
+                      OutlinedButton(
+                        onPressed: !archived
+                            ? () {
+                                BlocProvider.of<ActivitiesBloc>(context)
+                                    .add(ActivityAddedTime(
+                                  index: activityIndex,
+                                  interval: TimeInterval.duration(
+                                      end: DateTime.now(), duration: d),
+                                ));
+                              }
+                            : null,
+                        child: Text('+ ${stringDuration(d, context)}'),
+                      )
+                  ],
+                ),
+              ],
+            );
+    });
   }
 
   Widget _table(BuildContext context, String theme) {
@@ -231,61 +237,65 @@ class ActivityCard extends StatelessWidget {
     List<Color> palette = themePalettes[theme]![0];
     List<Color> paletteDark = themePalettes[theme]![1];
 
-    return (activity.durationButtons.isEmpty)
-        ? Container()
-        : Column(
-            key: Key('tableOfButtons'),
-            children: [
-              Text('${AppLocalizations.of(context)!.checkedCells} '
-                  '${activity.intervalsList.length}'),
-              Text('${AppLocalizations.of(context)!.totalCap}: '
-                  '${activity.maxNum}'),
-              Wrap(
-                spacing: 5,
-                runSpacing: 2.5,
-                children: [
-                  for (int i = 0; i < activity.durationButtons.length; i++)
-                    OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: _wasPressed(i)
-                            ? paletteDark[activity.color!]
-                            : palette[activity.color!],
-                        side: _isInactive(i) || archived
+    return BlocBuilder<ActivitiesBloc, ActivitiesState>(
+        builder: (context, ActivitiesState state) {
+      return (activity.durationButtons.isEmpty)
+          ? Container()
+          : Column(
+              key: Key('tableOfButtons'),
+              children: [
+                Text('${AppLocalizations.of(context)!.checkedCells} '
+                    '${activity.intervalsList.length}'),
+                Text('${AppLocalizations.of(context)!.totalCap}: '
+                    '${activity.maxNum}'),
+                Wrap(
+                  spacing: 5,
+                  runSpacing: 2.5,
+                  children: [
+                    for (int i = 0; i < activity.durationButtons.length; i++)
+                      OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: _wasPressed(i)
+                              ? paletteDark[activity.color!]
+                              : palette[activity.color!],
+                          side: _isInactive(i) || archived
+                              ? null
+                              : BorderSide(
+                                  color: paletteDark[activity.color!],
+                                  width: 3.0),
+                        ),
+                        onPressed: _isInactive(i) || archived
                             ? null
-                            : BorderSide(
-                                color: paletteDark[activity.color!],
-                                width: 3.0),
-                      ),
-                      onPressed: _isInactive(i) || archived
-                          ? null
-                          : () {
-                              BlocProvider.of<ActivitiesBloc>(context)
-                                  .add(ActivityAddedTime(
-                                index: activityIndex,
-                                interval: TimeInterval.duration(
-                                    end: DateTime.now(),
-                                    duration: activity.durationButtons[i]),
-                              ));
-                            },
-                      onLongPress: _wasPressed(i) && !archived
-                          ? () {
-                              //здесь индекс i кнопки из durationButtons можно использовать
-                              //как индекс интервала из intervalsList, т.к.
-                              //условие _wasPressed(i) обеспечивает выполнение
-                              //i < длины intervalsList
-                              BlocProvider.of<ActivitiesBloc>(context).add(
-                                  DeleteIntervalWithIndex(
-                                      activityIndex: activityIndex,
-                                      intervalIndex: i));
-                            }
-                          : null,
-                      child: _isInactive(i)
-                          ? const Text('')
-                          : Text('+ ${stringDuration(activity.durationButtons[0], context)}'),
-                    )
-                ],
-              ),
-            ],
-          );
+                            : () {
+                                BlocProvider.of<ActivitiesBloc>(context)
+                                    .add(ActivityAddedTime(
+                                  index: activityIndex,
+                                  interval: TimeInterval.duration(
+                                      end: DateTime.now(),
+                                      duration: activity.durationButtons[i]),
+                                ));
+                              },
+                        onLongPress: _wasPressed(i) && !archived
+                            ? () {
+                                //здесь индекс i кнопки из durationButtons можно использовать
+                                //как индекс интервала из intervalsList, т.к.
+                                //условие _wasPressed(i) обеспечивает выполнение
+                                //i < длины intervalsList
+                                BlocProvider.of<ActivitiesBloc>(context).add(
+                                    DeleteIntervalWithIndex(
+                                        activityIndex: activityIndex,
+                                        intervalIndex: i));
+                              }
+                            : null,
+                        child: _isInactive(i)
+                            ? const Text('')
+                            : Text(
+                                '+ ${stringDuration(activity.durationButtons[0], context)}'),
+                      )
+                  ],
+                ),
+              ],
+            );
+    });
   }
 }
