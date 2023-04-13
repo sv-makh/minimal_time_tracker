@@ -5,22 +5,22 @@ abstract class ActivitiesState extends Equatable {
 }
 
 class NormalActivitiesState extends ActivitiesState {
-  final Box<Activity> activitiesBox;
-  final Box<Activity> archiveBox;
+  //final Box<Activity> activitiesBox;
+  //final Box<Activity> archiveBox;
   final Map<Duration, bool> durationButtons;
   final int color;
   final Presentation presentation;
   final int numOfCells;
   final Activity? editedActivity;
 
-  NormalActivitiesState(this.activitiesBox, this.archiveBox,
+  NormalActivitiesState(//this.activitiesBox, this.archiveBox,
       this.durationButtons, this.color, this.presentation, this.numOfCells,
       [this.editedActivity]);
 
   @override
   List<Object?> get props => [
-        activitiesBox,
-        archiveBox,
+        //activitiesBox,
+        //archiveBox,
         durationButtons,
         color,
         presentation,

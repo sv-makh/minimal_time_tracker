@@ -5,7 +5,7 @@ import 'package:hive_test/hive_test.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
 import 'package:minimal_time_tracker/widgets/activity_card.dart';
-import 'package:minimal_time_tracker/screens/main_activities_view.dart';
+import 'package:minimal_time_tracker/screens/main_view_screen.dart';
 import '../test_material_app.dart';
 
 void main() {

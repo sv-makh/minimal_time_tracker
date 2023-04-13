@@ -7,7 +7,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:minimal_time_tracker/data/bloc/activity_bloc.dart';
 import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/screens/main_activities_view.dart';
+import 'package:minimal_time_tracker/screens/main_view_screen.dart';
 import 'package:minimal_time_tracker/settings/settings_data.dart';
 import 'package:minimal_time_tracker/settings/themes.dart';
 
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: supportedLocales,
-          home: const MainActivitiesView(),
+          home: MainActivitiesView(),
         );
       }),
     );

@@ -2,6 +2,7 @@ part of 'activity_bloc.dart';
 
 abstract class ActivityEvent extends Equatable {}
 
+//!
 class ActivityDeleted extends ActivityEvent {
   final int index;
 
@@ -11,6 +12,7 @@ class ActivityDeleted extends ActivityEvent {
   List<Object?> get props => [index];
 }
 
+//!
 class ActivityAdded extends ActivityEvent {
   final Activity activity;
 
@@ -20,6 +22,7 @@ class ActivityAdded extends ActivityEvent {
   List<Object?> get props => [activity];
 }
 
+//!
 class ActivityAddedTime extends ActivityEvent {
   final int index;
   final TimeInterval interval;
@@ -57,6 +60,7 @@ class ChangeColor extends ActivityEvent {
   List<Object?> get props => [color];
 }
 
+//!
 class PressedNewActivity extends ActivityEvent {
   @override
   List<Object?> get props => [];
@@ -100,6 +104,7 @@ class DeleteIntervalWithIndex extends ActivityEvent {
   List<Object?> get props => [intervalIndex, activityIndex];
 }
 
+//!
 class EditActivity extends ActivityEvent {
   final Activity activity;
 
@@ -135,6 +140,7 @@ class DeleteAllIntervalsEditedActivity extends ActivityEvent {
   List<Object?> get props => [];
 }
 
+//!
 class ActivityArchived extends ActivityEvent {
   final int index;
 
@@ -144,6 +150,7 @@ class ActivityArchived extends ActivityEvent {
   List<Object?> get props => [index];
 }
 
+//!
 class ActivityUnarchived extends ActivityEvent {
   final int index;
 

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive/hive.dart';
 
 import 'package:minimal_time_tracker/screens/add_activity_screen.dart';
 import 'package:minimal_time_tracker/screens/settings_screen.dart';
@@ -10,8 +11,14 @@ import 'package:minimal_time_tracker/widgets/activity_card.dart';
 import 'package:minimal_time_tracker/data/bloc/activity_bloc.dart';
 import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
 
+import '../data/activity.dart';
+import '../data/hive_data.dart';
+
 class MainActivitiesView extends StatelessWidget {
-  const MainActivitiesView({Key? key}) : super(key: key);
+  MainActivitiesView({Key? key}) : super(key: key);
+
+  Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
+  Box<Activity> archiveBox = Hive.box<Activity>(archiveName);
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +38,9 @@ class MainActivitiesView extends StatelessWidget {
                 )
               ],
             ),
-            body: ((state as NormalActivitiesState).activitiesBox.values.isEmpty &&
-                    state.archiveBox.values.isEmpty)
+            body: (activitiesBox.values.isEmpty && archiveBox.values.isEmpty)
+            //((state as NormalActivitiesState).activitiesBox.values.isEmpty &&
+            //        state.archiveBox.values.isEmpty)
                 ? Center(
                     child: Text(
                       AppLocalizations.of(context)!.noActivities,
@@ -45,18 +53,18 @@ class MainActivitiesView extends StatelessWidget {
                         ListView.builder(
                           key: Key('activitiesBoxListView.builder'),
                           shrinkWrap: true,
-                          itemCount: state.activitiesBox.length,
+                          itemCount: activitiesBox.length,//state.activitiesBox.length,
                           itemBuilder: (BuildContext context, int index) {
                             return ActivityCard(
                               key: UniqueKey(),
-                              activity: state.activitiesBox.getAt(index)!,
+                              activity: activitiesBox.getAt(index)!,//state.activitiesBox.getAt(index)!,
                               activityIndex: index,
                               archived: false,
                             );
                           },
                         ),
                         (settingsState.showArchive! &&
-                                state.activitiesBox.values.isNotEmpty)
+                            activitiesBox.values.isNotEmpty)//state.activitiesBox.values.isNotEmpty)
                             ? const SizedBox(
                                 height: 20,
                               )
@@ -71,10 +79,10 @@ class MainActivitiesView extends StatelessWidget {
                             ? ListView.builder(
                                 key: Key('archiveListView.builder'),
                                 shrinkWrap: true,
-                                itemCount: state.archiveBox.length,
+                                itemCount: archiveBox.length,//state.archiveBox.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return ActivityCard(
-                                    activity: state.archiveBox.getAt(index)!,
+                                    activity: archiveBox.getAt(index)!,//state.archiveBox.getAt(index)!,
                                     activityIndex: index,
                                     archived: true,
                                   );
