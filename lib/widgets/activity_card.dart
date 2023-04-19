@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:minimal_time_tracker/bloc/main_view_bloc/main_view_bloc.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/data/bloc/activity_bloc.dart';
 import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
@@ -26,6 +27,9 @@ class ActivityCard extends StatelessWidget {
         builder: (context, SettingsState settingsState) {
       return BlocBuilder<ActivitiesBloc, ActivitiesState>(
         builder: (context, ActivitiesState state) {
+          return BlocBuilder<MainViewBloc, MainViewState>(
+            builder: (context, MainViewState mvState) {
+
           List<Color> palette = themePalettes[settingsState.theme]![0];
           List<Color> paletteDark = themePalettes[settingsState.theme]![1];
           List<Color> paletteInactive = themePalettes[settingsState.theme]![2];
@@ -98,13 +102,16 @@ class ActivityCard extends StatelessWidget {
             ]),
           );
         },
-      );
+      );});
     });
   }
 
   Future<void> _editActivity(BuildContext context) async {
-    BlocProvider.of<ActivitiesBloc>(context)
-        .add(EditActivity(activity: activity));
+    //BlocProvider.of<ActivitiesBloc>(context)
+    //    .add(EditActivity(activity: activity));
+
+    BlocProvider.of<MainViewBloc>(context)
+        .add(EditActivityMve(index: activityIndex));
 
     await Navigator.push(
       context,
@@ -113,13 +120,18 @@ class ActivityCard extends StatelessWidget {
           editedActivity: activity,
         ),
       ),
-    ).then((value) => BlocProvider.of<ActivitiesBloc>(context)
-        .add(SaveEditedActivity(activity: value, index: activityIndex)));
+    ).then((value) => //BlocProvider.of<ActivitiesBloc>(context)
+        //.add(SaveEditedActivity(activity: value, index: activityIndex)));
+
+    BlocProvider.of<MainViewBloc>(context)
+        .add(SaveEditedActivityMve(activity: value, index: activityIndex)));
   }
 
   void _unarchiveActivity(BuildContext context) {
-    BlocProvider.of<ActivitiesBloc>(context)
-        .add(ActivityUnarchived(index: activityIndex));
+    //BlocProvider.of<ActivitiesBloc>(context)
+    //    .add(ActivityUnarchived(index: activityIndex));
+    BlocProvider.of<MainViewBloc>(context)
+        .add(ActivityUnarchivedMve(index: activityIndex));
   }
 
   Future<void> _archiveActivity(BuildContext context) {
@@ -137,8 +149,10 @@ class ActivityCard extends StatelessWidget {
                 child: Text(AppLocalizations.of(context)!.cancel)),
             TextButton(
                 onPressed: () {
-                  BlocProvider.of<ActivitiesBloc>(context)
-                      .add(ActivityArchived(index: activityIndex));
+                  //BlocProvider.of<ActivitiesBloc>(context)
+                  //    .add(ActivityArchived(index: activityIndex));
+                  BlocProvider.of<MainViewBloc>(context)
+                      .add(ActivityArchivedMve(index: activityIndex));
                   Navigator.of(context).pop();
                 },
                 child: Text(AppLocalizations.of(context)!.archive)),
@@ -163,8 +177,10 @@ class ActivityCard extends StatelessWidget {
                   child: Text(AppLocalizations.of(context)!.cancel)),
               TextButton(
                   onPressed: () {
-                    BlocProvider.of<ActivitiesBloc>(context)
-                        .add(ActivityDeleted(index: activityIndex));
+                    //BlocProvider.of<ActivitiesBloc>(context)
+                    //    .add(ActivityDeleted(index: activityIndex));
+                    BlocProvider.of<MainViewBloc>(context)
+                        .add(ActivityDeletedMve(index: activityIndex));
                     Navigator.of(context).pop();
                   },
                   child: Text(AppLocalizations.of(context)!.delete)),
@@ -174,8 +190,8 @@ class ActivityCard extends StatelessWidget {
   }
 
   Widget _rowOfButtons(BuildContext context) {
-    return BlocBuilder<ActivitiesBloc, ActivitiesState>(
-        builder: (context, ActivitiesState state) {
+    return BlocBuilder<MainViewBloc, MainViewState>(
+        builder: (context, MainViewState state) {
       return (activity.durationButtons.isEmpty)
           ? Container()
           : Column(
@@ -192,8 +208,9 @@ class ActivityCard extends StatelessWidget {
                       OutlinedButton(
                         onPressed: !archived
                             ? () {
-                                BlocProvider.of<ActivitiesBloc>(context)
-                                    .add(ActivityAddedTime(
+                          BlocProvider.of<MainViewBloc>(context)
+                                //BlocProvider.of<ActivitiesBloc>(context)
+                                    .add(ActivityAddedTimeMve(
                                   index: activityIndex,
                                   interval: TimeInterval.duration(
                                       end: DateTime.now(), duration: d),
@@ -237,8 +254,8 @@ class ActivityCard extends StatelessWidget {
     List<Color> palette = themePalettes[theme]![0];
     List<Color> paletteDark = themePalettes[theme]![1];
 
-    return BlocBuilder<ActivitiesBloc, ActivitiesState>(
-        builder: (context, ActivitiesState state) {
+    return BlocBuilder<MainViewBloc, MainViewState>(
+        builder: (context, MainViewState state) {
       return (activity.durationButtons.isEmpty)
           ? Container()
           : Column(
@@ -267,8 +284,9 @@ class ActivityCard extends StatelessWidget {
                         onPressed: _isInactive(i) || archived
                             ? null
                             : () {
-                                BlocProvider.of<ActivitiesBloc>(context)
-                                    .add(ActivityAddedTime(
+                                //BlocProvider.of<ActivitiesBloc>(context)
+                                BlocProvider.of<MainViewBloc>(context)
+                                    .add(ActivityAddedTimeMve(
                                   index: activityIndex,
                                   interval: TimeInterval.duration(
                                       end: DateTime.now(),
@@ -281,10 +299,10 @@ class ActivityCard extends StatelessWidget {
                                 //как индекс интервала из intervalsList, т.к.
                                 //условие _wasPressed(i) обеспечивает выполнение
                                 //i < длины intervalsList
-                                BlocProvider.of<ActivitiesBloc>(context).add(
+/*                                BlocProvider.of<ActivitiesBloc>(context).add(
                                     DeleteIntervalWithIndex(
                                         activityIndex: activityIndex,
-                                        intervalIndex: i));
+                                        intervalIndex: i));*/
                               }
                             : null,
                         child: _isInactive(i)

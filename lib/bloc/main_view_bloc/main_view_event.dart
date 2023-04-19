@@ -13,6 +13,7 @@ class ActivityDeletedMve extends MainViewEvent {
   List<Object?> get props => [index];
 }
 
+//?
 class ActivityAddedMve extends MainViewEvent {
   final Activity activity;
 
@@ -38,12 +39,22 @@ class PressedNewActivityMve extends MainViewEvent {
 }
 
 class EditActivityMve extends MainViewEvent {
-  final Activity activity;
+  final int index;
 
-  const EditActivityMve({required this.activity});
+  const EditActivityMve({required this.index});
 
   @override
-  List<Object?> get props => [activity];
+  List<Object?> get props => [index];
+}
+
+class SaveEditedActivityMve extends MainViewEvent {
+  final Activity activity;
+  final int index;
+
+  const SaveEditedActivityMve({required this.activity, required this.index});
+
+  @override
+  List<Object?> get props => [activity, index];
 }
 
 class ActivityArchivedMve extends MainViewEvent {

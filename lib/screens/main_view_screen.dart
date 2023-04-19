@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
+import 'package:minimal_time_tracker/bloc/main_view_bloc/main_view_bloc.dart';
 
 import 'package:minimal_time_tracker/screens/add_activity_screen.dart';
 import 'package:minimal_time_tracker/screens/settings_screen.dart';
@@ -26,6 +27,8 @@ class MainActivitiesView extends StatelessWidget {
         builder: (context, SettingsState settingsState) {
       return BlocBuilder<ActivitiesBloc, ActivitiesState>(
         builder: (context, ActivitiesState state) {
+          return BlocBuilder<MainViewBloc, MainViewState>(
+            builder: (context, MainViewState mvState) {
           return Scaffold(
             appBar: AppBar(
               title: Text(AppLocalizations.of(context)!.title),
@@ -98,7 +101,7 @@ class MainActivitiesView extends StatelessWidget {
                 _addActivity(context);
               },
             ),
-          );
+          );});
         },
       );
     });
@@ -110,12 +113,15 @@ class MainActivitiesView extends StatelessWidget {
   }
 
   Future<void> _addActivity(BuildContext context) async {
-    BlocProvider.of<ActivitiesBloc>(context).add(PressedNewActivity());
+    //BlocProvider.of<ActivitiesBloc>(context).add(PressedNewActivity());
+    BlocProvider.of<MainViewBloc>(context).add(PressedNewActivityMve());
 
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => AddActivityScreen()),
-    ).then((value) => BlocProvider.of<ActivitiesBloc>(context)
-        .add(ActivityAdded(activity: value)));
+    ).then((value) => //BlocProvider.of<ActivitiesBloc>(context)
+        //.add(ActivityAdded(activity: value)));
+    BlocProvider.of<MainViewBloc>(context)
+        .add(ActivityAddedMve(activity: value)));
   }
 }

@@ -1,5 +1,7 @@
 //import 'package:build_runner/build_runner.dart';
+import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
+import 'package:collection/collection.dart';
 
 part 'activity.g.dart';
 
@@ -31,6 +33,48 @@ class Activity {
       this.maxNum,
       this.color})
       : durationButtons = durationButtons ?? [];
+
+  @override
+  bool operator ==(Object other) {
+    //Function deepEq = const DeepCollectionEquality().equals;
+    Function eq = const ListEquality().equals;
+
+/*    Activity act = other as Activity;
+    print('identical(this, other) is ${identical(this, other)}');
+    print('title == other.title is ${other is Activity && title == other.title}');
+    print('subtitle == other.subtitle is ${other is Activity && subtitle == other.subtitle}');
+    print('eq(_intervals, other._intervals) is ${other is Activity && eq(_intervals, other._intervals)}');
+    print('_intervals l = ${_intervals.length}; other._intervals l = ${act._intervals.length}');
+    print('eq(durationButtons, other.durationButtons) is ${other is Activity && eq(durationButtons, other.durationButtons)}');
+    print('presentation == other.presentation is ${other is Activity && presentation == other.presentation}');
+    print('color == other.color is ${other is Activity && color == other.color}');
+    print('maxNum == other.maxNum is ${other is Activity && maxNum == other.maxNum}');*/
+
+    return //identical(this, other) ||
+        other is Activity &&
+            title == other.title &&
+            subtitle == other.subtitle &&
+            eq(_intervals, other._intervals) &&
+            eq(durationButtons, other.durationButtons) &&//result &&
+            presentation == other.presentation &&
+            color == other.color &&
+            maxNum == other.maxNum;
+  }
+
+  @override
+  int get hashCode {
+    int iHash = 1;
+    for (var e in _intervals) { iHash ^= e.hashCode; }
+    int dHash = 1;
+    for (var e in durationButtons) { dHash ^= e.hashCode; }
+    return title.hashCode ^
+    subtitle.hashCode ^
+    iHash ^
+    dHash ^
+    presentation.hashCode ^
+    color.hashCode ^
+    maxNum.hashCode;
+  }
 
   void addInterval(TimeInterval ti) {
     _intervals.add(ti);
@@ -70,6 +114,18 @@ class TimeInterval {
   Duration length() {
     return duration;
   }
+
+  @override
+  bool operator ==(Object other) {
+    return //identical(this, other) ||
+        other is TimeInterval && start == other.start && end == other.end && duration == other.duration;
+  }
+
+  @override
+  int get hashCode {
+    return start.hashCode ^ end.hashCode ^ duration.hashCode;
+  }
+
 }
 
 class DurationAdapter extends TypeAdapter<Duration> {

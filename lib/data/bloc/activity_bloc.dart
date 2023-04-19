@@ -48,6 +48,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
     Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
     Box<Activity> archiveBox = Hive.box<Activity>(archiveName);
 
+    //!
     on<ActivityDeleted>(
         (ActivityDeleted event, Emitter<ActivitiesState> emitter) {
         activitiesBox.deleteAt(event.index);
@@ -55,6 +56,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
             durationButtons, color, presentation, numOfCells));
     });
 
+    //!
     on<ActivityAddedTime>(
         (ActivityAddedTime event, Emitter<ActivitiesState> emitter) {
       Activity activity = activitiesBox.getAt(event.index)!;
@@ -64,6 +66,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           color, presentation, numOfCells));
     });
 
+    //!
     on<ActivityAdded>((ActivityAdded event, Emitter<ActivitiesState> emitter) {
       activitiesBox.add(event.activity);
       durationButtons = {
@@ -96,6 +99,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           color, presentation, numOfCells, editedActivity));
     });
 
+    //!
     on<PressedNewActivity>(
         (PressedNewActivity event, Emitter<ActivitiesState> emitter) {
       return emitter(NormalActivitiesState(
@@ -145,6 +149,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           color, presentation, numOfCells));
     });
 
+    //!
     on<EditActivity>((EditActivity event, Emitter<ActivitiesState> emitter) {
       durationButtons.clear();
       for (var d in event.activity.durationButtons) {
@@ -161,6 +166,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           color, presentation, numOfCells, editedActivity));
     });
 
+    //!
     on<SaveEditedActivity>(
         (SaveEditedActivity event, Emitter<ActivitiesState> emitter) {
       activitiesBox.putAt(event.index, event.activity);
@@ -186,6 +192,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           color, presentation, numOfCells, editedActivity));
     });
 
+    //!
     on<ActivityArchived>(
         (ActivityArchived event, Emitter<ActivitiesState> emitter) {
       Activity activity = activitiesBox.getAt(event.index)!;
@@ -196,6 +203,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           color, presentation, numOfCells, editedActivity));
     });
 
+    //!
     on<ActivityUnarchived>(
         (ActivityUnarchived event, Emitter<ActivitiesState> emitter) {
       Activity activity = archiveBox.getAt(event.index)!;

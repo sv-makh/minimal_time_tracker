@@ -114,6 +114,7 @@ class EditActivity extends ActivityEvent {
   List<Object?> get props => [activity];
 }
 
+//!
 class SaveEditedActivity extends ActivityEvent {
   final Activity activity;
   final int index;

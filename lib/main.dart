@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:minimal_time_tracker/bloc/main_view_bloc/main_view_bloc.dart';
 
 import 'package:minimal_time_tracker/data/bloc/activity_bloc.dart';
 import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<ActivitiesBloc>(create: (_) => ActivitiesBloc(boxName, archiveName)),
         BlocProvider<SettingsBloc>(create: (_) => SettingsBloc()),
+        BlocProvider<MainViewBloc>(create: (_) => MainViewBloc(boxName: boxName, archiveName: archiveName)),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
           builder: (context, SettingsState state) {
