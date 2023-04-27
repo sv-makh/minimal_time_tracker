@@ -49,7 +49,7 @@ class MainActivitiesView extends StatelessWidget {
                             itemCount: state.activitiesBox.length,
                             itemBuilder: (BuildContext context, int index) {
                               return ActivityCard(
-                                key: UniqueKey(),
+                                //key: UniqueKey(),
                                 activity: state.activitiesBox.getAt(index)!,
                                 activityIndex: index,
                                 archived: false,
