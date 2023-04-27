@@ -38,5 +38,6 @@
     "restoreActivity": "Restore activity?",
     "archive": "Archive",
     "archivedActivities": "Archived activities",
-    "showArchivedActivities": "Show archived activities"
+    "showArchivedActivities": "Show archived activities",
+    "somethingWrong": "Something went wrong!"
 }

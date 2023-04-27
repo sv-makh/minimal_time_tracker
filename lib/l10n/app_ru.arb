@@ -38,5 +38,6 @@
     "restoreActivity": "Восстановить активность?",
     "archive": "Архивировать",
     "archivedActivities": "Архивированные активности",
-    "showArchivedActivities": "Показывать архивированные активности"
+    "showArchivedActivities": "Показывать архивированные активности",
+    "somethingWrong": "Что-то пошло не так!"
 }

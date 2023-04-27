@@ -3,7 +3,12 @@ part of 'activity_bloc.dart';
 //без наследования от Equatable и без переопределения == и hashCode
 //чтобы блок ребилдил виджеты для каждого состояния
 //https://bloclibrary.dev/#/faqs?id=when-to-use-equatable
-class ActivitiesState {
+
+abstract class ActivitiesState {
+  ActivitiesState();
+}
+
+class NormalActivitiesState extends ActivitiesState {
   final Box<Activity> activitiesBox;
   final Box<Activity> archiveBox;
   Map<Duration, bool> durationButtons;
@@ -12,7 +17,7 @@ class ActivitiesState {
   int numOfCells;
   Activity? editedActivity;
 
-  ActivitiesState(this.activitiesBox, this.archiveBox, this.durationButtons,
+  NormalActivitiesState(this.activitiesBox, this.archiveBox, this.durationButtons,
       this.color, this.presentation, this.numOfCells,
       [this.editedActivity]);
 
@@ -45,4 +50,7 @@ class ActivitiesState {
     editedActivity.hashCode;
     return result;
   }*/
+}
+
+class ActivitiesError extends ActivitiesState {
 }

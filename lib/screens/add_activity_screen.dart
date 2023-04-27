@@ -36,156 +36,160 @@ class AddActivityScreen extends StatelessWidget {
     return BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, settingsState) {
       return BlocBuilder<ActivitiesBloc, ActivitiesState>(
-          builder: (context, ActivitiesState state) {
-        Map<Duration, bool> durations = state.durationButtons;
+          builder: (context, state) {
+        if (state is NormalActivitiesState) {
+          Map<Duration, bool> durations = state.durationButtons;
 
-        bool presentationValue;
+          bool presentationValue;
 
-        if (state.presentation == Presentation.BUTTONS) {
-          presentationValue = true;
-        } else {
-          presentationValue = false;
-        }
+          if (state.presentation == Presentation.BUTTONS) {
+            presentationValue = true;
+          } else {
+            presentationValue = false;
+          }
 
-        if (editedActivity != null) {
-          //заголовок у активности есть всегда
-          _titleOfEditedActivity = editedActivity!.title;
-          titleController.text = _titleOfEditedActivity;
+          if (editedActivity != null) {
+            //заголовок у активности есть всегда
+            _titleOfEditedActivity = editedActivity!.title;
+            titleController.text = _titleOfEditedActivity;
 
-          //подзаголовка может не быть
-          _subtitleOfEditedActivity = (editedActivity!.subtitle == null)
-              ? ''
-              : editedActivity!.subtitle!;
-          subtitleController.text = _subtitleOfEditedActivity;
-        }
+            //подзаголовка может не быть
+            _subtitleOfEditedActivity = (editedActivity!.subtitle == null)
+                ? ''
+                : editedActivity!.subtitle!;
+            subtitleController.text = _subtitleOfEditedActivity;
+          }
 
-        _numOfCells = state.numOfCells.toString();
+          _numOfCells = state.numOfCells.toString();
 
-        return Scaffold(
-          backgroundColor: themePalettes[settingsState.theme]![0][state.color],
-          appBar: AppBar(
-            title: (editedActivity == null)
-                ? Text(AppLocalizations.of(context)!.addNewActivity)
-                : Text(AppLocalizations.of(context)!.editActivity),
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.save),
-                onPressed: () {
-                  if (titleController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      key: Key('noTitleSnackBar'),
-                      content: Text(AppLocalizations.of(context)!.enterTitle),
-                      duration: const Duration(seconds: 3),
-                      //backgroundColor: messageColor,
-                      action: SnackBarAction(
-                        label: 'Ok',
-                        textColor: Colors.black,
-                        onPressed: () {},
-                      ),
-                    ));
-                  } else {
-                    Activity activity = Activity(
-                      title: titleController.text,
-                      subtitle: subtitleController.text,
-                      color: state.color,
-                      presentation: state.presentation,
-                    );
-
-                    if (state.presentation == Presentation.BUTTONS) {
-                      for (MapEntry<Duration, bool> d in durations.entries) {
-                        if (d.value) activity.addDurationButton(d.key);
-                      }
+          return Scaffold(
+            backgroundColor: themePalettes[settingsState.theme]![0]
+                [state.color],
+            appBar: AppBar(
+              title: (editedActivity == null)
+                  ? Text(AppLocalizations.of(context)!.addNewActivity)
+                  : Text(AppLocalizations.of(context)!.editActivity),
+              actions: <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.save),
+                  onPressed: () {
+                    if (titleController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        key: Key('noTitleSnackBar'),
+                        content: Text(AppLocalizations.of(context)!.enterTitle),
+                        duration: const Duration(seconds: 3),
+                        //backgroundColor: messageColor,
+                        action: SnackBarAction(
+                          label: 'Ok',
+                          textColor: Colors.black,
+                          onPressed: () {},
+                        ),
+                      ));
                     } else {
-                      int currentNum = int.tryParse(_numOfCells) ?? 0;
-                      activity.maxNum = currentNum;
-                      if (currentNum != 0) {
-                        Duration currentDuration =
-                            durations.keys.toList().first;
-                        for (int i = 0; i < currentNum; i++) {
-                          activity.addDurationButton(currentDuration);
+                      Activity activity = Activity(
+                        title: titleController.text,
+                        subtitle: subtitleController.text,
+                        color: state.color,
+                        presentation: state.presentation,
+                      );
+
+                      if (state.presentation == Presentation.BUTTONS) {
+                        for (MapEntry<Duration, bool> d in durations.entries) {
+                          if (d.value) activity.addDurationButton(d.key);
+                        }
+                      } else {
+                        int currentNum = int.tryParse(_numOfCells) ?? 0;
+                        activity.maxNum = currentNum;
+                        if (currentNum != 0) {
+                          Duration currentDuration =
+                              durations.keys.toList().first;
+                          for (int i = 0; i < currentNum; i++) {
+                            activity.addDurationButton(currentDuration);
+                          }
                         }
                       }
-                    }
 
-                    //в случае редактирования существующей активности
-                    //заполняются недостающие поля
-                    if (editedActivity != null) {
-                      for (var interval
-                          in state.editedActivity!.intervalsList) {
-                        activity.addInterval(interval);
+                      //в случае редактирования существующей активности
+                      //заполняются недостающие поля
+                      if (editedActivity != null) {
+                        for (var interval
+                            in state.editedActivity!.intervalsList) {
+                          activity.addInterval(interval);
+                        }
+                        activity.durationButtons =
+                            editedActivity!.durationButtons;
                       }
-                      activity.durationButtons =
-                          editedActivity!.durationButtons;
+
+                      durations.clear();
+
+                      Navigator.pop(
+                        context,
+                        activity,
+                      );
                     }
-
-                    durations.clear();
-
-                    Navigator.pop(
-                      context,
-                      activity,
-                    );
-                  }
-                },
-              ),
-            ],
-          ),
-          body: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Text(AppLocalizations.of(context)!.titleActivity),
-                    TextField(
-                      controller: titleController,
-                      onChanged: (value) => _titleOfEditedActivity = value,
-                    ),
-                    const SpacerBox(),
-                    Text(AppLocalizations.of(context)!.subtitleActivity),
-                    TextField(
-                      controller: subtitleController,
-                      onChanged: (value) => _subtitleOfEditedActivity = value,
-                    ),
-                    const SpacerBox(),
-                    Text(AppLocalizations.of(context)!.color),
-                    _colorPicker(context, state.color, settingsState.theme!),
-                    const SpacerBox(),
-                    Text(AppLocalizations.of(context)!.addNewIntervals),
-                    Row(
-                      children: [
-                        Text(AppLocalizations.of(context)!.presentaionTable),
-                        Switch(
-                            value: presentationValue,
-                            onChanged: (bool value) {
-                              Presentation p = value
-                                  ? Presentation.BUTTONS
-                                  : Presentation.TABLE;
-                              BlocProvider.of<ActivitiesBloc>(context)
-                                  .add(ChangePresentation(presentation: p));
-                            }),
-                        Text(AppLocalizations.of(context)!
-                            .presentationIntervals),
-                      ],
-                    ),
-                    const SpacerBox(),
-                    //виджет для настройки того как будет добавляться время к активности
-                    //с помощью кнопок либо таблицы
-                    (state.presentation == Presentation.BUTTONS)
-                        ? _buttonSettings(context, durations)
-                        : _tableSettings(context, durations),
-                    const SpacerBox(),
-                    //если эта страница открыта для редактирования существующей активности
-                    //ниже выводится виджет для редактирования запомненных интервалов
-                    (editedActivity == null)
-                        ? Container()
-                        : _editActivityData(context, state.color,
-                            settingsState.theme!, state.editedActivity!),
-                  ],
+                  },
+                ),
+              ],
+            ),
+            body: SafeArea(
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Text(AppLocalizations.of(context)!.titleActivity),
+                      TextField(
+                        controller: titleController,
+                        onChanged: (value) => _titleOfEditedActivity = value,
+                      ),
+                      const SpacerBox(),
+                      Text(AppLocalizations.of(context)!.subtitleActivity),
+                      TextField(
+                        controller: subtitleController,
+                        onChanged: (value) => _subtitleOfEditedActivity = value,
+                      ),
+                      const SpacerBox(),
+                      Text(AppLocalizations.of(context)!.color),
+                      _colorPicker(context, state.color, settingsState.theme!),
+                      const SpacerBox(),
+                      Text(AppLocalizations.of(context)!.addNewIntervals),
+                      Row(
+                        children: [
+                          Text(AppLocalizations.of(context)!.presentaionTable),
+                          Switch(
+                              value: presentationValue,
+                              onChanged: (bool value) {
+                                Presentation p = value
+                                    ? Presentation.BUTTONS
+                                    : Presentation.TABLE;
+                                BlocProvider.of<ActivitiesBloc>(context)
+                                    .add(ChangePresentation(presentation: p));
+                              }),
+                          Text(AppLocalizations.of(context)!
+                              .presentationIntervals),
+                        ],
+                      ),
+                      const SpacerBox(),
+                      //виджет для настройки того как будет добавляться время к активности
+                      //с помощью кнопок либо таблицы
+                      (state.presentation == Presentation.BUTTONS)
+                          ? _buttonSettings(context, durations)
+                          : _tableSettings(context, durations),
+                      const SpacerBox(),
+                      //если эта страница открыта для редактирования существующей активности
+                      //ниже выводится виджет для редактирования запомненных интервалов
+                      (editedActivity == null)
+                          ? Container()
+                          : _editActivityData(context, state.color,
+                              settingsState.theme!, state.editedActivity!),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
+          );
+        }
+        return Text(AppLocalizations.of(context)!.somethingWrong);
       });
     });
   }
