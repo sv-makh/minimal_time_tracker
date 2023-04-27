@@ -1,5 +1,8 @@
 part of 'activity_bloc.dart';
 
+//без наследования от Equatable и без переопределения == и hashCode
+//чтобы блок ребилдил виджеты для каждого состояния
+//https://bloclibrary.dev/#/faqs?id=when-to-use-equatable
 class ActivitiesState {
   final Box<Activity> activitiesBox;
   final Box<Activity> archiveBox;
@@ -13,7 +16,7 @@ class ActivitiesState {
       this.color, this.presentation, this.numOfCells,
       [this.editedActivity]);
 
-  @override
+/*  @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is ActivitiesState &&
@@ -41,5 +44,5 @@ class ActivitiesState {
     numOfCells.hashCode ^
     editedActivity.hashCode;
     return result;
-  }
+  }*/
 }

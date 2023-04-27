@@ -34,7 +34,7 @@ class AddActivityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
-        builder: (context, SettingsState settingsState) {
+        builder: (context, settingsState) {
       return BlocBuilder<ActivitiesBloc, ActivitiesState>(
           builder: (context, ActivitiesState state) {
         Map<Duration, bool> durations = state.durationButtons;
