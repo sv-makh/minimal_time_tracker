@@ -68,8 +68,12 @@ void main() {
     });
 
     testWidgets('default new activity screen', (widgetTester) async {
-      when(() => settingsBloc.state)
-          .thenReturn(SettingsState(Locale('en', ''), 'Olive', 12, true));
+      when(() => settingsBloc.state).thenReturn(SettingsState(
+          locale: Locale('en', ''),
+          theme: 'Olive',
+          fontSize: 12,
+          showArchive: true,
+          status: Status.normal));
 
       await widgetTester.pumpWidget(TestMaterialApp(
           child: AddActivityScreen(),
@@ -110,8 +114,12 @@ void main() {
 
     testWidgets('show SnackBar when trying to save with no title',
         (widgetTester) async {
-      when(() => settingsBloc.state)
-          .thenReturn(SettingsState(Locale('en', ''), 'Olive', 12, true));
+      when(() => settingsBloc.state).thenReturn(SettingsState(
+          locale: Locale('en', ''),
+          theme: 'Olive',
+          fontSize: 12,
+          showArchive: true,
+          status: Status.normal));
 
       await widgetTester.pumpWidget(TestMaterialApp(
           child: AddActivityScreen(),
@@ -125,8 +133,12 @@ void main() {
     });
 
     testWidgets('switch to table buttons', (widgetTester) async {
-      when(() => settingsBloc.state)
-          .thenReturn(SettingsState(Locale('en', ''), 'Olive', 12, true));
+      when(() => settingsBloc.state).thenReturn(SettingsState(
+          locale: Locale('en', ''),
+          theme: 'Olive',
+          fontSize: 12,
+          showArchive: true,
+          status: Status.normal));
 
       await widgetTester.pumpWidget(TestMaterialApp(
           child: AddActivityScreen(),
@@ -149,9 +161,12 @@ void main() {
     });
 
     testWidgets('screen with edited activity', (widgetTester) async {
-
-      when(() => settingsBloc.state)
-          .thenReturn(SettingsState(Locale('en', ''), 'Olive', 12, true));
+      when(() => settingsBloc.state).thenReturn(SettingsState(
+          locale: Locale('en', ''),
+          theme: 'Olive',
+          fontSize: 12,
+          showArchive: true,
+          status: Status.normal));
 
       int testColor = 1;
       Presentation testPresentation = Presentation.BUTTONS;
@@ -168,7 +183,7 @@ void main() {
       );
 
       activitiesBloc = MockActivitiesBloc();
-      when(() => activitiesBloc.state).thenReturn(ActivitiesState(
+      when(() => activitiesBloc.state).thenReturn(NormalActivitiesState(
         testActivitiesBox,
         testArchiveBox,
         testDurationButtons,
@@ -208,7 +223,6 @@ void main() {
       expect(find.byKey(Key('editActivityDataCard')), findsNWidgets(3));
       expect(find.byKey(Key('editActivityDataButton')), findsOneWidget);
       expect(find.text('Total: 35m'), findsOneWidget);
-
     });
   });
 }

@@ -85,16 +85,30 @@ void main() {
     });
 
     test('testing stubbing the bloc stream and emitting one state', () async {
-      when(() => settingsBloc.state)
-          .thenReturn(SettingsState(Locale('en', ''), 'Pale', 12, true));
-      expect(settingsBloc.state,
-          equals(SettingsState(Locale('en', ''), 'Pale', 12, true)));
+      when(() => settingsBloc.state).thenReturn(SettingsState(
+          locale: Locale('en', ''),
+          theme: 'Pale',
+          fontSize: 12,
+          showArchive: true,
+          status: Status.normal));
+      expect(
+          settingsBloc.state,
+          equals(SettingsState(
+              locale: Locale('en', ''),
+              theme: 'Pale',
+              fontSize: 12,
+              showArchive: true,
+              status: Status.normal)));
     });
 
     testWidgets('activity only with title, not in archive',
         (widgetTester) async {
-      when(() => settingsBloc.state)
-          .thenReturn(SettingsState(Locale('en', ''), 'Pale', 12, true));
+      when(() => settingsBloc.state).thenReturn(SettingsState(
+          locale: Locale('en', ''),
+          theme: 'Pale',
+          fontSize: 12,
+          showArchive: true,
+          status: Status.normal));
 
       await widgetTester.pumpWidget(TestMaterialApp(
         child: ActivityCard(
@@ -137,8 +151,12 @@ void main() {
             end: DateTime.now(), duration: Duration(hours: 1)));
       }
 
-      when(() => settingsBloc.state)
-          .thenReturn(SettingsState(Locale('en', ''), 'Olive', 12, true));
+      when(() => settingsBloc.state).thenReturn(SettingsState(
+          locale: Locale('en', ''),
+          theme: 'Olive',
+          fontSize: 12,
+          showArchive: true,
+          status: Status.normal));
 
       await widgetTester.pumpWidget(TestMaterialApp(
         child: ActivityCard(
@@ -183,8 +201,12 @@ void main() {
       testActivity.addInterval(TimeInterval.duration(
           end: DateTime.now(), duration: Duration(minutes: 40)));
 
-      when(() => settingsBloc.state)
-          .thenReturn(SettingsState(Locale('en', ''), 'Pastel', 12, true));
+      when(() => settingsBloc.state).thenReturn(SettingsState(
+          locale: Locale('en', ''),
+          theme: 'Pastel',
+          fontSize: 12,
+          showArchive: true,
+          status: Status.normal));
 
       await widgetTester.pumpWidget(TestMaterialApp(
         child: ActivityCard(

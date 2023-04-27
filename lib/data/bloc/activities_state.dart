@@ -24,7 +24,7 @@ class NormalActivitiesState extends ActivitiesState {
 /*  @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is ActivitiesState &&
+        other is NormalActivitiesState &&
             activitiesBox == other.activitiesBox &&
             archiveBox == other.archiveBox &&
             mapEquals(durationButtons, other.durationButtons) &&//result &&

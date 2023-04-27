@@ -45,7 +45,7 @@ void main() {
 
     testWidgets('default settings screen', (widgetTester) async {
       when(() => settingsBloc.state)
-          .thenReturn(SettingsState(Locale('en', ''), 'Olive', 12, true));
+          .thenReturn(SettingsState(locale: Locale('en', ''), theme: 'Olive', fontSize: 12, showArchive: true));
 
       await widgetTester.pumpWidget(TestMaterialApp(
           child: SettingsScreen(),
