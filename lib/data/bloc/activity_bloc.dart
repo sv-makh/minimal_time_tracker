@@ -80,6 +80,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           Duration(hours: 1): false,
           Duration(minutes: 30): false,
         };
+        color = 0;
         return emitter(NormalActivitiesState(activitiesBox, archiveBox,
             durationButtons, color, presentation, numOfCells));
       } catch (_) {
@@ -124,6 +125,15 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
     on<PressedNewActivity>(
         (PressedNewActivity event, Emitter<ActivitiesState> emitter) {
       try {
+        editedActivity = null;
+        color = 0;
+        durationButtons.clear();
+        durationButtons = {
+          Duration(hours: 1): false,
+          Duration(minutes: 30): false,
+        };
+        presentation = Presentation.BUTTONS;
+        numOfCells = 0;
         return emitter(NormalActivitiesState(activitiesBox, archiveBox,
             defaultDurationButtons, 0, Presentation.BUTTONS, numOfCells));
       } catch (_) {

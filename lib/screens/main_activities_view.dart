@@ -112,7 +112,7 @@ class MainActivitiesView extends StatelessWidget {
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => AddActivityScreen()),
-    ).then((value) => BlocProvider.of<ActivitiesBloc>(context)
-        .add(ActivityAdded(activity: value)));
+    ).then((value) => value != null ? BlocProvider.of<ActivitiesBloc>(context)
+        .add(ActivityAdded(activity: value)) : {});
   }
 }

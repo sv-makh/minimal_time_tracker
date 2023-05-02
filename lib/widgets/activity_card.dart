@@ -110,8 +110,8 @@ class ActivityCard extends StatelessWidget {
           editedActivity: activity,
         ),
       ),
-    ).then((value) => BlocProvider.of<ActivitiesBloc>(context)
-        .add(SaveEditedActivity(activity: value, index: activityIndex)));
+    ).then((value) => value != null ? BlocProvider.of<ActivitiesBloc>(context)
+        .add(SaveEditedActivity(activity: value, index: activityIndex)) : {});
   }
 
   void _unarchiveActivity(BuildContext context) {

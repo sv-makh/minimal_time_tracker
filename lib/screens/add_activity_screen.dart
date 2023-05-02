@@ -20,6 +20,8 @@ TextEditingController subtitleController = TextEditingController();
 class AddActivityScreen extends StatelessWidget {
   AddActivityScreen({Key? key}) : super(key: key) {
     editedActivity = null;
+    titleController.clear();
+    subtitleController.clear();
   }
 
   AddActivityScreen.editActivity({Key? key, required this.editedActivity})
@@ -116,8 +118,8 @@ class AddActivityScreen extends StatelessWidget {
                             in state.editedActivity!.intervalsList) {
                           activity.addInterval(interval);
                         }
-                        activity.durationButtons =
-                            editedActivity!.durationButtons;
+                        //activity.durationButtons =
+                        //    editedActivity!.durationButtons;
                       }
 
                       durations.clear();
@@ -154,6 +156,7 @@ class AddActivityScreen extends StatelessWidget {
                       const SpacerBox(),
                       Text(AppLocalizations.of(context)!.addNewIntervals),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(AppLocalizations.of(context)!.presentaionTable),
                           Switch(
