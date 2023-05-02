@@ -24,9 +24,9 @@ class _DurationBottomSheetState extends State<DurationBottomSheet> {
   @override
   void initState() {
     super.initState();
-    _daysController.text = '0';
-    _hoursController.text = '0';
-    _minutesController.text = '0';
+    _daysController.text = '';
+    _hoursController.text = '';
+    _minutesController.text = '';
   }
 
   @override
