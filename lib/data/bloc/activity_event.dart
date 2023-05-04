@@ -8,6 +8,12 @@ class ActivityDeleted extends ActivityEvent {
   ActivityDeleted({required this.index});
 }
 
+class ArchivedActivityDeleted extends ActivityEvent {
+  int index;
+
+  ArchivedActivityDeleted({required this.index});
+}
+
 class ActivityAdded extends ActivityEvent {
   Activity activity;
 

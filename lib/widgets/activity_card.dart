@@ -110,8 +110,10 @@ class ActivityCard extends StatelessWidget {
           editedActivity: activity,
         ),
       ),
-    ).then((value) => value != null ? BlocProvider.of<ActivitiesBloc>(context)
-        .add(SaveEditedActivity(activity: value, index: activityIndex)) : {});
+    ).then((value) => value != null
+        ? BlocProvider.of<ActivitiesBloc>(context)
+            .add(SaveEditedActivity(activity: value, index: activityIndex))
+        : {});
   }
 
   void _unarchiveActivity(BuildContext context) {
@@ -160,8 +162,11 @@ class ActivityCard extends StatelessWidget {
                   child: Text(AppLocalizations.of(context)!.cancel)),
               TextButton(
                   onPressed: () {
-                    BlocProvider.of<ActivitiesBloc>(context)
-                        .add(ActivityDeleted(index: activityIndex));
+                    archived
+                        ? BlocProvider.of<ActivitiesBloc>(context)
+                            .add(ArchivedActivityDeleted(index: activityIndex))
+                        : BlocProvider.of<ActivitiesBloc>(context)
+                            .add(ActivityDeleted(index: activityIndex));
                     Navigator.of(context).pop();
                   },
                   child: Text(AppLocalizations.of(context)!.delete)),
@@ -281,7 +286,8 @@ class ActivityCard extends StatelessWidget {
                           : null,
                       child: _isInactive(i)
                           ? const Text('')
-                          : Text('+ ${stringDuration(activity.durationButtons[0], context)}'),
+                          : Text(
+                              '+ ${stringDuration(activity.durationButtons[0], context)}'),
                     )
                 ],
               ),

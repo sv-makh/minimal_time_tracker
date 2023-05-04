@@ -2,37 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:minimal_time_tracker/data/bloc/activity_bloc.dart';
 import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
-import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/screens/main_activities_view.dart';
 import 'package:minimal_time_tracker/settings/settings_data.dart';
 import 'package:minimal_time_tracker/settings/themes.dart';
-
-import 'data/hive_data.dart';
+import 'package:minimal_time_tracker/data/activity_repository.dart';
 
 void main() async {
-  await Hive.initFlutter();
-  Hive.registerAdapter(ActivityAdapter());
-  Hive.registerAdapter(TimeIntervalAdapter());
-  Hive.registerAdapter(DurationAdapter());
-  Hive.registerAdapter(PresentationAdapter());
-  await Hive.openBox<Activity>(boxName);
-  await Hive.openBox<Activity>(archiveName);
+  ActivityRepository activityRepository = ActivityRepository();
+  await activityRepository.initRepository();
 
-  runApp(const MyApp());
+  runApp(MyApp(activityRepository: activityRepository));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final ActivityRepository activityRepository;
+
+  const MyApp({Key? key, required this.activityRepository}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ActivitiesBloc>(create: (_) => ActivitiesBloc(boxName, archiveName)),
+        BlocProvider<ActivitiesBloc>(
+            create: (_) =>
+                ActivitiesBloc(activityRepository: activityRepository)),
         BlocProvider<SettingsBloc>(create: (_) => SettingsBloc()),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
@@ -50,7 +46,7 @@ class MyApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: supportedLocales,
-          home: const MainActivitiesView(),
+          home: MainActivitiesView(activityRepository: activityRepository),
         );
       }),
     );

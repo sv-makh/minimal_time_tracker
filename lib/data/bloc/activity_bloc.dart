@@ -1,20 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
-import 'package:equatable/equatable.dart';
 
 import 'package:minimal_time_tracker/data/activity.dart';
+import 'package:minimal_time_tracker/data/activity_repository.dart';
 
 part 'activity_event.dart';
-
 part 'activities_state.dart';
 
 class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
-  String boxName;
-  String archiveName;
-
-  //Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
-  //Box<Activity> archiveBox = Hive.box<Activity>(archiveName);
+  final ActivityRepository activityRepository;
 
   Map<Duration, bool> defaultDurationButtons = {
     Duration(hours: 1): false,
@@ -34,10 +28,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
 
   Activity? editedActivity;
 
-  ActivitiesBloc(this.boxName, this.archiveName)
+  ActivitiesBloc({required this.activityRepository})
       : super(NormalActivitiesState(
-          Hive.box<Activity>(boxName),
-          Hive.box<Activity>(archiveName),
           {
             Duration(hours: 1): false,
             Duration(minutes: 30): false,
@@ -46,14 +38,22 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           Presentation.BUTTONS,
           0,
         )) {
-    Box<Activity> activitiesBox = Hive.box<Activity>(boxName);
-    Box<Activity> archiveBox = Hive.box<Activity>(archiveName);
 
     on<ActivityDeleted>(
         (ActivityDeleted event, Emitter<ActivitiesState> emitter) {
       try {
-        activitiesBox.deleteAt(event.index);
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        activityRepository.activitiesDeleteAt(event.index);
+        return emitter(NormalActivitiesState(
+            durationButtons, color, presentation, numOfCells));
+      } catch (_) {
+        return emitter(ActivitiesError());
+      }
+    });
+
+    on<ArchivedActivityDeleted>((ArchivedActivityDeleted event, Emitter<ActivitiesState> emitter) {
+      try {
+        activityRepository.archiveDeleteAt(event.index);
+        return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells));
       } catch (_) {
         return emitter(ActivitiesError());
@@ -63,10 +63,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
     on<ActivityAddedTime>(
         (ActivityAddedTime event, Emitter<ActivitiesState> emitter) {
       try {
-        Activity activity = activitiesBox.getAt(event.index)!;
-        activity.addInterval(event.interval);
-        activitiesBox.putAt(event.index, activity);
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        activityRepository.addTimeToActivity(event.index, event.interval);
+        return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells));
       } catch (_) {
         return emitter(ActivitiesError());
@@ -75,13 +73,13 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
 
     on<ActivityAdded>((ActivityAdded event, Emitter<ActivitiesState> emitter) {
       try {
-        activitiesBox.add(event.activity);
+        activityRepository.addActivityToBox(event.activity);
         durationButtons = {
           Duration(hours: 1): false,
           Duration(minutes: 30): false,
         };
         color = 0;
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells));
       } catch (_) {
         return emitter(ActivitiesError());
@@ -93,7 +91,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       try {
         durationButtons.update(event.duration, (value) => false,
             ifAbsent: () => false);
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
@@ -105,7 +103,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       try {
         durationButtons.update(event.duration, (value) => !value,
             ifAbsent: () => false);
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
@@ -115,7 +113,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
     on<ChangeColor>((ChangeColor event, Emitter<ActivitiesState> emitter) {
       try {
         color = event.color;
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
@@ -134,7 +132,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         };
         presentation = Presentation.BUTTONS;
         numOfCells = 0;
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        return emitter(NormalActivitiesState(
             defaultDurationButtons, 0, Presentation.BUTTONS, numOfCells));
       } catch (_) {
         return emitter(ActivitiesError());
@@ -154,7 +152,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
             Duration(minutes: 30): false,
           };
         }
-        ActivitiesState state = NormalActivitiesState(activitiesBox, archiveBox,
+        ActivitiesState state = NormalActivitiesState(
             durationButtons, color, presentation, numOfCells, editedActivity);
         return emitter(state);
       } catch (_) {
@@ -168,7 +166,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         durationButtons.clear();
         durationButtons.update(event.duration, (value) => false,
             ifAbsent: () => false);
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
@@ -179,7 +177,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         (ChangeNumOfCells event, Emitter<ActivitiesState> emitter) {
       try {
         numOfCells = event.num;
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
@@ -189,11 +187,9 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
     on<DeleteIntervalWithIndex>(
         (DeleteIntervalWithIndex event, Emitter<ActivitiesState> emitter) {
       try {
-        Activity activity = activitiesBox.getAt(event.activityIndex)!;
-        activity.intervalsList.removeAt(event.intervalIndex);
-        activitiesBox.putAt(event.activityIndex, activity);
+        activityRepository.deleteTimeFromActivity(event.activityIndex, event.intervalIndex);
 
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells));
       } catch (_) {
         return emitter(ActivitiesError());
@@ -213,7 +209,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         }
         editedActivity = event.activity;
 
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
@@ -223,9 +219,9 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
     on<SaveEditedActivity>(
         (SaveEditedActivity event, Emitter<ActivitiesState> emitter) {
       try {
-        activitiesBox.putAt(event.index, event.activity);
+        activityRepository.putActivityToBoxAt(event.index, event.activity);
 
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
@@ -237,7 +233,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       try {
         editedActivity!.intervalsList.removeAt(event.index);
 
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
@@ -250,7 +246,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       try {
         editedActivity!.intervalsList.clear();
 
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
@@ -260,11 +256,9 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
     on<ActivityArchived>(
         (ActivityArchived event, Emitter<ActivitiesState> emitter) {
       try {
-        Activity activity = activitiesBox.getAt(event.index)!;
-        archiveBox.add(activity);
-        activitiesBox.deleteAt(event.index);
+        activityRepository.moveActivityFromBoxToArchive(event.index);
 
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
@@ -274,11 +268,9 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
     on<ActivityUnarchived>(
         (ActivityUnarchived event, Emitter<ActivitiesState> emitter) {
       try {
-        Activity activity = archiveBox.getAt(event.index)!;
-        activitiesBox.add(activity);
-        archiveBox.deleteAt(event.index);
+        activityRepository.moveActivityFromArchiveToBox(event.index);
 
-        return emitter(NormalActivitiesState(activitiesBox, archiveBox,
+        return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());

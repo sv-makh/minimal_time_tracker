@@ -9,15 +9,15 @@ abstract class ActivitiesState {
 }
 
 class NormalActivitiesState extends ActivitiesState {
-  final Box<Activity> activitiesBox;
-  final Box<Activity> archiveBox;
+  //final Box<Activity> activitiesBox;
+  //final Box<Activity> archiveBox;
   Map<Duration, bool> durationButtons;
   int color;
   Presentation presentation;
   int numOfCells;
   Activity? editedActivity;
 
-  NormalActivitiesState(this.activitiesBox, this.archiveBox, this.durationButtons,
+  NormalActivitiesState(this.durationButtons,
       this.color, this.presentation, this.numOfCells,
       [this.editedActivity]);
 
