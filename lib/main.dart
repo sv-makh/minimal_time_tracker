@@ -9,18 +9,30 @@ import 'package:minimal_time_tracker/screens/main_activities_view.dart';
 import 'package:minimal_time_tracker/settings/settings_data.dart';
 import 'package:minimal_time_tracker/settings/themes.dart';
 import 'package:minimal_time_tracker/data/activity_repository.dart';
+import 'package:minimal_time_tracker/settings/settings_repository.dart';
 
 void main() async {
   ActivityRepository activityRepository = ActivityRepository();
   await activityRepository.initRepository();
 
-  runApp(MyApp(activityRepository: activityRepository));
+  SettingsRepository settingsRepository = SettingsRepository();
+  await settingsRepository.initRepository();
+
+  runApp(MyApp(
+    activityRepository: activityRepository,
+    settingsRepository: settingsRepository,
+  ));
 }
 
 class MyApp extends StatelessWidget {
   final ActivityRepository activityRepository;
+  final SettingsRepository settingsRepository;
 
-  const MyApp({Key? key, required this.activityRepository}) : super(key: key);
+  const MyApp(
+      {Key? key,
+      required this.activityRepository,
+      required this.settingsRepository})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +41,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<ActivitiesBloc>(
             create: (_) =>
                 ActivitiesBloc(activityRepository: activityRepository)),
-        BlocProvider<SettingsBloc>(create: (_) => SettingsBloc()),
+        BlocProvider<SettingsBloc>(
+            create: (_) =>
+                SettingsBloc(settingsRepository: settingsRepository)),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
           builder: (context, SettingsState state) {

@@ -18,8 +18,8 @@ class MockActivitiesBloc extends MockBloc<ActivityEvent, ActivitiesState>
 
 void main() {
   group('SettingsScreen tests', () {
-    String boxName = 'mockBox';
-    String archiveName = 'mockArchive';
+    //String boxName = 'mockBox';
+    //String archiveName = 'mockArchive';
     late Box<Activity> testActivitiesBox;
     late Box<Activity> testArchiveBox;
     late SettingsBloc settingsBloc;
@@ -35,8 +35,8 @@ void main() {
     setUp(() async {
       settingsBloc = MockSettingsBloc();
       await setUpTestHive();
-      testActivitiesBox = await Hive.openBox<Activity>(boxName);
-      testArchiveBox = await Hive.openBox<Activity>(archiveName);
+      //testActivitiesBox = await Hive.openBox<Activity>(boxName);
+      //testArchiveBox = await Hive.openBox<Activity>(archiveName);
     });
 
     tearDown(() async {
@@ -49,8 +49,8 @@ void main() {
 
       await widgetTester.pumpWidget(TestMaterialApp(
           child: SettingsScreen(),
-          boxName: boxName,
-          archiveName: archiveName,
+          //boxName: boxName,
+          //archiveName: archiveName,
           settingsBloc: settingsBloc));
 
       expect(find.text('Language'), findsOneWidget);

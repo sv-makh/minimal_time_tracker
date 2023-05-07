@@ -87,6 +87,10 @@ class ActivityRepository {
     activitiesBox.add(activity);
   }
 
+  void addActivityToArchive(Activity activity) {
+    archiveBox.add(activity);
+  }
+
   void deleteTimeFromActivity(int index, int intervalIndex) {
     Activity activity = activitiesBox.getAt(index)!;
     activity.intervalsList.removeAt(intervalIndex);
