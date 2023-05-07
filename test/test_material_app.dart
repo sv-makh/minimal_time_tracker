@@ -1,3 +1,4 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:minimal_time_tracker/data/bloc/activity_bloc.dart';
@@ -7,18 +8,20 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 //вспомогательная обёртка для тестируемых виджетов
 
+class MockActivitiesBloc extends MockBloc<ActivityEvent, ActivitiesState> implements ActivitiesBloc {}
+
 class TestMaterialApp extends StatelessWidget {
   final Widget child;
-  final String boxName;
-  final String archiveName;
+  //final String boxName;
+  //final String archiveName;
   final SettingsBloc settingsBloc;
   final ActivitiesBloc? activitiesBloc;
 
   const TestMaterialApp({
     Key? key,
     required this.child,
-    required this.boxName,
-    required this.archiveName,
+    //required this.boxName,
+    //required this.archiveName,
     required this.settingsBloc,
     ActivitiesBloc? this.activitiesBloc,
   }) : super(key: key);
@@ -37,7 +40,7 @@ class TestMaterialApp extends StatelessWidget {
         providers: [
           if (activitiesBloc != null) BlocProvider.value(value: activitiesBloc!)
           else BlocProvider<ActivitiesBloc>(
-              create: (_) => ActivitiesBloc(boxName, archiveName)),
+              create: (_) => MockActivitiesBloc()),
           BlocProvider.value(value: settingsBloc),
         ],
         child: child,

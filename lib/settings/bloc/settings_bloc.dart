@@ -2,16 +2,23 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:equatable/equatable.dart';
+
+import 'package:minimal_time_tracker/settings/settings_repository.dart';
 
 part 'settings_state.dart';
 
 part 'settings_event.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
-  SettingsBloc()
-      : super(SettingsState(locale: Locale('en', ''), theme: 'Pale', fontSize: 12, showArchive: true)) {
+  final SettingsRepository settingsRepository;
+
+  SettingsBloc({required this.settingsRepository})
+      : super(SettingsState(
+            locale: Locale('en', ''),
+            theme: 'Pale',
+            fontSize: 12,
+            showArchive: true)) {
     Locale? currentLocale;
     String? currentTheme;
     int? currentFont;
@@ -20,21 +27,22 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<SetInitialSetting>(
         (SetInitialSetting event, Emitter<SettingsState> emitter) async {
       try {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-
-        String langCode = prefs.getString('lang') ?? Platform.localeName;
-        String initTheme = prefs.getString('theme') ?? 'Pale';
-        int initFont = prefs.getInt('fontSize') ?? 12;
-        Locale initLocale = Locale(langCode);
-        bool initArchive = prefs.getBool('showArchive') ?? true;
+        String initTheme = settingsRepository.getTheme();
+        int initFont = settingsRepository.getFontSize();
+        Locale initLocale = settingsRepository.getLocale();
+        bool initArchive = settingsRepository.getArchiveVisibility();
 
         currentLocale = initLocale;
         currentFont = initFont;
         currentTheme = initTheme;
         currentArchive = initArchive;
 
-        return emitter(state.copyWith(locale: initLocale, theme: initTheme, fontSize: initFont, showArchive: initArchive, status: Status.normal));
-            //SettingsState(initLocale, initTheme, initFont, initArchive));
+        return emitter(state.copyWith(
+            locale: initLocale,
+            theme: initTheme,
+            fontSize: initFont,
+            showArchive: initArchive,
+            status: Status.normal));
       } catch (_) {
         return emitter(state.copyWith(status: Status.error));
       }
@@ -43,13 +51,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<ChangeLanguage>(
         (ChangeLanguage event, Emitter<SettingsState> emitter) async {
       try {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
         Locale newLocale = event.locale;
         currentLocale = newLocale;
-        prefs.setString('lang', newLocale.languageCode);
+        settingsRepository.setLocale(newLocale);
 
         return emitter(state.copyWith(locale: newLocale));
-            //NormalSettingsState(newLocale, currentTheme, currentFont, currentArchive));
       } catch (_) {
         return emitter(state.copyWith(status: Status.error));
       }
@@ -57,13 +63,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
     on<ChangeTheme>((ChangeTheme event, Emitter<SettingsState> emitter) async {
       try {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
         String newTheme = event.theme;
         currentTheme = newTheme;
-        prefs.setString('theme', newTheme);
+        settingsRepository.setTheme(newTheme);
 
         return emitter(state.copyWith(theme: newTheme));
-            //NormalSettingsState(currentLocale, newTheme, currentFont, currentArchive));
       } catch (_) {
         return emitter(state.copyWith(status: Status.error));
       }
@@ -72,13 +76,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<ChangeFontSize>(
         (ChangeFontSize event, Emitter<SettingsState> emitter) async {
       try {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
         int newFontSize = event.fontSize;
         currentFont = newFontSize;
-        prefs.setInt('fontSize', newFontSize);
+        settingsRepository.setFontSize(newFontSize);
 
         return emitter(state.copyWith(fontSize: newFontSize));
-            //NormalSettingsState(currentLocale, currentTheme, newFontSize, currentArchive));
       } catch (_) {
         return emitter(state.copyWith(status: Status.error));
       }
@@ -87,13 +89,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<ChangeArchiveVisibility>(
         (ChangeArchiveVisibility event, Emitter<SettingsState> emitter) async {
       try {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
         bool newShowArchive = event.showArchive;
         currentArchive = newShowArchive;
-        prefs.setBool('showArchive', newShowArchive);
+        settingsRepository.setArchiveVisibility(newShowArchive);
 
         return emitter(state.copyWith(showArchive: newShowArchive));
-            //NormalSettingsState(currentLocale, currentTheme, currentFont, newShowArchive));
       } catch (_) {
         return emitter(state.copyWith(status: Status.error));
       }

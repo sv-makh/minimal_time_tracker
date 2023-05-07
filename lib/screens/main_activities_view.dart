@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -9,9 +7,13 @@ import 'package:minimal_time_tracker/screens/settings_screen.dart';
 import 'package:minimal_time_tracker/widgets/activity_card.dart';
 import 'package:minimal_time_tracker/data/bloc/activity_bloc.dart';
 import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
+import 'package:minimal_time_tracker/data/activity_repository.dart';
 
 class MainActivitiesView extends StatelessWidget {
-  const MainActivitiesView({Key? key}) : super(key: key);
+  final ActivityRepository activityRepository;
+
+  const MainActivitiesView({Key? key, required this.activityRepository})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +34,8 @@ class MainActivitiesView extends StatelessWidget {
                   )
                 ],
               ),
-              body: (state.activitiesBox.values.isEmpty &&
-                      state.archiveBox.values.isEmpty)
+              body: (activityRepository.isActivitiesEmpty &&
+                      activityRepository.isArchiveEmpty)
                   ? Center(
                       child: Text(
                         AppLocalizations.of(context)!.noActivities,
@@ -46,18 +48,22 @@ class MainActivitiesView extends StatelessWidget {
                           ListView.builder(
                             key: Key('activitiesBoxListView.builder'),
                             shrinkWrap: true,
-                            itemCount: state.activitiesBox.length,
+                            itemCount: activityRepository.activitiesLength,
                             itemBuilder: (BuildContext context, int index) {
-                              return ActivityCard(
-                                //key: UniqueKey(),
-                                activity: state.activitiesBox.getAt(index)!,
-                                activityIndex: index,
-                                archived: false,
-                              );
+                              try {
+                                return ActivityCard(
+                                  activity: activityRepository
+                                      .getActivityFromBoxAt(index),
+                                  activityIndex: index,
+                                  archived: false,
+                                );
+                              } catch (_) {
+                                return Container();
+                              }
                             },
                           ),
                           (settingsState.showArchive! &&
-                                  state.activitiesBox.values.isNotEmpty)
+                                  activityRepository.isActivitiesNotEmpty)
                               ? const SizedBox(
                                   height: 20,
                                 )
@@ -73,14 +79,19 @@ class MainActivitiesView extends StatelessWidget {
                               ? ListView.builder(
                                   key: Key('archiveListView.builder'),
                                   shrinkWrap: true,
-                                  itemCount: state.archiveBox.length,
+                                  itemCount: activityRepository.archiveLength,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    return ActivityCard(
-                                      activity: state.archiveBox.getAt(index)!,
-                                      activityIndex: index,
-                                      archived: true,
-                                    );
+                                    try {
+                                      return ActivityCard(
+                                        activity: activityRepository
+                                            .getActivityFromArchiveAt(index),
+                                        activityIndex: index,
+                                        archived: true,
+                                      );
+                                    } catch (_) {
+                                      return Container();
+                                    }
                                   },
                                 )
                               : Container(),
@@ -112,7 +123,9 @@ class MainActivitiesView extends StatelessWidget {
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => AddActivityScreen()),
-    ).then((value) => value != null ? BlocProvider.of<ActivitiesBloc>(context)
-        .add(ActivityAdded(activity: value)) : {});
+    ).then((value) => value != null
+        ? BlocProvider.of<ActivitiesBloc>(context)
+            .add(ActivityAdded(activity: value))
+        : {});
   }
 }
