@@ -2,49 +2,44 @@ import 'dart:ui';
 
 //https://coolors.co/
 
-var palettes = [
-  pale,
-  dustyRose,
-  olive,
-  pastel,
-];
-
-var palettesDark = [
-  paleDark,
-  dustyRoseDark,
-  oliveDark,
-  pastelDark,
-];
-
-var palettesInactive = [
-  paleInactive,
-  dustyRoseInactive,
-  oliveInactive,
-  pastelInactive,
-];
-
 const List<Color> pale = [
-  Color(0xFFF7F7F7),
-  Color(0xFFF7F7F7),
-  Color(0xFFF7F7F7),
-  Color(0xFFF7F7F7),
-  Color(0xFFF7F7F7),
+  Color(0xFFF0FAFF),
+  Color(0xFFF0FAFF),
+  Color(0xFFF0FAFF),
+  Color(0xFFF0FAFF),
+  Color(0xFFF0FAFF),
 ];
 
 const List<Color> paleDark = [
-  Color(0xFFADADAD),
-  Color(0xFFADADAD),
-  Color(0xFFADADAD),
-  Color(0xFFADADAD),
-  Color(0xFFADADAD),
+  Color(0xFFAEC5D1),
+  Color(0xFFAEC5D1),
+  Color(0xFFAEC5D1),
+  Color(0xFFAEC5D1),
+  Color(0xFFAEC5D1),
+];
+
+const List<Color> paleDarkMode = [
+  Color(0xFF5C5C5C),
+  Color(0xFF5C5C5C),
+  Color(0xFF5C5C5C),
+  Color(0xFF5C5C5C),
+  Color(0xFF5C5C5C),
 ];
 
 const List<Color> paleInactive = [
-  Color(0xFFE1E1E1),
-  Color(0xFFE1E1E1),
-  Color(0xFFE1E1E1),
-  Color(0xFFE1E1E1),
-  Color(0xFFE1E1E1),
+  Color(0xFFD3DCE0),
+  Color(0xFFD3DCE0),
+  Color(0xFFD3DCE0),
+  Color(0xFFD3DCE0),
+  Color(0xFFD3DCE0),
+];
+
+const List<Color> paleInactiveDarkMode = [
+  Color(0xFF454545),
+  Color(0xFF454545),
+  Color(0xFF454545),
+  Color(0xFF454545),
+  Color(0xFF454545),
 ];
 
 const List<Color> dustyRose = [
@@ -96,25 +91,41 @@ const List<Color> oliveInactive = [
 ];
 
 const List<Color> pastel = [
-  Color(0xFFE9A2A2),
-  Color(0xFFD1E9A2),
-  Color(0xFF855DAC),
-  Color(0xFF73C0B8),
-  Color(0xFFECE8D1),
+  Color(0xFFE89C9C),
+  Color(0xFFCEE89C),
+  Color(0xFFC1AFD5),
+  Color(0xFFABD8D5),
+  Color(0xFFDBD3A9),
 ];
 
 const List<Color> pastelDark = [
-  Color(0xFFD54D4D),
-  Color(0xFFA8D54D),
-  Color(0xFF624382),
-  Color(0xFF469C94),
-  Color(0xFFCABF7E),
+  Color(0xFFB62B2B),
+  Color(0xFF85B62B),
+  Color(0xFF6E4D93),
+  Color(0xFF479A94),
+  Color(0xFF9E8F42),
+];
+
+const List<Color> pastelDarkMode = [
+  Color(0xFF531313),
+  Color(0xFF3C5313),
+  Color(0xFF322343),
+  Color(0xFF204643),
+  Color(0xFF48411E),
 ];
 
 const List<Color> pastelInactive = [
-  Color(0xFFD7B2B2),
-  Color(0xFFCAD7B2),
-  Color(0xFF857198),
-  Color(0xFF86ACA9),
-  Color(0xFFE5E3D7),
+  Color(0xFFD9ABAB),
+  Color(0xFFC9D9AB),
+  Color(0xFFC1B6CD),
+  Color(0xFFB4CFCE),
+  Color(0xFFD1CCB3),
+];
+
+const List<Color> pastelInactiveDarkMode = [
+  Color(0xFF462020),
+  Color(0xFF374620),
+  Color(0xFF322A3C),
+  Color(0xFF283E3C),
+  Color(0xFF403B26),
 ];

@@ -64,8 +64,12 @@ class AddActivityScreen extends StatelessWidget {
 
           _numOfCells = state.numOfCells.toString();
 
+          int themeMode = settingsState.themeMode ? 1 : 0;
+
+          bool noColorPicker = (settingsState.theme == 'Pale');
+
           return Scaffold(
-            backgroundColor: themePalettes[settingsState.theme]![0]
+            backgroundColor: themePalettes[settingsState.theme]![themeMode][0]
                 [state.color],
             appBar: AppBar(
               title: (editedActivity == null)
@@ -151,9 +155,9 @@ class AddActivityScreen extends StatelessWidget {
                         onChanged: (value) => _subtitleOfEditedActivity = value,
                       ),
                       const SpacerBox(),
-                      Text(AppLocalizations.of(context)!.color),
-                      _colorPicker(context, state.color, settingsState.theme!),
-                      const SpacerBox(),
+                      noColorPicker ? Container() : Text(AppLocalizations.of(context)!.color),
+                      noColorPicker ? Container() : _colorPicker(context, state.color, settingsState.theme!, themeMode),
+                      noColorPicker ? Container() : const SpacerBox(),
                       Text(AppLocalizations.of(context)!.addNewIntervals),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -184,7 +188,7 @@ class AddActivityScreen extends StatelessWidget {
                       (editedActivity == null)
                           ? Container()
                           : _editActivityData(context, state.color,
-                              settingsState.theme!, state.editedActivity!),
+                              settingsState.theme!, themeMode, state.editedActivity!),
                     ],
                   ),
                 ),
@@ -197,9 +201,9 @@ class AddActivityScreen extends StatelessWidget {
     });
   }
 
-  Widget _editActivityData(BuildContext context, int colorIndex, String theme,
+  Widget _editActivityData(BuildContext context, int colorIndex, String theme, int themeMode,
       Activity editedActivity) {
-    List<Color> paletteDark = themePalettes[theme]![1];
+    List<Color> paletteDark = themePalettes[theme]![themeMode][1];
 
     return Column(
       key: Key('editActivityData'),
@@ -245,9 +249,9 @@ class AddActivityScreen extends StatelessWidget {
     );
   }
 
-  Widget _colorPicker(BuildContext context, int colorIndex, String theme) {
-    List<Color> palette = themePalettes[theme]![0];
-    List<Color> paletteDark = themePalettes[theme]![1];
+  Widget _colorPicker(BuildContext context, int colorIndex, String theme, int themeMode) {
+    List<Color> palette = themePalettes[theme]![themeMode][0];
+    List<Color> paletteDark = themePalettes[theme]![themeMode][1];
 
     return Wrap(spacing: 5, runSpacing: 2.5, children: [
       for (int i = 0; i < palette.length; i++)

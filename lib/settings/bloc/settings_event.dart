@@ -8,7 +8,17 @@ class ChangeLanguage extends SettingsEvent {
   ChangeLanguage({required this.locale});
 }
 
-class SetInitialSetting extends SettingsEvent {}
+class SetInitialSetting extends SettingsEvent {
+  BuildContext context;
+
+  SetInitialSetting({required this.context});
+}
+
+class ChangeThemeMode extends SettingsEvent {
+  bool mode;
+
+  ChangeThemeMode({required this.mode});
+}
 
 class ChangeTheme extends SettingsEvent {
   String theme;

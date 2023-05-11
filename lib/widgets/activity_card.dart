@@ -24,9 +24,10 @@ class ActivityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
       builder: (context, SettingsState settingsState) {
-        List<Color> palette = themePalettes[settingsState.theme]![0];
-        List<Color> paletteDark = themePalettes[settingsState.theme]![1];
-        List<Color> paletteInactive = themePalettes[settingsState.theme]![2];
+        int themeMode = settingsState.themeMode ? 1 : 0;
+        List<Color> palette = themePalettes[settingsState.theme]![themeMode][0];
+        List<Color> paletteDark = themePalettes[settingsState.theme]![themeMode][1];
+        List<Color> paletteInactive = themePalettes[settingsState.theme]![themeMode][2];
 
         //цвет фона карточки активности берётся из разных палитр
         //в зависимости от того, находится ли эта активность в архиве
@@ -92,7 +93,7 @@ class ActivityCard extends StatelessWidget {
             //выбрано
             (activity.presentation == Presentation.BUTTONS)
                 ? _rowOfButtons(context)
-                : _table(context, settingsState.theme!)
+                : _table(context, settingsState.theme!, themeMode)
           ]),
         );
       },
@@ -208,7 +209,7 @@ class ActivityCard extends StatelessWidget {
           );
   }
 
-  Widget _table(BuildContext context, String theme) {
+  Widget _table(BuildContext context, String theme, int themeMode) {
     //кнопку в таблице можно нажать, только если это первая кнопка после всех нажатых,
     //(т.е. после всего списка intervalsList )
     bool _isInactive(int index) {
@@ -233,8 +234,8 @@ class ActivityCard extends StatelessWidget {
       }
     }
 
-    List<Color> palette = themePalettes[theme]![0];
-    List<Color> paletteDark = themePalettes[theme]![1];
+    List<Color> palette = themePalettes[theme]![themeMode][0];
+    List<Color> paletteDark = themePalettes[theme]![themeMode][1];
 
     return (activity.durationButtons.isEmpty)
         ? Container()

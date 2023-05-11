@@ -8,12 +8,14 @@ class SettingsState extends Equatable {
   final int fontSize;
   final bool showArchive;
   final Status status;
+  final bool themeMode;
 
   const SettingsState({
     this.locale = const Locale('en', ''),
     this.theme = 'Pale',
     this.fontSize = 12,
     this.showArchive = true,
+    this.themeMode = true,
     this.status = Status.normal,
   });
 
@@ -23,6 +25,7 @@ class SettingsState extends Equatable {
         theme,
         fontSize,
         showArchive,
+    themeMode,
     status,
       ];
 
@@ -31,6 +34,7 @@ class SettingsState extends Equatable {
     String? theme,
     int? fontSize,
     bool? showArchive,
+    bool? themeMode,
     Status? status,
   }) {
     return SettingsState(
@@ -38,6 +42,7 @@ class SettingsState extends Equatable {
       theme: theme ?? this.theme,
       fontSize: fontSize ?? this.fontSize,
       showArchive: showArchive ?? this.showArchive,
+      themeMode: themeMode ?? this.themeMode,
       status: status ?? this.status,
     );
   }
@@ -58,9 +63,4 @@ class SettingsState extends Equatable {
       theme.hashCode ^
       fontSize.hashCode ^
       showArchive.hashCode;*/
-}
-
-class ErrorSettingsState extends SettingsState {
-  @override
-  List<Object?> get props => [];
 }
