@@ -66,6 +66,8 @@ class AddActivityScreen extends StatelessWidget {
 
           int themeMode = settingsState.themeMode ? 1 : 0;
 
+          bool noColorPicker = (settingsState.theme == 'Pale');
+
           return Scaffold(
             backgroundColor: themePalettes[settingsState.theme]![themeMode][0]
                 [state.color],
@@ -153,9 +155,9 @@ class AddActivityScreen extends StatelessWidget {
                         onChanged: (value) => _subtitleOfEditedActivity = value,
                       ),
                       const SpacerBox(),
-                      Text(AppLocalizations.of(context)!.color),
-                      _colorPicker(context, state.color, settingsState.theme!, themeMode),
-                      const SpacerBox(),
+                      noColorPicker ? Container() : Text(AppLocalizations.of(context)!.color),
+                      noColorPicker ? Container() : _colorPicker(context, state.color, settingsState.theme!, themeMode),
+                      noColorPicker ? Container() : const SpacerBox(),
                       Text(AppLocalizations.of(context)!.addNewIntervals),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

@@ -2,27 +2,6 @@ import 'dart:ui';
 
 //https://coolors.co/
 
-var palettes = [
-  pale,
-  dustyRose,
-  olive,
-  pastel,
-];
-
-var palettesDark = [
-  paleDark,
-  dustyRoseDark,
-  oliveDark,
-  pastelDark,
-];
-
-var palettesInactive = [
-  paleInactive,
-  dustyRoseInactive,
-  oliveInactive,
-  pastelInactive,
-];
-
 const List<Color> pale = [
   Color(0xFFF0FAFF),
   Color(0xFFF0FAFF),
@@ -110,7 +89,7 @@ const List<Color> oliveInactive = [
   Color(0xFF7EA59C),
   Color(0xFFD8EDE4),
 ];
-//7 от начала
+
 const List<Color> pastel = [
   Color(0xFFE89C9C),
   Color(0xFFCEE89C),
@@ -118,7 +97,7 @@ const List<Color> pastel = [
   Color(0xFFABD8D5),
   Color(0xFFDBD3A9),
 ];
-//8 от 7
+
 const List<Color> pastelDark = [
   Color(0xFFB62B2B),
   Color(0xFF85B62B),
@@ -126,7 +105,7 @@ const List<Color> pastelDark = [
   Color(0xFF479A94),
   Color(0xFF9E8F42),
 ];
-//5 от конца
+
 const List<Color> pastelDarkMode = [
   Color(0xFF531313),
   Color(0xFF3C5313),
@@ -134,7 +113,7 @@ const List<Color> pastelDarkMode = [
   Color(0xFF204643),
   Color(0xFF48411E),
 ];
-//saturation -40
+
 const List<Color> pastelInactive = [
   Color(0xFFD9ABAB),
   Color(0xFFC9D9AB),
@@ -142,7 +121,7 @@ const List<Color> pastelInactive = [
   Color(0xFFB4CFCE),
   Color(0xFFD1CCB3),
 ];
-//saturation -40
+
 const List<Color> pastelInactiveDarkMode = [
   Color(0xFF462020),
   Color(0xFF374620),

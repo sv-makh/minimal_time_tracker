@@ -35,14 +35,14 @@ ThemeData appThemeDark(String themeName, int fontSize) {
 
 Map<String, MaterialColor> primarySwatches = {
   'Pale': Colors.blue,
-  'Dusty Rose': Colors.pink,
-  'Olive': Colors.teal,
+  //'Dusty Rose': Colors.pink,
+  //'Olive': Colors.teal,
   'Pastel': Colors.purple,
 };
 
 Map<String, List<List<List<Color>>>> themePalettes = {
   'Pale': [[pale, paleDark, paleInactive], [paleDarkMode, paleDark, paleInactiveDarkMode]],
-  'Dusty Rose': [[dustyRose, dustyRoseDark, dustyRoseInactive],[dustyRose, dustyRoseDark, dustyRoseInactive]],
-  'Olive': [[olive, oliveDark, oliveInactive],[olive, oliveDark, oliveInactive]],
+  //'Dusty Rose': [[dustyRose, dustyRoseDark, dustyRoseInactive],[dustyRose, dustyRoseDark, dustyRoseInactive]],
+  //'Olive': [[olive, oliveDark, oliveInactive],[olive, oliveDark, oliveInactive]],
   'Pastel': [[pastel, pastelDark, pastelInactive],[pastelDarkMode, pastelDark, pastelInactiveDarkMode],],
 };
