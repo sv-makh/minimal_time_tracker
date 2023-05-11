@@ -24,27 +24,43 @@ var palettesInactive = [
 ];
 
 const List<Color> pale = [
-  Color(0xFFF7F7F7),
-  Color(0xFFF7F7F7),
-  Color(0xFFF7F7F7),
-  Color(0xFFF7F7F7),
-  Color(0xFFF7F7F7),
+  Color(0xFFF0FAFF),
+  Color(0xFFF0FAFF),
+  Color(0xFFF0FAFF),
+  Color(0xFFF0FAFF),
+  Color(0xFFF0FAFF),
 ];
 
 const List<Color> paleDark = [
-  Color(0xFFADADAD),
-  Color(0xFFADADAD),
-  Color(0xFFADADAD),
-  Color(0xFFADADAD),
-  Color(0xFFADADAD),
+  Color(0xFFAEC5D1),
+  Color(0xFFAEC5D1),
+  Color(0xFFAEC5D1),
+  Color(0xFFAEC5D1),
+  Color(0xFFAEC5D1),
+];
+
+const List<Color> paleDarkMode = [
+  Color(0xFF5C5C5C),
+  Color(0xFF5C5C5C),
+  Color(0xFF5C5C5C),
+  Color(0xFF5C5C5C),
+  Color(0xFF5C5C5C),
 ];
 
 const List<Color> paleInactive = [
-  Color(0xFFE1E1E1),
-  Color(0xFFE1E1E1),
-  Color(0xFFE1E1E1),
-  Color(0xFFE1E1E1),
-  Color(0xFFE1E1E1),
+  Color(0xFFD3DCE0),
+  Color(0xFFD3DCE0),
+  Color(0xFFD3DCE0),
+  Color(0xFFD3DCE0),
+  Color(0xFFD3DCE0),
+];
+
+const List<Color> paleInactiveDarkMode = [
+  Color(0xFF454545),
+  Color(0xFF454545),
+  Color(0xFF454545),
+  Color(0xFF454545),
+  Color(0xFF454545),
 ];
 
 const List<Color> dustyRose = [
