@@ -26,6 +26,17 @@ class SettingsRepository {
     return prefs.getBool('showArchive') ?? true;
   }
 
+  //true - dark mode; false - light mode
+  bool getThemeMode(BuildContext context) {
+    var brightness = MediaQuery.maybeOf(context)?.platformBrightness ?? Brightness.light;
+    bool deviceMode = brightness == Brightness.dark;
+    return prefs.getBool('themeMode') ?? deviceMode;
+  }
+
+  void setThemeMode(bool mode) {
+    prefs.setBool('themeMode', mode);
+  }
+
   void setLocale(Locale locale) {
     prefs.setString('lang', locale.languageCode);
   }

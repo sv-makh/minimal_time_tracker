@@ -13,6 +13,8 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, SettingsState settingsState) {
+      bool themeModeValue = settingsState.themeMode;
+
       return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.settings),
@@ -71,6 +73,20 @@ class SettingsScreen extends StatelessWidget {
                     },
                   ),
                   const SpacerBox(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.light_mode),
+                      Switch(
+                          value: themeModeValue,
+                          onChanged: (bool value) {
+                            BlocProvider.of<SettingsBloc>(context)
+                                .add(ChangeThemeMode(mode: value));
+                          }),
+                      Icon(Icons.dark_mode),
+                    ],
+                  ),
+                  const SpacerBox(),
                   Text(
                     AppLocalizations.of(context)!.font,
                   ),
@@ -111,4 +127,3 @@ class SettingsScreen extends StatelessWidget {
     });
   }
 }
-

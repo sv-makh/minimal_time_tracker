@@ -47,12 +47,16 @@ class MyApp extends StatelessWidget {
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
           builder: (context, SettingsState state) {
-        BlocProvider.of<SettingsBloc>(context).add(SetInitialSetting());
+        BlocProvider.of<SettingsBloc>(context).add(SetInitialSetting(context: context));
+
+        ThemeMode themeMode = state.themeMode ? ThemeMode.dark : ThemeMode.light;
 
         return MaterialApp(
           locale: state.locale,
           title: 'Minimal Time Tracker',
           theme: appTheme(state.theme!, state.fontSize!),
+          darkTheme: appThemeDark(state.theme!, state.fontSize!),
+          themeMode: themeMode,
           localizationsDelegates: [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,

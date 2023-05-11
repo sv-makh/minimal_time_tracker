@@ -18,11 +18,14 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
             locale: Locale('en', ''),
             theme: 'Pale',
             fontSize: 12,
-            showArchive: true)) {
+            showArchive: true,
+    themeMode: true,
+  )) {
     Locale? currentLocale;
     String? currentTheme;
     int? currentFont;
     bool? currentArchive;
+    bool? currentThemeMode;
 
     on<SetInitialSetting>(
         (SetInitialSetting event, Emitter<SettingsState> emitter) async {
@@ -31,17 +34,20 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         int initFont = settingsRepository.getFontSize();
         Locale initLocale = settingsRepository.getLocale();
         bool initArchive = settingsRepository.getArchiveVisibility();
+        bool initThemeMode = settingsRepository.getThemeMode(event.context);
 
         currentLocale = initLocale;
         currentFont = initFont;
         currentTheme = initTheme;
         currentArchive = initArchive;
+        currentThemeMode = initThemeMode;
 
         return emitter(state.copyWith(
             locale: initLocale,
             theme: initTheme,
             fontSize: initFont,
             showArchive: initArchive,
+            themeMode: initThemeMode,
             status: Status.normal));
       } catch (_) {
         return emitter(state.copyWith(status: Status.error));
@@ -94,6 +100,18 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         settingsRepository.setArchiveVisibility(newShowArchive);
 
         return emitter(state.copyWith(showArchive: newShowArchive));
+      } catch (_) {
+        return emitter(state.copyWith(status: Status.error));
+      }
+    });
+
+    on<ChangeThemeMode>((ChangeThemeMode event, Emitter<SettingsState> emitter) async {
+      try {
+        bool newThemeMode = event.mode;
+        currentThemeMode = newThemeMode;
+        settingsRepository.setThemeMode(newThemeMode);
+
+        return emitter(state.copyWith(themeMode: newThemeMode));
       } catch (_) {
         return emitter(state.copyWith(status: Status.error));
       }
