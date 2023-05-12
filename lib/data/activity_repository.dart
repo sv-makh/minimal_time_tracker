@@ -120,4 +120,20 @@ class ActivityRepository {
   Activity getActivityFromArchiveAt(int index) {
     return archiveBox.getAt(index)!;
   }
+
+  Map<int, bool> getActivityMap() {
+    Map<int, bool> res = {};
+    for (int i = 0; i < activitiesLength; i++) {
+      res[i] = true;
+    }
+    return res;
+  }
+
+  Map<int, bool> getArchiveMap() {
+    Map<int, bool> res = {};
+    for (int i = 0; i < archiveLength; i++) {
+      res[i] = true;
+    }
+    return res;
+  }
 }

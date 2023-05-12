@@ -9,8 +9,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:minimal_time_tracker/helpers/convert.dart';
 import 'package:minimal_time_tracker/widgets/duration_bottom_sheet.dart';
 import 'package:minimal_time_tracker/settings/themes.dart';
-import '../data/bloc/activity_bloc.dart';
-import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
+import '../data/activity_bloc/activity_bloc.dart';
+import '../settings/settings_bloc/settings_bloc.dart';
 import 'package:minimal_time_tracker/widgets/spacer_box.dart';
 
 TextEditingController cellsNumber = TextEditingController();
