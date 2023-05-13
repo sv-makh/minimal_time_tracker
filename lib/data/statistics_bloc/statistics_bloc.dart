@@ -15,6 +15,18 @@ class StatisticsBloc extends Bloc<StatisticsEvent, StatisticsState> {
           shownActivities: activityRepository.getActivityMap(),
           shownArchiveActivities: activityRepository.getArchiveMap(),
         )) {
+
+    on<OpenStatisticsScreen>((OpenStatisticsScreen event, Emitter<StatisticsState> emitter) {
+      try {
+        return emitter(NormalStatisticsState(
+          shownActivities: activityRepository.getActivityMap(),
+          shownArchiveActivities: activityRepository.getArchiveMap(),
+        ));
+      } catch (_) {
+        return emitter(ErrorStatisticsState());
+      }
+    });
+
     on<ActivityPressed>(
         (ActivityPressed event, Emitter<StatisticsState> emitter) {
       try {

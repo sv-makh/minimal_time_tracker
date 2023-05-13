@@ -13,3 +13,5 @@ class ArchivedActivityPressed extends StatisticsEvent {
 
   ArchivedActivityPressed({required this.index});
 }
+
+class OpenStatisticsScreen extends StatisticsEvent {}
