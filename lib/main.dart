@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import 'package:minimal_time_tracker/data/bloc/activity_bloc.dart';
-import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
-import 'package:minimal_time_tracker/screens/main_activities_view.dart';
-import 'package:minimal_time_tracker/settings/settings_data.dart';
-import 'package:minimal_time_tracker/settings/themes.dart';
-import 'package:minimal_time_tracker/data/activity_repository.dart';
-import 'package:minimal_time_tracker/settings/settings_repository.dart';
+import 'package:minimal_time_tracker/data/statistics_bloc/statistics_bloc.dart';
+import '../data/activity_bloc/activity_bloc.dart';
+import '../settings/settings_bloc/settings_bloc.dart';
+import '../screens/main_activities_view.dart';
+import '../settings/settings_data.dart';
+import '../settings/themes.dart';
+import '../data/activity_repository.dart';
+import '../settings/settings_repository.dart';
 
 void main() async {
   ActivityRepository activityRepository = ActivityRepository();
@@ -44,12 +44,17 @@ class MyApp extends StatelessWidget {
         BlocProvider<SettingsBloc>(
             create: (_) =>
                 SettingsBloc(settingsRepository: settingsRepository)),
+        BlocProvider<StatisticsBloc>(
+          create: (_) => StatisticsBloc(activityRepository: activityRepository),
+        )
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
           builder: (context, SettingsState state) {
-        BlocProvider.of<SettingsBloc>(context).add(SetInitialSetting(context: context));
+        BlocProvider.of<SettingsBloc>(context)
+            .add(SetInitialSetting(context: context));
 
-        ThemeMode themeMode = state.themeMode ? ThemeMode.dark : ThemeMode.light;
+        ThemeMode themeMode =
+            state.themeMode ? ThemeMode.dark : ThemeMode.light;
 
         return MaterialApp(
           locale: state.locale,

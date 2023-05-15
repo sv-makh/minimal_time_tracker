@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/data/bloc/activity_bloc.dart';
-import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:minimal_time_tracker/helpers/convert.dart';
-import 'package:minimal_time_tracker/settings/themes.dart';
-import 'package:minimal_time_tracker/screens/add_activity_screen.dart';
+import '../data/activity.dart';
+import '../data/activity_bloc/activity_bloc.dart';
+import '../settings/settings_bloc/settings_bloc.dart';
+import '../helpers/convert.dart';
+import '../settings/themes.dart';
+import '../screens/add_activity_screen.dart';
 
 class ActivityCard extends StatelessWidget {
   final Activity activity;
@@ -260,7 +260,7 @@ class ActivityCard extends StatelessWidget {
                             ? null
                             : BorderSide(
                                 color: paletteDark[activity.color!],
-                                width: 3.0),
+                                width: 2.0),
                       ),
                       onPressed: _isInactive(i) || archived
                           ? null
