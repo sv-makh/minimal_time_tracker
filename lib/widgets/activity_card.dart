@@ -260,7 +260,7 @@ class ActivityCard extends StatelessWidget {
                             ? null
                             : BorderSide(
                                 color: paletteDark[activity.color!],
-                                width: 3.0),
+                                width: 2.0),
                       ),
                       onPressed: _isInactive(i) || archived
                           ? null

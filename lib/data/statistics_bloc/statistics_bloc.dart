@@ -16,6 +16,7 @@ class StatisticsBloc extends Bloc<StatisticsEvent, StatisticsState> {
           shownArchiveActivities: activityRepository.getArchiveMap(),
         )) {
 
+    //обновление данных состояния при переходе на экран со статистикой
     on<OpenStatisticsScreen>((OpenStatisticsScreen event, Emitter<StatisticsState> emitter) {
       try {
         return emitter(NormalStatisticsState(

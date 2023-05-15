@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../data/activity.dart';
-import '../data/activity_bloc/activity_bloc.dart';
 import '../data/statistics_bloc/statistics_bloc.dart';
 import '../settings/settings_bloc/settings_bloc.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../data/activity_repository.dart';
+import '../helpers/convert.dart';
 
+//экран со статистикой - виджет с PieChart и под ним колонка чекбоксы с ативностями
 class StatisticsScreen extends StatelessWidget {
   final ActivityRepository activityRepository;
 
@@ -41,15 +42,18 @@ class StatisticsScreen extends StatelessWidget {
                           child: Column(
                             children: [
                               _pieChart(
+                                context,
                                 state.shownActivities,
                                 state.shownArchiveActivities,
-                                MediaQuery.of(context).size.width,
                               ),
                               ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: activityRepository.activitiesLength,
                                 itemBuilder: (BuildContext context, int index) {
                                   try {
+                                    Activity currentActivity =
+                                        activityRepository
+                                            .getActivityFromBoxAt(index);
                                     return Row(
                                       children: [
                                         Checkbox(
@@ -60,9 +64,10 @@ class StatisticsScreen extends StatelessWidget {
                                                   .add(ActivityPressed(
                                                       index: index));
                                             }),
-                                        Text(activityRepository
-                                            .getActivityFromBoxAt(index)
-                                            .title),
+                                        Expanded(
+                                          child: Text(
+                                              '${currentActivity.title}, ${stringDuration(currentActivity.totalTime(), context)}'),
+                                        ),
                                       ],
                                     );
                                   } catch (_) {
@@ -70,11 +75,18 @@ class StatisticsScreen extends StatelessWidget {
                                   }
                                 },
                               ),
+                              Text(
+                                AppLocalizations.of(context)!
+                                    .archivedActivities,
+                              ),
                               ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: activityRepository.archiveLength,
                                 itemBuilder: (BuildContext context, int index) {
                                   try {
+                                    Activity currentActivity =
+                                        activityRepository
+                                            .getActivityFromArchiveAt(index);
                                     return Row(
                                       children: [
                                         Checkbox(
@@ -86,9 +98,10 @@ class StatisticsScreen extends StatelessWidget {
                                                   .add(ArchivedActivityPressed(
                                                       index: index));
                                             }),
-                                        Text(activityRepository
-                                            .getActivityFromArchiveAt(index)
-                                            .title),
+                                        Expanded(
+                                          child: Text(
+                                              '${currentActivity.title}, ${stringDuration(currentActivity.totalTime(), context)}'),
+                                        ),
                                       ],
                                     );
                                   } catch (_) {
@@ -107,8 +120,12 @@ class StatisticsScreen extends StatelessWidget {
     });
   }
 
-  Widget _pieChart(Map<int, bool> shownActivities,
-      Map<int, bool> shownArchiveActivities, double screenWidth) {
+  //виджет с PieChart
+  Widget _pieChart(BuildContext context, Map<int, bool> shownActivities,
+      Map<int, bool> shownArchiveActivities) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    //список активностей, выбранных для отображения
     List<Activity> _activitiesForChart() {
       List<Activity> res = [];
       shownActivities.forEach((key, value) {
@@ -124,23 +141,34 @@ class StatisticsScreen extends StatelessWidget {
       return res;
     }
 
-    List<PieChartSectionData> _sectionsData() {
-      List<PieChartSectionData> resList = [];
-      List<Activity> resActivities = _activitiesForChart();
+    //суммарное время активностей, выбранных для отображения
+    Duration _totalTime(List<Activity> resActivities) {
       Duration totalTime = Duration();
       for (var a in resActivities) {
         totalTime += a.totalTime();
       }
+      return totalTime;
+    }
+
+    //список данных для секций чарта
+    List<PieChartSectionData> _sectionsData() {
+      List<PieChartSectionData> resList = [];
+      List<Activity> resActivities = _activitiesForChart();
+      Duration totalTime = _totalTime(resActivities);
 
       for (var a in resActivities) {
+        String sectionTitle = a.title;
+        //если заголовок для секции чарта слишком длиннный, укорачиваем
+        if (sectionTitle.length > 13)
+          sectionTitle = sectionTitle.substring(0, 13) + '...';
+
         resList.add(PieChartSectionData(
           value: a.totalTime().inMinutes * 100 / totalTime.inMinutes,
           color: Colors
               .primaries[resActivities.indexOf(a) % Colors.primaries.length],
           radius: screenWidth * 3 / 16,
           showTitle: true,
-          title: a.title,
-          //titleStyle:
+          title: sectionTitle,
         ));
       }
 
@@ -150,15 +178,23 @@ class StatisticsScreen extends StatelessWidget {
     return SizedBox(
         width: screenWidth * 3 / 4,
         height: screenWidth * 3 / 4,
-        child: PieChart(
-          PieChartData(
-            sections: _sectionsData(),
-            centerSpaceRadius: double.infinity,
-            sectionsSpace: 0,
-            borderData: FlBorderData(
-              show: false,
+        child: Stack(children: [
+          //в середине чарта показывается суммарное время активностей, выбранных для отображения
+          Center(
+              child: Text(
+            stringDuration(_totalTime(_activitiesForChart()), context),
+            style: TextStyle(fontWeight: FontWeight.bold),
+          )),
+          PieChart(
+            PieChartData(
+              sections: _sectionsData(),
+              centerSpaceRadius: double.infinity,
+              sectionsSpace: 1,
+              borderData: FlBorderData(
+                show: false,
+              ),
             ),
           ),
-        ));
+        ]));
   }
 }
