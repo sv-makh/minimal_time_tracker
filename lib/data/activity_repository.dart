@@ -40,6 +40,14 @@ class ActivityRepository {
     }
   }
 
+  bool get isArchiveNotEmpty {
+    try {
+      return archiveBox.values.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
+  }
+
   int get activitiesLength {
     try {
       return activitiesBox.length;

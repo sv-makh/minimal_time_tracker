@@ -12,8 +12,8 @@ class StatisticsBloc extends Bloc<StatisticsEvent, StatisticsState> {
 
   StatisticsBloc({required this.activityRepository})
       : super(NormalStatisticsState(
-          shownActivities: activityRepository.getActivityMap(),
-          shownArchiveActivities: activityRepository.getArchiveMap(),
+          shownActivities: {},//activityRepository.getActivityMap(),
+          shownArchiveActivities: {},//activityRepository.getArchiveMap(),
         )) {
 
     //обновление данных состояния при переходе на экран со статистикой

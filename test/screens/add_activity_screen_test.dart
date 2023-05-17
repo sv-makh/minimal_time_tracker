@@ -1,14 +1,13 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_test/hive_test.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/data/bloc/activity_bloc.dart';
-import 'package:minimal_time_tracker/screens/add_activity_screen.dart';
-import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
+import 'package:minimal_time_tracker/data/activity_bloc/activity_bloc.dart';
+import 'package:minimal_time_tracker/settings/color_palettes.dart';
+import 'package:minimal_time_tracker/settings/settings_bloc/settings_bloc.dart';
 import 'package:mocktail/mocktail.dart';
-import '../test_material_app.dart';
+import '../helper_test_material_app.dart';
+import 'package:minimal_time_tracker/screens/add_activity_screen.dart';
 
 class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
     implements SettingsBloc {}
@@ -41,59 +40,40 @@ extension BoxDecorationColored on CommonFinders {
 }
 
 void main() {
-  group('AddActivityScreen tests', () {
-    String boxName = 'mockBox';
-    String archiveName = 'mockArchive';
-    late Box<Activity> testActivitiesBox;
-    late Box<Activity> testArchiveBox;
-    late SettingsBloc settingsBloc;
-    late ActivitiesBloc activitiesBloc;
+  SettingsBloc settingsBloc = MockSettingsBlock();
+  ActivitiesBloc activitiesBloc = MockActivitiesBloc();
 
-    setUpAll(() {
-      Hive.registerAdapter(ActivityAdapter());
-      Hive.registerAdapter(TimeIntervalAdapter());
-      Hive.registerAdapter(DurationAdapter());
-      Hive.registerAdapter(PresentationAdapter());
-    });
-
-    setUp(() async {
-      settingsBloc = MockSettingsBloc();
-      await setUpTestHive();
-      testActivitiesBox = await Hive.openBox<Activity>(boxName);
-      testArchiveBox = await Hive.openBox<Activity>(archiveName);
-    });
-
-    tearDown(() async {
-      await tearDownTestHive();
-    });
-
-    testWidgets('default new activity screen', (widgetTester) async {
+  group('new activity screen', () {
+    setUp(() {
       when(() => settingsBloc.state).thenReturn(SettingsState(
           locale: Locale('en', ''),
-          theme: 'Olive',
+          theme: 'Pastel',
+          themeMode: false,
           fontSize: 12,
           showArchive: true,
           status: Status.normal));
 
+      when(() => activitiesBloc.state).thenReturn(NormalActivitiesState(
+          {Duration(hours: 1): false, Duration(minutes: 30): false},
+          0,
+          Presentation.BUTTONS,
+          0));
+    });
+
+    testWidgets('default new activity screen', (widgetTester) async {
       await widgetTester.pumpWidget(TestMaterialApp(
-          child: AddActivityScreen(),
-          boxName: boxName,
-          archiveName: archiveName,
-          settingsBloc: settingsBloc));
+          settingsBloc: settingsBloc,
+          activitiesBloc: activitiesBloc,
+          child: AddActivityScreen()));
 
       expect(titleController.text, '');
       expect(subtitleController.text, '');
 
-      expect(find.byBoxDecorationColored(color: Color(0xFF584D32)),
-          findsOneWidget);
-      expect(find.byBoxDecorationColored(color: Color(0xFF615A3B)),
-          findsOneWidget);
-      expect(find.byBoxDecorationColored(color: Color(0xFF457863)),
-          findsOneWidget);
-      expect(find.byBoxDecorationColored(color: Color(0xFF69B8A6)),
-          findsOneWidget);
-      expect(find.byBoxDecorationColored(color: Color(0xFFCFF8E5)),
-          findsOneWidget);
+      expect(find.byBoxDecorationColored(color: pastel[0]), findsOneWidget);
+      expect(find.byBoxDecorationColored(color: pastel[1]), findsOneWidget);
+      expect(find.byBoxDecorationColored(color: pastel[2]), findsOneWidget);
+      expect(find.byBoxDecorationColored(color: pastel[3]), findsOneWidget);
+      expect(find.byBoxDecorationColored(color: pastel[4]), findsOneWidget);
 
       final switchFinder = find.byWidgetPredicate(
           (widget) => widget is Switch && widget.value == true,
@@ -114,56 +94,25 @@ void main() {
 
     testWidgets('show SnackBar when trying to save with no title',
         (widgetTester) async {
-      when(() => settingsBloc.state).thenReturn(SettingsState(
-          locale: Locale('en', ''),
-          theme: 'Olive',
-          fontSize: 12,
-          showArchive: true,
-          status: Status.normal));
-
       await widgetTester.pumpWidget(TestMaterialApp(
-          child: AddActivityScreen(),
-          boxName: boxName,
-          archiveName: archiveName,
-          settingsBloc: settingsBloc));
+          settingsBloc: settingsBloc,
+          activitiesBloc: activitiesBloc,
+          child: AddActivityScreen()));
 
       await widgetTester.tap(find.byIcon(Icons.save));
       await widgetTester.pump();
       expect(find.byKey(Key('noTitleSnackBar')), findsOneWidget);
     });
+  });
 
-    testWidgets('switch to table buttons', (widgetTester) async {
+  group('screen with edited activity', () {
+    late Activity testActivity;
+
+    setUp(() {
       when(() => settingsBloc.state).thenReturn(SettingsState(
           locale: Locale('en', ''),
-          theme: 'Olive',
-          fontSize: 12,
-          showArchive: true,
-          status: Status.normal));
-
-      await widgetTester.pumpWidget(TestMaterialApp(
-          child: AddActivityScreen(),
-          boxName: boxName,
-          archiveName: archiveName,
-          settingsBloc: settingsBloc));
-
-      await widgetTester.tap(find.byType(Switch));
-      await widgetTester.pump();
-      expect(find.text('+'), findsOneWidget);
-
-      final states = <MaterialState>{};
-      final buttonFinder = find.byWidgetPredicate((widget) =>
-          widget is OutlinedButton &&
-          (widget.style?.backgroundColor?.resolve(states) == Colors.white12));
-      expect(buttonFinder, findsNothing);
-      expect(find.text('1h'), findsNothing);
-      expect(find.text('30m'), findsNothing);
-      expect(find.text('0'), findsOneWidget);
-    });
-
-    testWidgets('screen with edited activity', (widgetTester) async {
-      when(() => settingsBloc.state).thenReturn(SettingsState(
-          locale: Locale('en', ''),
-          theme: 'Olive',
+          theme: 'Pastel',
+          themeMode: false,
           fontSize: 12,
           showArchive: true,
           status: Status.normal));
@@ -174,24 +123,13 @@ void main() {
         Duration(minutes: 15): true,
         Duration(minutes: 10): true
       };
-      Activity testActivity = Activity(
+      testActivity = Activity(
         title: 'test title',
         subtitle: 'test subtitle',
         durationButtons: [Duration(minutes: 15), Duration(minutes: 10)],
         presentation: testPresentation,
         color: testColor,
       );
-
-      activitiesBloc = MockActivitiesBloc();
-      when(() => activitiesBloc.state).thenReturn(NormalActivitiesState(
-        testActivitiesBox,
-        testArchiveBox,
-        testDurationButtons,
-        testColor,
-        testPresentation,
-        2,
-        testActivity,
-      ));
 
       testActivity.addInterval(TimeInterval.duration(
           end: DateTime.now(), duration: Duration(minutes: 15)));
@@ -200,20 +138,22 @@ void main() {
       testActivity.addInterval(TimeInterval.duration(
           end: DateTime.now(), duration: Duration(minutes: 10)));
 
+      when(() => activitiesBloc.state).thenReturn(NormalActivitiesState(
+          testDurationButtons, testColor, testPresentation, 2, testActivity));
+    });
+
+    testWidgets('screen with edited activity', (widgetTester) async {
       await widgetTester.pumpWidget(TestMaterialApp(
-        child: AddActivityScreen.editActivity(editedActivity: testActivity),
-        boxName: boxName,
-        archiveName: archiveName,
-        settingsBloc: settingsBloc,
-        activitiesBloc: activitiesBloc,
-      ));
+          settingsBloc: settingsBloc,
+          activitiesBloc: activitiesBloc,
+          child: AddActivityScreen.editActivity(editedActivity: testActivity)));
 
       expect(titleController.text, 'test title');
       expect(subtitleController.text, 'test subtitle');
 
       final states = <MaterialState>{};
       final buttonFinder = find.byWidgetPredicate((widget) =>
-          widget is OutlinedButton &&
+      widget is OutlinedButton &&
           (widget.style?.backgroundColor?.resolve(states) == Colors.black12));
       expect(buttonFinder, findsNWidgets(2));
       expect(find.text('15m'), findsOneWidget);

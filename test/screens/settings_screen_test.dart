@@ -1,57 +1,30 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_test/hive_test.dart';
-import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/data/bloc/activity_bloc.dart';
 import 'package:minimal_time_tracker/screens/settings_screen.dart';
-import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
+import 'package:minimal_time_tracker/settings/settings_bloc/settings_bloc.dart';
 import 'package:mocktail/mocktail.dart';
-import '../test_material_app.dart';
+import '../helper_test_material_app.dart';
 
 class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
     implements SettingsBloc {}
 
-class MockActivitiesBloc extends MockBloc<ActivityEvent, ActivitiesState>
-    implements ActivitiesBloc {}
-
 void main() {
   group('SettingsScreen tests', () {
-    //String boxName = 'mockBox';
-    //String archiveName = 'mockArchive';
-    late Box<Activity> testActivitiesBox;
-    late Box<Activity> testArchiveBox;
-    late SettingsBloc settingsBloc;
-    late ActivitiesBloc activitiesBloc;
+    SettingsBloc settingsBloc = MockSettingsBlock();
 
-    setUpAll(() {
-      Hive.registerAdapter(ActivityAdapter());
-      Hive.registerAdapter(TimeIntervalAdapter());
-      Hive.registerAdapter(DurationAdapter());
-      Hive.registerAdapter(PresentationAdapter());
-    });
-
-    setUp(() async {
-      settingsBloc = MockSettingsBloc();
-      await setUpTestHive();
-      //testActivitiesBox = await Hive.openBox<Activity>(boxName);
-      //testArchiveBox = await Hive.openBox<Activity>(archiveName);
-    });
-
-    tearDown(() async {
-      await tearDownTestHive();
-    });
-
-    testWidgets('default settings screen', (widgetTester) async {
-      when(() => settingsBloc.state)
-          .thenReturn(SettingsState(locale: Locale('en', ''), theme: 'Olive', fontSize: 12, showArchive: true));
+    testWidgets('SettingsScreen view', (widgetTester) async {
+      when(() => settingsBloc.state).thenReturn(SettingsState(
+          locale: Locale('en', ''),
+          theme: 'Pale',
+          fontSize: 12,
+          showArchive: true,
+          status: Status.normal));
 
       await widgetTester.pumpWidget(TestMaterialApp(
-          child: SettingsScreen(),
-          //boxName: boxName,
-          //archiveName: archiveName,
-          settingsBloc: settingsBloc));
+        settingsBloc: settingsBloc,
+        child: SettingsScreen(),
+      ));
 
       expect(find.text('Language'), findsOneWidget);
       final langButton =
@@ -62,7 +35,7 @@ void main() {
       expect(find.text('Theme'), findsOneWidget);
       final themeButton = widgetTester
           .widget(find.byKey(Key('themeDropdownButton'))) as DropdownButton;
-      expect(themeButton.value, equals('Olive'));
+      expect(themeButton.value, equals('Pale'));
 
       expect(find.text('Font'), findsOneWidget);
       final fontButton = widgetTester

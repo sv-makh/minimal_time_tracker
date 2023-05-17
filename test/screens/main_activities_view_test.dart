@@ -1,57 +1,96 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_test/hive_test.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
+import 'package:minimal_time_tracker/data/activity_bloc/activity_bloc.dart';
+import 'package:minimal_time_tracker/data/statistics_bloc/statistics_bloc.dart';
+import 'package:minimal_time_tracker/settings/settings_bloc/settings_bloc.dart';
 import 'package:minimal_time_tracker/widgets/activity_card.dart';
 import 'package:minimal_time_tracker/screens/main_activities_view.dart';
 import 'package:minimal_time_tracker/data/activity_repository.dart';
 import 'package:mocktail/mocktail.dart';
-import '../test_material_app.dart';
+import '../helper_test_material_app.dart';
+
+class MockActivityRepository extends Mock implements ActivityRepository {}
 
 class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
     implements SettingsBloc {}
 
+class MockActivitiesBloc extends MockBloc<ActivityEvent, ActivitiesState>
+    implements ActivitiesBloc {}
+
+class MockStatisticsBloc extends MockBloc<StatisticsEvent, StatisticsState>
+    implements StatisticsBloc {}
+
 void main() {
+  late ActivityRepository activityRepository;
+  SettingsBloc settingsBloc = MockSettingsBlock();
+  ActivitiesBloc activitiesBloc = MockActivitiesBloc();
+  StatisticsBloc statisticsBloc = MockStatisticsBloc();
+
+  group('MainActivitiesScreen error tests', () {
+    setUp(() {
+      activityRepository = MockActivityRepository();
+
+      when(() => settingsBloc.state).thenReturn(SettingsState(
+          locale: Locale('en', ''),
+          theme: 'Pale',
+          fontSize: 12,
+          showArchive: true,
+          status: Status.normal));
+
+      when(() => activitiesBloc.state).thenReturn(ActivitiesError());
+
+      when(() => statisticsBloc.state).thenReturn(NormalStatisticsState(
+          shownActivities: {}, shownArchiveActivities: {}));
+    });
+
+    testWidgets('Error message when error state', (widgetTester) async {
+      await widgetTester.pumpWidget(
+        TestMaterialApp(
+          settingsBloc: settingsBloc,
+          activitiesBloc: activitiesBloc,
+          statisticsBloc: statisticsBloc,
+          child: MainActivitiesView(activityRepository: activityRepository),
+        ),
+      );
+
+      expect(find.byKey(Key('somethingWrong')), findsOneWidget);
+    });
+  });
+
   group('MainActivitiesScreen tests', () {
-    String boxName = 'mockBox';
-    String archiveName = 'mockArchive';
-    late ActivityRepository activityRepository;
-    //late Box<Activity> testActivitiesBox;
-    //late Box<Activity> testArchiveBox;
+    setUp(() {
+      activityRepository = MockActivityRepository();
 
-/*    Hive.registerAdapter(ActivityAdapter());
-    Hive.registerAdapter(TimeIntervalAdapter());
-    Hive.registerAdapter(DurationAdapter());
-    Hive.registerAdapter(PresentationAdapter());*/
+      when(() => settingsBloc.state).thenReturn(SettingsState(
+          locale: Locale('en', ''),
+          theme: 'Pale',
+          fontSize: 12,
+          showArchive: true,
+          status: Status.normal));
 
-    late SettingsBloc settingsBloc;
+      when(() => activitiesBloc.state).thenReturn(NormalActivitiesState(
+          {Duration(hours: 1): false, Duration(minutes: 30): false},
+          0,
+          Presentation.BUTTONS,
+          0));
 
-    setUp(() async {
-      await setUpTestHive();
-      activityRepository = ActivityRepository.setBoxnames(
-          boxName: boxName, archiveName: archiveName);
-      activityRepository.initRepository();
-      //testActivitiesBox = await Hive.openBox<Activity>(boxName);
-      //testArchiveBox = await Hive.openBox<Activity>(archiveName);
-      settingsBloc = MockSettingsBloc();
+      when(() => statisticsBloc.state).thenReturn(NormalStatisticsState(
+          shownActivities: {}, shownArchiveActivities: {}));
     });
 
-    tearDown(() async {
-      await tearDownTestHive();
-    });
-
-    testWidgets('no Activity cards on screen when Hive boxes are empty',
+    testWidgets('no Activity cards on screen when activity repository is empty',
         (widgetTester) async {
+      when(() => activityRepository.isActivitiesEmpty).thenReturn(true);
+      when(() => activityRepository.isArchiveEmpty).thenReturn(true);
 
       await widgetTester.pumpWidget(
         TestMaterialApp(
-          child: MainActivitiesView(activityRepository: activityRepository),
-          //boxName: boxName,
-          //archiveName: archiveName,
           settingsBloc: settingsBloc,
+          activitiesBloc: activitiesBloc,
+          statisticsBloc: statisticsBloc,
+          child: MainActivitiesView(activityRepository: activityRepository),
         ),
       );
 
@@ -60,20 +99,23 @@ void main() {
       expect(find.byKey(Key('archivedActivitiesText')), findsNothing);
     });
 
-/*    testWidgets('one Activity in Hive box shows one card on screen',
+    testWidgets(
+        'one Activity in repository not in archive => one card on screen',
         (widgetTester) async {
-
-      //await widgetTester.runAsync(
-      //    () => testActivitiesBox.add(Activity(title: 'test activity')));
-
-      activityRepository.addActivityToBox(Activity(title: 'test activity'));
+      when(() => activityRepository.isActivitiesEmpty).thenReturn(false);
+      when(() => activityRepository.isArchiveEmpty).thenReturn(true);
+      when(() => activityRepository.isActivitiesNotEmpty).thenReturn(true);
+      when(() => activityRepository.isArchiveNotEmpty).thenReturn(false);
+      when(() => activityRepository.activitiesLength).thenReturn(1);
+      when(() => activityRepository.getActivityFromBoxAt(0))
+          .thenReturn(Activity(title: 'title'));
 
       await widgetTester.pumpWidget(
         TestMaterialApp(
-          child: MainActivitiesView(activityRepository: activityRepository),
-          //boxName: boxName,
-          //archiveName: archiveName,
           settingsBloc: settingsBloc,
+          activitiesBloc: activitiesBloc,
+          statisticsBloc: statisticsBloc,
+          child: MainActivitiesView(activityRepository: activityRepository),
         ),
       );
 
@@ -84,39 +126,37 @@ void main() {
               of: find.byType(ActivityCard),
               matching: find.byKey(Key('activitiesBoxListView.builder'))),
           findsOneWidget);
+    });
 
-    });*/
-
-/*    testWidgets(
-        'one Activity in archive Hive box shows one card on screen in archive section',
+    testWidgets('one Activity in repository in archive => one card on screen',
         (widgetTester) async {
-      //await widgetTester
-      //    .runAsync(() => testArchiveBox.add(Activity(title: 'test activity')));
+          when(() => activityRepository.isActivitiesEmpty).thenReturn(true);
+          when(() => activityRepository.isArchiveEmpty).thenReturn(false);
+          when(() => activityRepository.isActivitiesNotEmpty).thenReturn(false);
+          when(() => activityRepository.isArchiveNotEmpty).thenReturn(true);
+          when(() => activityRepository.activitiesLength).thenReturn(0);
+          when(() => activityRepository.archiveLength).thenReturn(1);
+          when(() => activityRepository.getActivityFromArchiveAt(0))
+              .thenReturn(Activity(title: 'title'));
 
-      activityRepository.addActivityToArchive(Activity(title: 'test activity'));
+          await widgetTester.pumpWidget(
+            TestMaterialApp(
+              settingsBloc: settingsBloc,
+              activitiesBloc: activitiesBloc,
+              statisticsBloc: statisticsBloc,
+              child: MainActivitiesView(activityRepository: activityRepository),
+            ),
+          );
 
-      await widgetTester.pumpWidget(
-        TestMaterialApp(
-          child: MainActivitiesView(activityRepository: activityRepository,),
-          //boxName: boxName,
-          //archiveName: archiveName,
-          settingsBloc: settingsBloc,
-        ),
-      );
+          expect(find.byType(ActivityCard), findsOneWidget);
+          expect(find.byKey(Key('archivedActivitiesText')), findsOneWidget);
 
-      //проверка, что по умолчанию архивные активности показываются
-      SettingsState settingsState = settingsBloc.state;
-      expect(settingsState.showArchive, equals(true));
-
-      expect(find.byType(ActivityCard), findsOneWidget);
-      expect(find.byKey(Key('archivedActivitiesText')), findsOneWidget);
-
-      //проверка, что карточка с архивной активностью находится в архивной секции
-      expect(
-          find.ancestor(
-              of: find.byType(ActivityCard),
-              matching: find.byKey(Key('archiveListView.builder'))),
-          findsOneWidget);
-    });*/
+          //проверка, что карточка с архивной активностью находится в архивной секции
+          expect(
+              find.ancestor(
+                  of: find.byType(ActivityCard),
+                  matching: find.byKey(Key('archiveListView.builder'))),
+              findsOneWidget);
+        });
   });
 }

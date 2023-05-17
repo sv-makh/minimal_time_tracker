@@ -77,14 +77,14 @@ class MainActivitiesView extends StatelessWidget {
                                       height: 20,
                                     )
                                   : Container(),
-                              settingsState.showArchive!
+                              (settingsState.showArchive! && activityRepository.isArchiveNotEmpty)
                                   ? Text(
                                       AppLocalizations.of(context)!
                                           .archivedActivities,
                                       key: Key('archivedActivitiesText'),
                                     )
                                   : Container(),
-                              settingsState.showArchive!
+                              (settingsState.showArchive! && activityRepository.isArchiveNotEmpty)
                                   ? ListView.builder(
                                       key: Key('archiveListView.builder'),
                                       shrinkWrap: true,
@@ -117,7 +117,9 @@ class MainActivitiesView extends StatelessWidget {
                   ),
                 );
               }
-              return Text(AppLocalizations.of(context)!.somethingWrong);
+              return Text(AppLocalizations.of(context)!.somethingWrong,
+                key: Key('somethingWrong'),
+              );
             },
           );
         },

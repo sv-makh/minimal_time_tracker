@@ -2,12 +2,16 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
+import 'package:minimal_time_tracker/settings/color_palettes.dart';
+import 'package:minimal_time_tracker/settings/settings_bloc/settings_bloc.dart';
 import 'package:minimal_time_tracker/widgets/activity_card.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_test/hive_test.dart';
-import '../test_material_app.dart';
+import '../helper_test_material_app.dart';
 import 'package:mocktail/mocktail.dart';
+
+class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
+    implements SettingsBloc {}
 
 //файндер, ищущий кнопки OutlinedButton заданного цвета
 //также у них не активно простое нажатие и активно долгое нажатие
@@ -38,6 +42,7 @@ extension PressedButton on CommonFinders {
       PressedButtonsFinder(color: color);
 }
 
+//файндер, ищущий кнопки OutlinedButton, на которые можно нажать
 class EnabledButtonsFinder extends MatchFinder {
   EnabledButtonsFinder({bool skipOffstage = true})
       : super(skipOffstage: skipOffstage);
@@ -52,37 +57,15 @@ class EnabledButtonsFinder extends MatchFinder {
   }
 }
 
+//добавление файндера EnabledButtons в класс CommonFinders
 extension EnabledButtons on CommonFinders {
   Finder byEnabledButtons({bool skipOffstage = true}) => EnabledButtonsFinder();
 }
 
-class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
-    implements SettingsBloc {}
-
 void main() {
-  late SettingsBloc settingsBloc;
+  SettingsBloc settingsBloc = MockSettingsBloc();
 
   group('ActivityCard tests', () {
-    String boxName = 'mockBox';
-    String archiveName = 'mockArchive';
-    late Box<Activity> testActivitiesBox;
-    late Box<Activity> testArchiveBox;
-
-    Hive.registerAdapter(ActivityAdapter());
-    Hive.registerAdapter(TimeIntervalAdapter());
-    Hive.registerAdapter(DurationAdapter());
-    Hive.registerAdapter(PresentationAdapter());
-
-    setUp(() async {
-      settingsBloc = MockSettingsBloc();
-      await setUpTestHive();
-      testActivitiesBox = await Hive.openBox<Activity>(boxName);
-      testArchiveBox = await Hive.openBox<Activity>(archiveName);
-    });
-
-    tearDown(() async {
-      await tearDownTestHive();
-    });
 
     test('testing stubbing the bloc stream and emitting one state', () async {
       when(() => settingsBloc.state).thenReturn(SettingsState(
@@ -106,25 +89,23 @@ void main() {
       when(() => settingsBloc.state).thenReturn(SettingsState(
           locale: Locale('en', ''),
           theme: 'Pale',
+          themeMode: false,
           fontSize: 12,
           showArchive: true,
           status: Status.normal));
 
       await widgetTester.pumpWidget(TestMaterialApp(
         child: ActivityCard(
-            activity: Activity(title: 'test title'),
-            activityIndex: 0,
-            archived: false),
-        boxName: boxName,
-        archiveName: archiveName,
+          activity: Activity(title: 'test title'),
+          activityIndex: 0,
+          archived: false,
+        ),
         settingsBloc: settingsBloc,
       ));
 
       expect(find.byKey(Key('title of activity')), findsOneWidget);
       expect(find.text('test title, total = 0m'), findsOneWidget);
-
       expect(find.byKey(Key('subtitle of activity')), findsNothing);
-
       expect(find.byIcon(Icons.edit), findsOneWidget);
       expect(find.byIcon(Icons.archive), findsOneWidget);
       expect(find.byIcon(Icons.unarchive), findsNothing);
@@ -153,7 +134,8 @@ void main() {
 
       when(() => settingsBloc.state).thenReturn(SettingsState(
           locale: Locale('en', ''),
-          theme: 'Olive',
+          theme: 'Pastel',
+          themeMode: false,
           fontSize: 12,
           showArchive: true,
           status: Status.normal));
@@ -161,13 +143,11 @@ void main() {
       await widgetTester.pumpWidget(TestMaterialApp(
         child: ActivityCard(
             activity: testActivity, activityIndex: 0, archived: false),
-        boxName: boxName,
-        archiveName: archiveName,
         settingsBloc: settingsBloc,
       ));
 
       final card = widgetTester.widget<Card>(find.byType(Card));
-      expect(card.color, Color(0xFF615A3B));
+      expect(card.color, pastel[1]);
 
       expect(find.byKey(Key('title of activity')), findsOneWidget);
       expect(find.text('test title, total = 3h'), findsOneWidget);
@@ -181,8 +161,8 @@ void main() {
 
       expect(find.byType(OutlinedButton), findsNWidgets(maxNum));
       //нажатые ранее кнопки в таблице меняют цвет, ищем кнопки такого цвета
-      //oliveDark[1] из color_palettes.dart
-      expect(find.byPressedButtons(color: Color(0xFF47422B)), findsNWidgets(3));
+      //pastelDark[1] из color_palettes.dart
+      expect(find.byPressedButtons(color: pastelDark[1]), findsNWidgets(3));
       //для простого нажатия активна одна кнопка
       expect(find.byEnabledButtons(), findsOneWidget);
     });
@@ -204,6 +184,7 @@ void main() {
       when(() => settingsBloc.state).thenReturn(SettingsState(
           locale: Locale('en', ''),
           theme: 'Pastel',
+          themeMode: false,
           fontSize: 12,
           showArchive: true,
           status: Status.normal));
@@ -211,8 +192,6 @@ void main() {
       await widgetTester.pumpWidget(TestMaterialApp(
         child: ActivityCard(
             activity: testActivity, activityIndex: 0, archived: true),
-        boxName: boxName,
-        archiveName: archiveName,
         settingsBloc: settingsBloc,
       ));
 
@@ -224,7 +203,7 @@ void main() {
       expect(find.byKey(Key('tableOfButtons')), findsNothing);
 
       final card = widgetTester.widget<Card>(find.byType(Card));
-      expect(card.color, Color(0xFFCAD7B2));
+      expect(card.color, pastelInactive[1]);
 
       expect(find.byKey(Key('title of activity')), findsOneWidget);
       expect(find.text('test title, total = 1h 40m'), findsOneWidget);

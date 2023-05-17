@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:minimal_time_tracker/settings/bloc/settings_bloc.dart';
+import 'package:minimal_time_tracker/settings/settings_bloc/settings_bloc.dart';
 
 void main() {
   test('testing default values for Settings', () {
