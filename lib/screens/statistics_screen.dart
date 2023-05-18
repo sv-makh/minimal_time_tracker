@@ -31,7 +31,7 @@ class StatisticsScreen extends StatelessWidget {
                 ? Center(
                     child: Text(
                       AppLocalizations.of(context)!.noActivities,
-                      key: Key('noActivitiesText'),
+                      key: Key('noActivitiesText stats'),
                     ),
                   )
                 : SafeArea(
@@ -115,7 +115,9 @@ class StatisticsScreen extends StatelessWidget {
                   ),
           );
         }
-        return Text(AppLocalizations.of(context)!.somethingWrong);
+        return Text(AppLocalizations.of(context)!.somethingWrong,
+          key: Key('something wrong stats'),
+        );
       });
     });
   }
@@ -176,6 +178,7 @@ class StatisticsScreen extends StatelessWidget {
     }
 
     return SizedBox(
+      key: Key('stats chart'),
         width: screenWidth * 3 / 4,
         height: screenWidth * 3 / 4,
         child: Stack(children: [

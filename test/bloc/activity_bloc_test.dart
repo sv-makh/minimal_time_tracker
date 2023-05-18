@@ -2,8 +2,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/data/activity_bloc/activity_bloc.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_test/hive_test.dart';
 import 'package:minimal_time_tracker/data/activity_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -29,7 +27,7 @@ void main() {
     );
 
     blocTest<ActivitiesBloc, ActivitiesState>(
-      'normal state',
+      'normal state after ActivityDeleted',
       setUp: () {
         when(() => activityRepository.activitiesDeleteAt(0)).thenAnswer((_) {});
       },
@@ -40,7 +38,7 @@ void main() {
     );
 
     blocTest<ActivitiesBloc, ActivitiesState>(
-      'error state',
+      'error state after ActivityDeleted',
       setUp: () {
         when(() => activityRepository.activitiesDeleteAt(0)).thenThrow(Exception('Error'));
       },
