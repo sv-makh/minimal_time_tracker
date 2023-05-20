@@ -14,7 +14,10 @@ class ActivityRepository {
         this.archiveName = 'archiveBox';
 
   ActivityRepository.setBoxnames(
-      {required this.boxName, required this.archiveName});
+      {required this.boxName, required this.archiveName}) {
+    activitiesBox = Hive.box<Activity>(boxName);
+    archiveBox = Hive.box<Activity>(archiveName);
+  }
 
   bool get isActivitiesEmpty {
     try {

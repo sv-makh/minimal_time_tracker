@@ -47,6 +47,7 @@ class StatisticsScreen extends StatelessWidget {
                                 state.shownArchiveActivities,
                               ),
                               ListView.builder(
+                                key: Key('stats activities'),
                                 shrinkWrap: true,
                                 itemCount: activityRepository.activitiesLength,
                                 itemBuilder: (BuildContext context, int index) {
@@ -80,6 +81,7 @@ class StatisticsScreen extends StatelessWidget {
                                     .archivedActivities,
                               ),
                               ListView.builder(
+                                key: Key('stats archive'),
                                 shrinkWrap: true,
                                 itemCount: activityRepository.archiveLength,
                                 itemBuilder: (BuildContext context, int index) {

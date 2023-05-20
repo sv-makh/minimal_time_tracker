@@ -16,6 +16,7 @@ class MockSettingsBlock extends MockBloc<SettingsEvent, SettingsState>
 class MockStatisticsBloc extends MockBloc<StatisticsEvent, StatisticsState>
     implements StatisticsBloc {}
 
+//вспомогательная обёртка для тестируемых виджетов
 class TestMaterialApp extends StatelessWidget {
   final Widget child;
   SettingsBloc? settingsBloc;
