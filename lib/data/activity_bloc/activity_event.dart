@@ -107,3 +107,5 @@ class ActivityUnarchived extends ActivityEvent {
 
   ActivityUnarchived({required this.index});
 }
+
+class DeleteAllActivities extends ActivityEvent {}

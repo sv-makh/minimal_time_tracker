@@ -132,6 +132,11 @@ class ActivityRepository {
     return archiveBox.getAt(index)!;
   }
 
+  Future<void> clearAll() async {
+    await activitiesBox.clear();
+    await archiveBox.clear();
+  }
+
   Map<int, bool> getActivityMap() {
     Map<int, bool> res = {};
     for (int i = 0; i < activitiesLength; i++) {

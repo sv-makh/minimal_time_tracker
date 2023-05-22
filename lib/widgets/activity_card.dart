@@ -26,8 +26,10 @@ class ActivityCard extends StatelessWidget {
       builder: (context, SettingsState settingsState) {
         int themeMode = settingsState.themeMode ? 1 : 0;
         List<Color> palette = themePalettes[settingsState.theme]![themeMode][0];
-        List<Color> paletteDark = themePalettes[settingsState.theme]![themeMode][1];
-        List<Color> paletteInactive = themePalettes[settingsState.theme]![themeMode][2];
+        List<Color> paletteDark =
+            themePalettes[settingsState.theme]![themeMode][1];
+        List<Color> paletteInactive =
+            themePalettes[settingsState.theme]![themeMode][2];
 
         //цвет фона карточки активности берётся из разных палитр
         //в зависимости от того, находится ли эта активность в архиве
@@ -218,7 +220,7 @@ class ActivityCard extends StatelessWidget {
     }
 
     //проверка была ли нажата кнопка
-    //(т.е. в intervalsList был занес>н интервал)
+    //(т.е. в intervalsList был занесён интервал)
     bool _wasPressed(int index) {
       if (index < activity.intervalsList.length) return true;
       return false;
@@ -256,11 +258,12 @@ class ActivityCard extends StatelessWidget {
                         backgroundColor: _wasPressed(i)
                             ? paletteDark[activity.color!]
                             : palette[activity.color!],
-                        side: _isInactive(i) || archived
-                            ? null
-                            : BorderSide(
-                                color: paletteDark[activity.color!],
-                                width: 2.0),
+                        //рамки только у нажатых кнопок и активной кнопки;
+                        //если активность в архиве, рамок нет
+                        side: (_wasPressed(i) || !_isInactive(i)) && !archived
+                             ? BorderSide(
+                                color: paletteDark[activity.color!], width: 2.0)
+                            : null,
                       ),
                       onPressed: _isInactive(i) || archived
                           ? null

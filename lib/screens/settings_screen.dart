@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../data/activity_bloc/activity_bloc.dart';
 import '../settings/settings_bloc/settings_bloc.dart';
 import '../settings/settings_data.dart';
 import '../settings/themes.dart';
@@ -118,6 +119,10 @@ class SettingsScreen extends StatelessWidget {
                           .add(ChangeArchiveVisibility(showArchive: value));
                     },
                   ),
+                  const SpacerBox(),
+                  const SpacerBox(),
+                  OutlinedButton(onPressed: () {_deleteAllDialog(context);},
+                      child: Text(AppLocalizations.of(context)!.deleteAll)),
                 ],
               ),
             ),
@@ -125,5 +130,29 @@ class SettingsScreen extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Future<void> _deleteAllDialog(BuildContext context) {
+    return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(AppLocalizations.of(context)!.deleteAllActivities),
+            content: Text(AppLocalizations.of(context)!.deleteAllWarning),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(AppLocalizations.of(context)!.cancel)),
+              TextButton(
+                  onPressed: () { BlocProvider.of<ActivitiesBloc>(context)
+                        .add(DeleteAllActivities());
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(AppLocalizations.of(context)!.deleteAll)),
+            ],
+          );
+        });
   }
 }

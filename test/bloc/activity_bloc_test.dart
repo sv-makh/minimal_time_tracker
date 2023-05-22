@@ -404,5 +404,31 @@ void main() {
         verify(() => activityRepository.moveActivityFromArchiveToBox(0)).called(1);
       },
     );
+
+    blocTest<ActivitiesBloc, ActivitiesState>('normal state after DeleteAllActivities',
+      setUp: () {
+        when(() => activityRepository.clearAll())
+            .thenAnswer((_) async {});
+      },
+      build: () => ActivitiesBloc(activityRepository: activityRepository),
+      act: (bloc) => bloc.add(DeleteAllActivities()),
+      expect: () => [isA<NormalActivitiesState>()],
+      verify: (_) {
+        verify(() => activityRepository.clearAll()).called(1);
+      },
+    );
+
+    blocTest<ActivitiesBloc, ActivitiesState>('error state after DeleteAllActivities',
+      setUp: () {
+        when(() => activityRepository.clearAll())
+            .thenThrow(Exception('Error'));
+      },
+      build: () => ActivitiesBloc(activityRepository: activityRepository),
+      act: (bloc) => bloc.add(DeleteAllActivities()),
+      expect: () => [isA<ActivitiesError>()],
+      verify: (_) {
+        verify(() => activityRepository.clearAll()).called(1);
+      },
+    );
   });
 }

@@ -131,5 +131,11 @@ void main() {
       expect(activityRepository.getActivityFromBoxAt(0).title,
           testActivity3.title);
     });
+
+    test('clearAll', () async {
+      await activityRepository.clearAll();
+      expect(activityRepository.isActivitiesEmpty, true);
+      expect(activityRepository.isArchiveEmpty, true);
+    });
   });
 }
