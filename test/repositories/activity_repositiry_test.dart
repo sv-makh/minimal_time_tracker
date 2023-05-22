@@ -125,5 +125,11 @@ void main() {
     test('getArchiveMap', () {
       expect(activityRepository.getArchiveMap(), {0: true});
     });
+
+    test('putActivityToBoxAt', () {
+      activityRepository.putActivityToBoxAt(0, testActivity3);
+      expect(activityRepository.getActivityFromBoxAt(0).title,
+          testActivity3.title);
+    });
   });
 }

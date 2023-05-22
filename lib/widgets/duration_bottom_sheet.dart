@@ -15,8 +15,6 @@ class DurationBottomSheet extends StatefulWidget {
 
 class _DurationBottomSheetState extends State<DurationBottomSheet> {
 
-  //DurationBottomSheet({Key? key, required this.context}) : super(key: key);
-
   var _daysController = TextEditingController();
   var _hoursController = TextEditingController();
   var _minutesController = TextEditingController();
