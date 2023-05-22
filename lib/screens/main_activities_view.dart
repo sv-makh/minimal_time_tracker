@@ -56,6 +56,7 @@ class MainActivitiesView extends StatelessWidget {
                             children: [
                               ListView.builder(
                                 key: Key('activitiesBoxListView.builder'),
+                                physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: activityRepository.activitiesLength,
                                 itemBuilder: (BuildContext context, int index) {
@@ -87,6 +88,7 @@ class MainActivitiesView extends StatelessWidget {
                               (settingsState.showArchive! && activityRepository.isArchiveNotEmpty)
                                   ? ListView.builder(
                                       key: Key('archiveListView.builder'),
+                                      physics: NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemCount:
                                           activityRepository.archiveLength,

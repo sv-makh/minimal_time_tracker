@@ -15,19 +15,19 @@ String stringDuration(Duration d, BuildContext context) {
 
   final List<String> tokens = [];
   if (days != 0) {
-    tokens.add('$days${AppLocalizations.of(context)!.daysShort}');
+    tokens.add('$days ${AppLocalizations.of(context)!.daysShort}');
   }
   if (hours != 0) {
-    tokens.add('$hours${AppLocalizations.of(context)!.hoursShort}');
+    tokens.add('$hours ${AppLocalizations.of(context)!.hoursShort}');
   }
   if (tokens.isEmpty || (minutes != 0)) {
-    tokens.add('$minutes${AppLocalizations.of(context)!.minutesShort}');
+    tokens.add('$minutes ${AppLocalizations.of(context)!.minutesShort}');
   }
   if (seconds != 0) {
     if (minutes == 0) {
-      tokens.remove('$minutes${AppLocalizations.of(context)!.minutesShort}');
+      tokens.remove('$minutes ${AppLocalizations.of(context)!.minutesShort}');
     }
-    tokens.add('$seconds${AppLocalizations.of(context)!.secondsShort}');
+    tokens.add('$seconds ${AppLocalizations.of(context)!.secondsShort}');
   }
 
   return tokens.join(' ');

@@ -48,6 +48,7 @@ class StatisticsScreen extends StatelessWidget {
                               ),
                               ListView.builder(
                                 key: Key('stats activities'),
+                                physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: activityRepository.activitiesLength,
                                 itemBuilder: (BuildContext context, int index) {
@@ -76,12 +77,13 @@ class StatisticsScreen extends StatelessWidget {
                                   }
                                 },
                               ),
-                              Text(
+                              activityRepository.isArchiveNotEmpty ? Text(
                                 AppLocalizations.of(context)!
                                     .archivedActivities,
-                              ),
-                              ListView.builder(
+                              ) : Container(),
+                              activityRepository.isArchiveNotEmpty ? ListView.builder(
                                 key: Key('stats archive'),
+                                physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: activityRepository.archiveLength,
                                 itemBuilder: (BuildContext context, int index) {
@@ -110,7 +112,7 @@ class StatisticsScreen extends StatelessWidget {
                                     return Container();
                                   }
                                 },
-                              ),
+                              ) : Container(),
                             ],
                           ),
                         )),
