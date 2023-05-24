@@ -104,7 +104,7 @@ void main() {
       ));
 
       expect(find.byKey(Key('title of activity')), findsOneWidget);
-      expect(find.text('test title, total = 0m'), findsOneWidget);
+      expect(find.text('test title, total = 0 m'), findsOneWidget);
       expect(find.byKey(Key('subtitle of activity')), findsNothing);
       expect(find.byIcon(Icons.edit), findsOneWidget);
       expect(find.byIcon(Icons.archive), findsOneWidget);
@@ -150,7 +150,7 @@ void main() {
       expect(card.color, pastel[1]);
 
       expect(find.byKey(Key('title of activity')), findsOneWidget);
-      expect(find.text('test title, total = 3h'), findsOneWidget);
+      expect(find.text('test title, total = 3 h'), findsOneWidget);
 
       expect(find.byKey(Key('subtitle of activity')), findsOneWidget);
       expect(find.text('test subtitle'), findsOneWidget);
@@ -206,7 +206,7 @@ void main() {
       expect(card.color, pastelInactive[1]);
 
       expect(find.byKey(Key('title of activity')), findsOneWidget);
-      expect(find.text('test title, total = 1h 40m'), findsOneWidget);
+      expect(find.text('test title, total = 1 h 40 m'), findsOneWidget);
 
       expect(find.byKey(Key('subtitle of activity')), findsOneWidget);
       expect(find.text('test subtitle'), findsOneWidget);
