@@ -88,6 +88,7 @@ void main() {
           shownActivities: {0: true}, shownArchiveActivities: {0: true}));
       when(() => activityRepository.isActivitiesEmpty).thenReturn(false);
       when(() => activityRepository.isArchiveEmpty).thenReturn(false);
+      when(() => activityRepository.isArchiveNotEmpty).thenReturn(true);
       when(() => activityRepository.activitiesLength).thenReturn(1);
       when(() => activityRepository.getActivityFromBoxAt(0))
           .thenReturn(testActivity1);
@@ -105,8 +106,8 @@ void main() {
       expect(find.byKey(Key('stats activities')), findsOneWidget);
       expect(find.byKey(Key('stats archive')), findsOneWidget);
       expect(find.byType(Checkbox), findsNWidgets(2));
-      expect(find.text('test title, 1h'), findsOneWidget);
-      expect(find.text('arch title, 2h'), findsOneWidget);
+      expect(find.text('test title, 1 h'), findsOneWidget);
+      expect(find.text('arch title, 2 h'), findsOneWidget);
     });
   });
 }

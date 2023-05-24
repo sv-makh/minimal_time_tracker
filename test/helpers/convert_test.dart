@@ -51,7 +51,7 @@ void main() {
 
   Duration testDuration0 = Duration(days: 0, hours: 0, minutes: 0, seconds: 0);
 
-  testWidgets('return 0m for duration with all parameters = 0 for en locale',
+  testWidgets('return 0 m for duration with all parameters = 0 for en locale',
       (widgetTester) async {
     await widgetTester.pumpWidget(
       TestMaterialApp(
@@ -61,10 +61,10 @@ void main() {
         ),
       ),
     );
-    expect(find.text('0m'), findsOneWidget);
+    expect(find.text('0 m'), findsOneWidget);
   });
 
-  testWidgets('return 0м for duration with all parameters = 0 for ru locale',
+  testWidgets('return 0 м for duration with all parameters = 0 for ru locale',
       (widgetTester) async {
     await widgetTester.pumpWidget(
       TestMaterialApp(
@@ -74,11 +74,11 @@ void main() {
         ),
       ),
     );
-    expect(find.text('0м'), findsOneWidget);
+    expect(find.text('0 м'), findsOneWidget);
   });
 
   Duration testDuration1 = Duration(days: 2, hours: 15, minutes: 30, seconds: 13);
-  testWidgets('return 2d 15h 30m 13s for duration for en locale',
+  testWidgets('return 2 d 15 h 30 m 13 s for duration for en locale',
           (widgetTester) async {
         await widgetTester.pumpWidget(
           TestMaterialApp(
@@ -88,10 +88,10 @@ void main() {
             ),
           ),
         );
-        expect(find.text('2d 15h 30m 13s'), findsOneWidget);
+        expect(find.text('2 d 15 h 30 m 13 s'), findsOneWidget);
       });
 
-  testWidgets('return 2д 15ч 30м 13с for duration for ru locale',
+  testWidgets('return 2 д 15 ч 30 м 13 с for duration for ru locale',
           (widgetTester) async {
         await widgetTester.pumpWidget(
           TestMaterialApp(
@@ -101,11 +101,11 @@ void main() {
             ),
           ),
         );
-        expect(find.text('2д 15ч 30м 13с'), findsOneWidget);
+        expect(find.text('2 д 15 ч 30 м 13 с'), findsOneWidget);
       });
 
   Duration testDuration2 = Duration(microseconds: 30);
-  testWidgets('return 0m for duration for en locale',
+  testWidgets('return 0 m for duration for en locale',
           (widgetTester) async {
         await widgetTester.pumpWidget(
           TestMaterialApp(
@@ -115,11 +115,11 @@ void main() {
             ),
           ),
         );
-        expect(find.text('0m'), findsOneWidget);
+        expect(find.text('0 m'), findsOneWidget);
       });
 
   Duration testDuration3 = Duration(minutes: 0, seconds: 40);
-  testWidgets('return 0m for duration for en locale',
+  testWidgets('return 40 s for duration for en locale',
           (widgetTester) async {
         await widgetTester.pumpWidget(
           TestMaterialApp(
@@ -129,6 +129,6 @@ void main() {
             ),
           ),
         );
-        expect(find.text('40s'), findsOneWidget);
+        expect(find.text('40 s'), findsOneWidget);
       });
 }

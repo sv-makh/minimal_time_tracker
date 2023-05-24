@@ -5,6 +5,7 @@ import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/data/activity_repository.dart';
 
 part 'activity_event.dart';
+
 part 'activities_state.dart';
 
 class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
@@ -38,7 +39,6 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           Presentation.BUTTONS,
           0,
         )) {
-
     on<ActivityDeleted>(
         (ActivityDeleted event, Emitter<ActivitiesState> emitter) {
       try {
@@ -50,7 +50,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       }
     });
 
-    on<ArchivedActivityDeleted>((ArchivedActivityDeleted event, Emitter<ActivitiesState> emitter) {
+    on<ArchivedActivityDeleted>(
+        (ArchivedActivityDeleted event, Emitter<ActivitiesState> emitter) {
       try {
         activityRepository.archiveDeleteAt(event.index);
         return emitter(NormalActivitiesState(
@@ -187,7 +188,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
     on<DeleteIntervalWithIndex>(
         (DeleteIntervalWithIndex event, Emitter<ActivitiesState> emitter) {
       try {
-        activityRepository.deleteTimeFromActivity(event.activityIndex, event.intervalIndex);
+        activityRepository.deleteTimeFromActivity(
+            event.activityIndex, event.intervalIndex);
 
         return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells));
@@ -269,6 +271,18 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         (ActivityUnarchived event, Emitter<ActivitiesState> emitter) {
       try {
         activityRepository.moveActivityFromArchiveToBox(event.index);
+
+        return emitter(NormalActivitiesState(
+            durationButtons, color, presentation, numOfCells, editedActivity));
+      } catch (_) {
+        return emitter(ActivitiesError());
+      }
+    });
+
+    on<DeleteAllActivities>(
+        (DeleteAllActivities event, Emitter<ActivitiesState> emitter) async {
+      try {
+        await activityRepository.clearAll();
 
         return emitter(NormalActivitiesState(
             durationButtons, color, presentation, numOfCells, editedActivity));

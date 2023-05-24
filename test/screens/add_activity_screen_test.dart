@@ -66,8 +66,12 @@ void main() {
           activitiesBloc: activitiesBloc,
           child: AddActivityScreen()));
 
-      expect(titleController.text, '');
-      expect(subtitleController.text, '');
+      final titleTextFinder = find.ancestor(
+          of: find.text(''), matching: find.byKey(Key('title text field')));
+      expect(titleTextFinder, findsOneWidget);
+      final subtitleTextFinder = find.ancestor(
+          of: find.text(''), matching: find.byKey(Key('subtitle text field')));
+      expect(subtitleTextFinder, findsOneWidget);
 
       expect(find.byBoxDecorationColored(color: pastel[0]), findsOneWidget);
       expect(find.byBoxDecorationColored(color: pastel[1]), findsOneWidget);
@@ -88,8 +92,8 @@ void main() {
           widget is OutlinedButton &&
           (widget.style?.backgroundColor?.resolve(states) == Colors.white12));
       expect(buttonFinder, findsNWidgets(2));
-      expect(find.text('1h'), findsOneWidget);
-      expect(find.text('30m'), findsOneWidget);
+      expect(find.text('1 h'), findsOneWidget);
+      expect(find.text('30 m'), findsOneWidget);
     });
 
     testWidgets('show SnackBar when trying to save with no title',
@@ -148,21 +152,25 @@ void main() {
           activitiesBloc: activitiesBloc,
           child: AddActivityScreen.editActivity(editedActivity: testActivity)));
 
-      expect(titleController.text, 'test title');
-      expect(subtitleController.text, 'test subtitle');
+      final titleTextFinder = find.ancestor(
+          of: find.text('test title'), matching: find.byKey(Key('title text field')));
+      expect(titleTextFinder, findsOneWidget);
+      final subtitleTextFinder = find.ancestor(
+          of: find.text('test subtitle'), matching: find.byKey(Key('subtitle text field')));
+      expect(subtitleTextFinder, findsOneWidget);
 
       final states = <MaterialState>{};
       final buttonFinder = find.byWidgetPredicate((widget) =>
-      widget is OutlinedButton &&
+          widget is OutlinedButton &&
           (widget.style?.backgroundColor?.resolve(states) == Colors.black12));
       expect(buttonFinder, findsNWidgets(2));
-      expect(find.text('15m'), findsOneWidget);
-      expect(find.text('10m'), findsOneWidget);
+      expect(find.text('15 m'), findsOneWidget);
+      expect(find.text('10 m'), findsOneWidget);
 
       expect(find.byKey(Key('editActivityData')), findsOneWidget);
       expect(find.byKey(Key('editActivityDataCard')), findsNWidgets(3));
       expect(find.byKey(Key('editActivityDataButton')), findsOneWidget);
-      expect(find.text('Total: 35m'), findsOneWidget);
+      expect(find.text('Total: 35 m'), findsOneWidget);
     });
   });
 }

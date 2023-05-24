@@ -40,5 +40,8 @@
     "archivedActivities": "Archived activities",
     "showArchivedActivities": "Show archived activities",
     "somethingWrong": "Something went wrong!",
-    "statistics": "Statistics"
+    "statistics": "Statistics",
+    "deleteAll": "Delete all",
+    "deleteAllActivities": "Delete all activities?",
+    "deleteAllWarning": "All data will will be lost."
 }

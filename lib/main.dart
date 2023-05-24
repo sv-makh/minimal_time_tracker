@@ -70,6 +70,7 @@ class MyApp extends StatelessWidget {
           ],
           supportedLocales: supportedLocales,
           home: MainActivitiesView(activityRepository: activityRepository),
+          debugShowCheckedModeBanner: false,
         );
       }),
     );

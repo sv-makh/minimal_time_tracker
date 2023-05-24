@@ -1,5 +1,3 @@
-//import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,191 +11,212 @@ import '../data/activity_bloc/activity_bloc.dart';
 import '../settings/settings_bloc/settings_bloc.dart';
 import 'package:minimal_time_tracker/widgets/spacer_box.dart';
 
-TextEditingController cellsNumber = TextEditingController();
-TextEditingController titleController = TextEditingController();
-TextEditingController subtitleController = TextEditingController();
+//TextEditingController titleController = TextEditingController();
+//TextEditingController subtitleController = TextEditingController();
 
-class AddActivityScreen extends StatelessWidget {
+class AddActivityScreen extends StatefulWidget {
   AddActivityScreen({Key? key}) : super(key: key) {
     editedActivity = null;
-    titleController.clear();
-    subtitleController.clear();
   }
 
   AddActivityScreen.editActivity({Key? key, required this.editedActivity})
       : super(key: key);
 
-  String _numOfCells = '0';
-  String _titleOfEditedActivity = '';
-  String _subtitleOfEditedActivity = '';
-
   Activity? editedActivity;
 
   @override
+  State<AddActivityScreen> createState() => _AddActivityScreenState();
+}
+
+class _AddActivityScreenState extends State<AddActivityScreen> {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController subtitleController = TextEditingController();
+
+  String titleOfEditedActivity = '';
+  String subtitleOfEditedActivity = '';
+  String _numOfCells = '0';
+
+  @override
+  void initState() {
+    Activity? editedActivity = widget.editedActivity;
+    super.initState();
+    if (editedActivity != null) {
+      //заголовок у активности есть всегда
+      titleOfEditedActivity = editedActivity!.title;
+      titleController.text = titleOfEditedActivity;
+
+      //подзаголовка может не быть
+      subtitleOfEditedActivity = (editedActivity!.subtitle == null)
+          ? ''
+          : editedActivity!.subtitle!;
+      subtitleController.text = subtitleOfEditedActivity;
+    }
+  }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    subtitleController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    Activity? editedActivity = widget.editedActivity;
+
     return BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, settingsState) {
       return BlocBuilder<ActivitiesBloc, ActivitiesState>(
           builder: (context, state) {
-        if (state is NormalActivitiesState) {
-          Map<Duration, bool> durations = state.durationButtons;
+            if (state is NormalActivitiesState) {
+              Map<Duration, bool> durations = state.durationButtons;
 
-          bool presentationValue;
+              bool presentationValue;
 
-          if (state.presentation == Presentation.BUTTONS) {
-            presentationValue = true;
-          } else {
-            presentationValue = false;
-          }
+              if (state.presentation == Presentation.BUTTONS) {
+                presentationValue = true;
+              } else {
+                presentationValue = false;
+              }
 
-          if (editedActivity != null) {
-            //заголовок у активности есть всегда
-            _titleOfEditedActivity = editedActivity!.title;
-            titleController.text = _titleOfEditedActivity;
+              int themeMode = settingsState.themeMode ? 1 : 0;
 
-            //подзаголовка может не быть
-            _subtitleOfEditedActivity = (editedActivity!.subtitle == null)
-                ? ''
-                : editedActivity!.subtitle!;
-            subtitleController.text = _subtitleOfEditedActivity;
-          }
+              _numOfCells = state.numOfCells.toString();
 
-          _numOfCells = state.numOfCells.toString();
+              bool noColorPicker = (settingsState.theme == 'Pale');
 
-          int themeMode = settingsState.themeMode ? 1 : 0;
-
-          bool noColorPicker = (settingsState.theme == 'Pale');
-
-          return Scaffold(
-            backgroundColor: themePalettes[settingsState.theme]![themeMode][0]
+              return Scaffold(
+                backgroundColor: themePalettes[settingsState.theme]![themeMode][0]
                 [state.color],
-            appBar: AppBar(
-              title: (editedActivity == null)
-                  ? Text(AppLocalizations.of(context)!.addNewActivity)
-                  : Text(AppLocalizations.of(context)!.editActivity),
-              actions: <Widget>[
-                IconButton(
-                  icon: const Icon(Icons.save),
-                  onPressed: () {
-                    if (titleController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        key: Key('noTitleSnackBar'),
-                        content: Text(AppLocalizations.of(context)!.enterTitle),
-                        duration: const Duration(seconds: 3),
-                        //backgroundColor: messageColor,
-                        action: SnackBarAction(
-                          label: 'Ok',
-                          textColor: Colors.black,
-                          onPressed: () {},
-                        ),
-                      ));
-                    } else {
-                      Activity activity = Activity(
-                        title: titleController.text,
-                        subtitle: subtitleController.text,
-                        color: state.color,
-                        presentation: state.presentation,
-                      );
+                appBar: AppBar(
+                  title: (editedActivity == null)
+                      ? Text(AppLocalizations.of(context)!.addNewActivity)
+                      : Text(AppLocalizations.of(context)!.editActivity),
+                  actions: <Widget>[
+                    IconButton(
+                      icon: const Icon(Icons.save),
+                      onPressed: () {
+                        if (titleController.text.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            key: Key('noTitleSnackBar'),
+                            content: Text(AppLocalizations.of(context)!.enterTitle),
+                            duration: const Duration(seconds: 3),
+                            //backgroundColor: messageColor,
+                            action: SnackBarAction(
+                              label: 'Ok',
+                              textColor: Colors.black,
+                              onPressed: () {},
+                            ),
+                          ));
+                        } else {
+                          Activity activity = Activity(
+                            title: titleController.text,
+                            subtitle: subtitleController.text,
+                            color: state.color,
+                            presentation: state.presentation,
+                          );
 
-                      if (state.presentation == Presentation.BUTTONS) {
-                        for (MapEntry<Duration, bool> d in durations.entries) {
-                          if (d.value) activity.addDurationButton(d.key);
-                        }
-                      } else {
-                        int currentNum = int.tryParse(_numOfCells) ?? 0;
-                        activity.maxNum = currentNum;
-                        if (currentNum != 0) {
-                          Duration currentDuration =
-                              durations.keys.toList().first;
-                          for (int i = 0; i < currentNum; i++) {
-                            activity.addDurationButton(currentDuration);
+                          if (state.presentation == Presentation.BUTTONS) {
+                            for (MapEntry<Duration, bool> d in durations.entries) {
+                              if (d.value) activity.addDurationButton(d.key);
+                            }
+                          } else {
+                            int currentNum = int.tryParse(_numOfCells) ?? 0;
+                            activity.maxNum = currentNum;
+                            if (currentNum != 0) {
+                              Duration currentDuration =
+                                  durations.keys.toList().first;
+                              for (int i = 0; i < currentNum; i++) {
+                                activity.addDurationButton(currentDuration);
+                              }
+                            }
                           }
-                        }
-                      }
 
-                      //в случае редактирования существующей активности
-                      //заполняются недостающие поля
-                      if (editedActivity != null) {
-                        for (var interval
+                          //в случае редактирования существующей активности
+                          //заполняются недостающие поля
+                          if (editedActivity != null) {
+                            for (var interval
                             in state.editedActivity!.intervalsList) {
-                          activity.addInterval(interval);
+                              activity.addInterval(interval);
+                            }
+                            //activity.durationButtons =
+                            //    editedActivity!.durationButtons;
+                          }
+
+                          durations.clear();
+
+                          Navigator.pop(
+                            context,
+                            activity,
+                          );
                         }
-                        //activity.durationButtons =
-                        //    editedActivity!.durationButtons;
-                      }
-
-                      durations.clear();
-
-                      Navigator.pop(
-                        context,
-                        activity,
-                      );
-                    }
-                  },
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            body: SafeArea(
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Text(AppLocalizations.of(context)!.titleActivity),
-                      TextField(
-                        controller: titleController,
-                        onChanged: (value) => _titleOfEditedActivity = value,
-                      ),
-                      const SpacerBox(),
-                      Text(AppLocalizations.of(context)!.subtitleActivity),
-                      TextField(
-                        controller: subtitleController,
-                        onChanged: (value) => _subtitleOfEditedActivity = value,
-                      ),
-                      const SpacerBox(),
-                      noColorPicker ? Container() : Text(AppLocalizations.of(context)!.color),
-                      noColorPicker ? Container() : _colorPicker(context, state.color, settingsState.theme!, themeMode),
-                      noColorPicker ? Container() : const SpacerBox(),
-                      Text(AppLocalizations.of(context)!.addNewIntervals),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                body: SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: SingleChildScrollView(
+                      child: Column(
                         children: [
-                          Text(AppLocalizations.of(context)!.presentaionTable),
-                          Switch(
-                              value: presentationValue,
-                              onChanged: (bool value) {
-                                Presentation p = value
-                                    ? Presentation.BUTTONS
-                                    : Presentation.TABLE;
-                                BlocProvider.of<ActivitiesBloc>(context)
-                                    .add(ChangePresentation(presentation: p));
-                              }),
-                          Text(AppLocalizations.of(context)!
-                              .presentationIntervals),
+                          Text(AppLocalizations.of(context)!.titleActivity),
+                          TextField(
+                            key: Key('title text field'),
+                            controller: titleController,
+                            onChanged: (value) => titleOfEditedActivity = value,
+                          ),
+                          const SpacerBox(),
+                          Text(AppLocalizations.of(context)!.subtitleActivity),
+                          TextField(
+                            key: Key('subtitle text field'),
+                            controller: subtitleController,
+                            onChanged: (value) => subtitleOfEditedActivity = value,
+                          ),
+                          const SpacerBox(),
+                          noColorPicker ? Container() : Text(AppLocalizations.of(context)!.color),
+                          noColorPicker ? Container() : _colorPicker(context, state.color, settingsState.theme!, themeMode),
+                          noColorPicker ? Container() : const SpacerBox(),
+                          Text(AppLocalizations.of(context)!.addNewIntervals),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(AppLocalizations.of(context)!.presentaionTable),
+                              Switch(
+                                  value: presentationValue,
+                                  onChanged: (bool value) {
+                                    Presentation p = value
+                                        ? Presentation.BUTTONS
+                                        : Presentation.TABLE;
+                                    BlocProvider.of<ActivitiesBloc>(context)
+                                        .add(ChangePresentation(presentation: p));
+                                  }),
+                              Text(AppLocalizations.of(context)!
+                                  .presentationIntervals),
+                            ],
+                          ),
+                          const SpacerBox(),
+                          //виджет для настройки того как будет добавляться время к активности
+                          //с помощью кнопок либо таблицы
+                          (state.presentation == Presentation.BUTTONS)
+                              ? _buttonSettings(context, durations)
+                              : _tableSettings(context, durations),
+                          const SpacerBox(),
+                          //если эта страница открыта для редактирования существующей активности
+                          //ниже выводится виджет для редактирования запомненных интервалов
+                          (editedActivity == null)
+                              ? Container()
+                              : _editActivityData(context, state.color,
+                              settingsState.theme!, themeMode, state.editedActivity!),
                         ],
                       ),
-                      const SpacerBox(),
-                      //виджет для настройки того как будет добавляться время к активности
-                      //с помощью кнопок либо таблицы
-                      (state.presentation == Presentation.BUTTONS)
-                          ? _buttonSettings(context, durations)
-                          : _tableSettings(context, durations),
-                      const SpacerBox(),
-                      //если эта страница открыта для редактирования существующей активности
-                      //ниже выводится виджет для редактирования запомненных интервалов
-                      (editedActivity == null)
-                          ? Container()
-                          : _editActivityData(context, state.color,
-                              settingsState.theme!, themeMode, state.editedActivity!),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-          );
-        }
-        return Text(AppLocalizations.of(context)!.somethingWrong);
-      });
+              );
+            }
+            return Text(AppLocalizations.of(context)!.somethingWrong);
+          });
     });
   }
 
@@ -213,8 +232,8 @@ class AddActivityScreen extends StatelessWidget {
           height: 250,
           decoration: BoxDecoration(
               border: Border.all(
-            color: paletteDark[colorIndex],
-          )),
+                color: paletteDark[colorIndex],
+              )),
           child: ListView.builder(
               itemCount: editedActivity.intervalsList.length,
               itemBuilder: (context, int index) {
@@ -224,7 +243,7 @@ class AddActivityScreen extends StatelessWidget {
                     //substring отсекает миллисекунды
                     title: Text(
                         '${editedActivity.intervalsList[index].start.toString().substring(0, 19)}, '
-                        '${stringDuration(editedActivity.intervalsList[index].duration, context)}'),
+                            '${stringDuration(editedActivity.intervalsList[index].duration, context)}'),
                     trailing: IconButton(
                       icon: const Icon(Icons.delete),
                       onPressed: () {
@@ -261,14 +280,14 @@ class AddActivityScreen extends StatelessWidget {
             height: 30,
             decoration: (i == colorIndex)
                 ? BoxDecoration(
-                    color: palette[i],
-                    border: Border.all(
-                      color: paletteDark[i],
-                      width: 3.0,
-                    ))
+                color: palette[i],
+                border: Border.all(
+                  color: paletteDark[i],
+                  width: 3.0,
+                ))
                 : BoxDecoration(
-                    color: palette[i],
-                  ),
+              color: palette[i],
+            ),
           ),
           onTap: () {
             BlocProvider.of<ActivitiesBloc>(context).add(ChangeColor(color: i));
