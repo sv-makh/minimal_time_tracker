@@ -3,23 +3,27 @@ import 'package:hive/hive.dart';
 
 part 'activity.g.dart';
 
-/*const String boxName = 'activitiesBox';
-const String archiveName = 'archiveBox';*/
-
 @HiveType(typeId: 1)
 class Activity {
+  //заголовок активности
   @HiveField(0)
   String title;
+  //подзаголовок активоности
   @HiveField(1)
   String? subtitle;
+  //добавленные пользователем интервалы времени
   @HiveField(2)
   List<TimeInterval> _intervals = [];
+  //кнопки, с помощью которых добавляется время
   @HiveField(3)
   List<Duration> durationButtons = <Duration>[];
+  //кнопочное/табличное добавление времени
   @HiveField(4)
   Presentation? presentation;
+  //количество яцеек в таблице в случает табличного представления
   @HiveField(5)
   int? maxNum;
+  //цвет карточки активности - индекс цвета из массивов цветов для темы
   @HiveField(6)
   int? color;
 

@@ -9,47 +9,24 @@ abstract class ActivitiesState {
 }
 
 class NormalActivitiesState extends ActivitiesState {
-  //final Box<Activity> activitiesBox;
-  //final Box<Activity> archiveBox;
+  //кнопки добавления времени (ключ время Duration) к активности
+  //значение bool: на экране редактирования/создания активности они могут быть
+  //выбраны либо не выбраны (от этого зависит их цвет)
   Map<Duration, bool> durationButtons;
+  //цвет карточки активности - индекс цвета из массивов цветов для темы
   int color;
+  //варианты добавления времени к активности: кнопочное/табличное
   Presentation presentation;
+  //количество ячеек в случает табличного представления
   int numOfCells;
+  //добавленные пользователем интервалы времени у редактируемой активности
+  List<int> intervals;
+  //редактиремая активность, в случае создания новой - null
   Activity? editedActivity;
 
   NormalActivitiesState(this.durationButtons,
-      this.color, this.presentation, this.numOfCells,
+      this.color, this.presentation, this.numOfCells, this.intervals,
       [this.editedActivity]);
-
-/*  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        other is NormalActivitiesState &&
-            activitiesBox == other.activitiesBox &&
-            archiveBox == other.archiveBox &&
-            mapEquals(durationButtons, other.durationButtons) &&//result &&
-            color == other.color &&
-            presentation == other.presentation &&
-            numOfCells == other.numOfCells &&
-            editedActivity == other.editedActivity;
-  }
-
-  @override
-  int get hashCode {
-    int mapHash = 1;
-    for (var k in durationButtons.keys) {
-      mapHash ^= k.hashCode;
-      mapHash ^= durationButtons[k].hashCode;
-    }
-    int result = activitiesBox.hashCode ^
-    archiveBox.hashCode ^
-    mapHash ^
-    color.hashCode ^
-    presentation.hashCode ^
-    numOfCells.hashCode ^
-    editedActivity.hashCode;
-    return result;
-  }*/
 }
 
 class ActivitiesError extends ActivitiesState {

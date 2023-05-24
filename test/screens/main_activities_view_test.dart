@@ -74,7 +74,7 @@ void main() {
           {Duration(hours: 1): false, Duration(minutes: 30): false},
           0,
           Presentation.BUTTONS,
-          0));
+          0, []));
 
       when(() => statisticsBloc.state).thenReturn(NormalStatisticsState(
           shownActivities: {}, shownArchiveActivities: {}));

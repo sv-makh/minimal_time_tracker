@@ -92,9 +92,7 @@ class DeleteIntervalEditedActivity extends ActivityEvent {
   DeleteIntervalEditedActivity({required this.index});
 }
 
-class DeleteAllIntervalsEditedActivity extends ActivityEvent {
-  DeleteAllIntervalsEditedActivity();
-}
+class DeleteAllIntervalsEditedActivity extends ActivityEvent {}
 
 class ActivityArchived extends ActivityEvent {
   int index;
@@ -109,3 +107,11 @@ class ActivityUnarchived extends ActivityEvent {
 }
 
 class DeleteAllActivities extends ActivityEvent {}
+
+class DeleteIntervalScreen extends ActivityEvent {
+  int index;
+
+  DeleteIntervalScreen({required this.index});
+}
+
+class DeleteAllIntervalsScreen extends ActivityEvent {}

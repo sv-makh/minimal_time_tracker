@@ -27,6 +27,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
 
   int numOfCells = 0;
 
+  List<int> intervals = [];
+
   Activity? editedActivity;
 
   ActivitiesBloc({required this.activityRepository})
@@ -38,13 +40,14 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           0,
           Presentation.BUTTONS,
           0,
+          [],
         )) {
     on<ActivityDeleted>(
         (ActivityDeleted event, Emitter<ActivitiesState> emitter) {
       try {
         activityRepository.activitiesDeleteAt(event.index);
         return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells));
+            durationButtons, color, presentation, numOfCells, intervals));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -55,7 +58,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       try {
         activityRepository.archiveDeleteAt(event.index);
         return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells));
+            durationButtons, color, presentation, numOfCells, intervals));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -66,7 +69,7 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       try {
         activityRepository.addTimeToActivity(event.index, event.interval);
         return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells));
+            durationButtons, color, presentation, numOfCells, intervals));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -80,8 +83,9 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
           Duration(minutes: 30): false,
         };
         color = 0;
+        intervals.clear();
         return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells));
+            durationButtons, color, presentation, numOfCells, intervals));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -92,8 +96,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       try {
         durationButtons.update(event.duration, (value) => false,
             ifAbsent: () => false);
-        return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells, editedActivity));
+        return emitter(NormalActivitiesState(durationButtons, color,
+            presentation, numOfCells, intervals, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -104,8 +108,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       try {
         durationButtons.update(event.duration, (value) => !value,
             ifAbsent: () => false);
-        return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells, editedActivity));
+        return emitter(NormalActivitiesState(durationButtons, color,
+            presentation, numOfCells, intervals, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -114,8 +118,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
     on<ChangeColor>((ChangeColor event, Emitter<ActivitiesState> emitter) {
       try {
         color = event.color;
-        return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells, editedActivity));
+        return emitter(NormalActivitiesState(durationButtons, color,
+            presentation, numOfCells, intervals, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -133,8 +137,9 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         };
         presentation = Presentation.BUTTONS;
         numOfCells = 0;
-        return emitter(NormalActivitiesState(
-            defaultDurationButtons, 0, Presentation.BUTTONS, numOfCells));
+        intervals.clear();
+        return emitter(NormalActivitiesState(defaultDurationButtons, 0,
+            Presentation.BUTTONS, numOfCells, intervals));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -153,8 +158,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
             Duration(minutes: 30): false,
           };
         }
-        ActivitiesState state = NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells, editedActivity);
+        ActivitiesState state = NormalActivitiesState(durationButtons, color,
+            presentation, numOfCells, intervals, editedActivity);
         return emitter(state);
       } catch (_) {
         return emitter(ActivitiesError());
@@ -167,8 +172,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         durationButtons.clear();
         durationButtons.update(event.duration, (value) => false,
             ifAbsent: () => false);
-        return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells, editedActivity));
+        return emitter(NormalActivitiesState(durationButtons, color,
+            presentation, numOfCells, intervals, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -178,8 +183,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         (ChangeNumOfCells event, Emitter<ActivitiesState> emitter) {
       try {
         numOfCells = event.num;
-        return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells, editedActivity));
+        return emitter(NormalActivitiesState(durationButtons, color,
+            presentation, numOfCells, intervals, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -192,7 +197,28 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
             event.activityIndex, event.intervalIndex);
 
         return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells));
+            durationButtons, color, presentation, numOfCells, intervals));
+      } catch (_) {
+        return emitter(ActivitiesError());
+      }
+    });
+
+    on<DeleteIntervalScreen>(
+        (DeleteIntervalScreen event, Emitter<ActivitiesState> emitter) {
+      try {
+        intervals.removeAt(event.index);
+        return emitter(NormalActivitiesState(durationButtons, color,
+            presentation, numOfCells, intervals, editedActivity));
+      } catch (_) {
+        return emitter(ActivitiesError());
+      }
+    });
+
+    on<DeleteAllIntervalsScreen>((DeleteAllIntervalsScreen event, Emitter<ActivitiesState> emitter) {
+      try {
+        intervals.clear();
+        return emitter(NormalActivitiesState(durationButtons, color,
+            presentation, numOfCells, intervals, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -209,10 +235,14 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         if (presentation == Presentation.TABLE) {
           numOfCells = event.activity.maxNum!;
         }
+        intervals.clear();
+        for (int i = 0; i < event.activity.intervalsList.length; i++) {
+          intervals.add(i);
+        }
         editedActivity = event.activity;
 
-        return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells, editedActivity));
+        return emitter(NormalActivitiesState(durationButtons, color,
+            presentation, numOfCells, intervals, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -223,8 +253,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       try {
         activityRepository.putActivityToBoxAt(event.index, event.activity);
 
-        return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells, editedActivity));
+        return emitter(NormalActivitiesState(durationButtons, color,
+            presentation, numOfCells, intervals, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -235,8 +265,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       try {
         editedActivity!.intervalsList.removeAt(event.index);
 
-        return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells, editedActivity));
+        return emitter(NormalActivitiesState(durationButtons, color,
+            presentation, numOfCells, intervals, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -248,8 +278,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       try {
         editedActivity!.intervalsList.clear();
 
-        return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells, editedActivity));
+        return emitter(NormalActivitiesState(durationButtons, color,
+            presentation, numOfCells, intervals, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -260,8 +290,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       try {
         activityRepository.moveActivityFromBoxToArchive(event.index);
 
-        return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells, editedActivity));
+        return emitter(NormalActivitiesState(durationButtons, color,
+            presentation, numOfCells, intervals, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -272,8 +302,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       try {
         activityRepository.moveActivityFromArchiveToBox(event.index);
 
-        return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells, editedActivity));
+        return emitter(NormalActivitiesState(durationButtons, color,
+            presentation, numOfCells, intervals, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
       }
@@ -284,8 +314,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       try {
         await activityRepository.clearAll();
 
-        return emitter(NormalActivitiesState(
-            durationButtons, color, presentation, numOfCells, editedActivity));
+        return emitter(NormalActivitiesState(durationButtons, color,
+            presentation, numOfCells, intervals, editedActivity));
       } catch (_) {
         return emitter(ActivitiesError());
       }

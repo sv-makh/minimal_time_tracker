@@ -252,7 +252,7 @@ class ActivityCard extends StatelessWidget {
                 spacing: 5,
                 runSpacing: 2.5,
                 children: [
-                  for (int i = 0; i < activity.durationButtons.length; i++)
+                  for (int i = 0; i < activity.maxNum!; i++)
                     OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         backgroundColor: _wasPressed(i)

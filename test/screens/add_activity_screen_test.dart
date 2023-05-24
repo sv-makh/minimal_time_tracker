@@ -57,7 +57,7 @@ void main() {
           {Duration(hours: 1): false, Duration(minutes: 30): false},
           0,
           Presentation.BUTTONS,
-          0));
+          0, []));
     });
 
     testWidgets('default new activity screen', (widgetTester) async {
@@ -143,7 +143,7 @@ void main() {
           end: DateTime.now(), duration: Duration(minutes: 10)));
 
       when(() => activitiesBloc.state).thenReturn(NormalActivitiesState(
-          testDurationButtons, testColor, testPresentation, 2, testActivity));
+          testDurationButtons, testColor, testPresentation, 2, [0, 1, 2], testActivity));
     });
 
     testWidgets('screen with edited activity', (widgetTester) async {

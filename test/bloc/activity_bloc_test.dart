@@ -13,13 +13,15 @@ void main() {
 
     final TimeInterval testTimeInterval = TimeInterval.duration(
         end: DateTime.now(), duration: Duration(hours: 1));
-    Activity testActivity = Activity(title: 'title', durationButtons: [
-      Duration(hours: 1)], color: 1, presentation: Presentation.TABLE, maxNum: 2);
-    testActivity.addInterval(testTimeInterval);
-    testActivity.addInterval(testTimeInterval);
+    late Activity testActivity;
 
     setUp(() {
       activityRepository = MockActivityRepository();
+
+      testActivity = Activity(title: 'title', durationButtons: [
+        Duration(hours: 1)], color: 1, presentation: Presentation.TABLE, maxNum: 2);
+      testActivity.addInterval(testTimeInterval);
+      testActivity.addInterval(testTimeInterval);
     });
 
     test('state of bloc', () {
@@ -286,6 +288,7 @@ void main() {
         expect(state.presentation, testActivity.presentation);
         expect(state.numOfCells, testActivity.maxNum);
         expect(state.durationButtons, {testActivity.durationButtons[0]: true});
+        expect(state.intervals, [0, 1]);
       },
     );
 
@@ -342,6 +345,41 @@ void main() {
       verify: (bloc) {
         NormalActivitiesState state = bloc.state as NormalActivitiesState;
         expect(state.editedActivity!.totalTime(), Duration());
+      },
+    );
+
+    blocTest<ActivitiesBloc, ActivitiesState>(
+      'normal state after DeleteIntervalScreen',
+      build: () => ActivitiesBloc(activityRepository: activityRepository),
+      act: (bloc) => bloc..add(EditActivity(activity: testActivity))
+        ..add(DeleteIntervalScreen(index: 0)),
+      skip: 1,
+      expect: () => [isA<NormalActivitiesState>()],
+      verify: (bloc) {
+        NormalActivitiesState state = bloc.state as NormalActivitiesState;
+        expect(state.intervals, [1]);
+      },
+    );
+
+    blocTest<ActivitiesBloc, ActivitiesState>(
+      'error state after DeleteIntervalScreen',
+      build: () => ActivitiesBloc(activityRepository: activityRepository),
+      act: (bloc) => bloc..add(EditActivity(activity: testActivity))
+        ..add(DeleteIntervalScreen(index: 2)),
+      skip: 1,
+      expect: () => [isA<ActivitiesError>()],
+    );
+
+    blocTest<ActivitiesBloc, ActivitiesState>(
+      'normal state after DeleteAllIntervalsScreen',
+      build: () => ActivitiesBloc(activityRepository: activityRepository),
+      act: (bloc) => bloc..add(EditActivity(activity: testActivity))
+        ..add(DeleteAllIntervalsScreen()),
+      skip: 1,
+      expect: () => [isA<NormalActivitiesState>()],
+      verify: (bloc) {
+        NormalActivitiesState state = bloc.state as NormalActivitiesState;
+        expect(state.intervals, []);
       },
     );
 
