@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/data/activity_repository.dart';
 
@@ -12,13 +10,13 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
   final ActivityRepository activityRepository;
 
   Map<Duration, bool> defaultDurationButtons = {
-    Duration(hours: 1): false,
-    Duration(minutes: 30): false,
+    const Duration(hours: 1): false,
+    const Duration(minutes: 30): false,
   };
 
   Map<Duration, bool> durationButtons = {
-    Duration(hours: 1): false,
-    Duration(minutes: 30): false,
+    const Duration(hours: 1): false,
+    const Duration(minutes: 30): false,
   };
 
   int color = 0;
@@ -34,8 +32,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
   ActivitiesBloc({required this.activityRepository})
       : super(NormalActivitiesState(
           {
-            Duration(hours: 1): false,
-            Duration(minutes: 30): false,
+            const Duration(hours: 1): false,
+            const Duration(minutes: 30): false,
           },
           0,
           Presentation.BUTTONS,
@@ -79,8 +77,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       try {
         activityRepository.addActivityToBox(event.activity);
         durationButtons = {
-          Duration(hours: 1): false,
-          Duration(minutes: 30): false,
+          const Duration(hours: 1): false,
+          const Duration(minutes: 30): false,
         };
         color = 0;
         intervals.clear();
@@ -132,8 +130,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         color = 0;
         durationButtons.clear();
         durationButtons = {
-          Duration(hours: 1): false,
-          Duration(minutes: 30): false,
+          const Duration(hours: 1): false,
+          const Duration(minutes: 30): false,
         };
         presentation = Presentation.BUTTONS;
         numOfCells = 0;
@@ -154,8 +152,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
         } else {
           numOfCells = 0;
           durationButtons = {
-            Duration(hours: 1): false,
-            Duration(minutes: 30): false,
+            const Duration(hours: 1): false,
+            const Duration(minutes: 30): false,
           };
         }
         ActivitiesState state = NormalActivitiesState(durationButtons, color,
@@ -214,7 +212,8 @@ class ActivitiesBloc extends Bloc<ActivityEvent, ActivitiesState> {
       }
     });
 
-    on<DeleteAllIntervalsScreen>((DeleteAllIntervalsScreen event, Emitter<ActivitiesState> emitter) {
+    on<DeleteAllIntervalsScreen>(
+        (DeleteAllIntervalsScreen event, Emitter<ActivitiesState> emitter) {
       try {
         intervals.clear();
         return emitter(NormalActivitiesState(durationButtons, color,

@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-
-import 'package:minimal_time_tracker/settings/settings_repository.dart';
+import 'package:minimal_time_tracker/data/settings/settings_repository.dart';
 
 part 'settings_state.dart';
 
@@ -14,13 +11,13 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final SettingsRepository settingsRepository;
 
   SettingsBloc({required this.settingsRepository})
-      : super(SettingsState(
-            locale: Locale('en', ''),
-            theme: 'Pale',
-            fontSize: 12,
-            showArchive: true,
-    themeMode: true,
-  )) {
+      : super(const SettingsState(
+          locale: Locale('en', ''),
+          theme: 'Pale',
+          fontSize: 12,
+          showArchive: true,
+          themeMode: true,
+        )) {
     Locale? currentLocale;
     String? currentTheme;
     int? currentFont;
@@ -105,7 +102,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       }
     });
 
-    on<ChangeThemeMode>((ChangeThemeMode event, Emitter<SettingsState> emitter) async {
+    on<ChangeThemeMode>(
+        (ChangeThemeMode event, Emitter<SettingsState> emitter) async {
       try {
         bool newThemeMode = event.mode;
         currentThemeMode = newThemeMode;

@@ -4,12 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:minimal_time_tracker/helpers/convert.dart';
-import 'package:minimal_time_tracker/widgets/duration_bottom_sheet.dart';
-import 'package:minimal_time_tracker/settings/themes.dart';
-import '../data/activity_bloc/activity_bloc.dart';
-import '../settings/settings_bloc/settings_bloc.dart';
-import 'package:minimal_time_tracker/widgets/spacer_box.dart';
+import '../helpers/convert.dart';
+import '../widgets/duration_bottom_sheet.dart';
+import '../widgets/spacer_box.dart';
+import '../data/settings/themes.dart';
+import '../bloc/activity_bloc/activity_bloc.dart';
+import '../bloc/settings_bloc/settings_bloc.dart';
 
 class AddActivityScreen extends StatefulWidget {
   //экран открывается для создания активности
@@ -33,8 +33,10 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
 
   //заголовок активности
   String titleOfEditedActivity = '';
+
   //подзаголовок активности
   String subtitleOfEditedActivity = '';
+
   //количество ячеек таблицы в случае табличного представления
   String numOfCells = '0';
 
@@ -44,12 +46,12 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     super.initState();
     if (editedActivity != null) {
       //заголовок у активности есть всегда
-      titleOfEditedActivity = editedActivity!.title;
+      titleOfEditedActivity = editedActivity.title;
       titleController.text = titleOfEditedActivity;
 
       //подзаголовка может не быть
       subtitleOfEditedActivity =
-          (editedActivity!.subtitle == null) ? '' : editedActivity!.subtitle!;
+          (editedActivity.subtitle == null) ? '' : editedActivity.subtitle!;
       subtitleController.text = subtitleOfEditedActivity;
     }
   }
@@ -110,20 +112,20 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
             ),
             body: SafeArea(
               child: Padding(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
                       Text(AppLocalizations.of(context)!.titleActivity),
                       TextField(
-                        key: Key('title text field'),
+                        key: const Key('title text field'),
                         controller: titleController,
                         onChanged: (value) => titleOfEditedActivity = value,
                       ),
                       const SpacerBox(),
                       Text(AppLocalizations.of(context)!.subtitleActivity),
                       TextField(
-                        key: Key('subtitle text field'),
+                        key: const Key('subtitle text field'),
                         controller: subtitleController,
                         onChanged: (value) => subtitleOfEditedActivity = value,
                       ),
@@ -134,7 +136,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                       noColorPicker
                           ? Container()
                           : _colorPicker(context, state.color,
-                              settingsState.theme!, themeMode),
+                              settingsState.theme, themeMode),
                       noColorPicker ? Container() : const SpacerBox(),
                       Text(AppLocalizations.of(context)!.addNewIntervals),
                       Row(
@@ -168,7 +170,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                           : _editActivityData(
                               context,
                               state.color,
-                              settingsState.theme!,
+                              settingsState.theme,
                               themeMode,
                               state.intervals,
                               state.editedActivity!),
@@ -191,7 +193,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     //выводится сообщение пользователю
     if (titleController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        key: Key('noTitleSnackBar'),
+        key: const Key('noTitleSnackBar'),
         content: Text(AppLocalizations.of(context)!.enterTitle),
         duration: const Duration(seconds: 3),
         action: SnackBarAction(
@@ -255,7 +257,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
     List<Color> paletteDark = themePalettes[theme]![themeMode][1];
 
     return Column(
-      key: Key('editActivityData'),
+      key: const Key('editActivityData'),
       children: [
         Text(AppLocalizations.of(context)!.addedIntervals),
         Container(
@@ -271,7 +273,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                 //(editedActivity.intervalsList)
                 int intervalIndex = intervals[index];
                 return Card(
-                  key: Key('editActivityDataCard'),
+                  key: const Key('editActivityDataCard'),
                   child: ListTile(
                     //substring отсекает миллисекунды
                     title: Text(
@@ -291,7 +293,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
         Text(
             '${AppLocalizations.of(context)!.totalCap}: ${stringDuration(editedActivity.totalTime(), context)}'),
         OutlinedButton(
-            key: Key('editActivityDataButton'),
+            key: const Key('editActivityDataButton'),
             onPressed: () {
               BlocProvider.of<ActivitiesBloc>(context)
                   .add(DeleteAllIntervalsScreen());
@@ -338,7 +340,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   //настройки кнопок добавления времени к активности
   Widget _buttonSettings(BuildContext context, Map<Duration, bool> durations) {
     return Column(
-      key: Key('_buttonSettings'),
+      key: const Key('_buttonSettings'),
       children: [
         Text(AppLocalizations.of(context)!.addButtons),
         Wrap(
@@ -361,7 +363,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
               ),
             //вызов BottomSheet для выбора времени для кнопки
             OutlinedButton(
-              key: Key('buttonsShowModalBottomSheet'),
+              key: const Key('buttonsShowModalBottomSheet'),
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
@@ -376,7 +378,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
                   }
                 });
               },
-              child: Text('+'),
+              child: const Text('+'),
             ),
           ],
         ),
@@ -387,7 +389,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
   //настройки табличного добавления времени к активности
   Widget _tableSettings(BuildContext context, Map<Duration, bool> durations) {
     return Column(
-      key: Key('_tableSettings'),
+      key: const Key('_tableSettings'),
       children: [
         Text(AppLocalizations.of(context)!.numberOfCellsInTable),
         //количество ячеек в таблице
@@ -414,7 +416,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
         Text(AppLocalizations.of(context)!.timeOfCell),
         //выбор времени, которому соответствует одна ячейка
         OutlinedButton(
-          key: Key('tableShowModalBottomSheet'),
+          key: const Key('tableShowModalBottomSheet'),
           onPressed: () {
             showModalBottomSheet(
               context: context,
@@ -430,7 +432,7 @@ class _AddActivityScreenState extends State<AddActivityScreen> {
             });
           },
           child: (durations.isEmpty)
-              ? Text('+')
+              ? const Text('+')
               : Text(stringDuration(durations.keys.toList().first, context)),
         ),
       ],

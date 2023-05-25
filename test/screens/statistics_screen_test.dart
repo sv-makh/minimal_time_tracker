@@ -1,12 +1,12 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/data/statistics_bloc/statistics_bloc.dart';
-import 'package:minimal_time_tracker/screens/statistics_screen.dart';
-import 'package:minimal_time_tracker/settings/settings_bloc/settings_bloc.dart';
-import 'package:minimal_time_tracker/data/activity_repository.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:minimal_time_tracker/data/activity.dart';
+import 'package:minimal_time_tracker/data/activity_repository.dart';
+import 'package:minimal_time_tracker/bloc/statistics_bloc/statistics_bloc.dart';
+import 'package:minimal_time_tracker/bloc/settings_bloc/settings_bloc.dart';
+import 'package:minimal_time_tracker/screens/statistics_screen.dart';
 import '../helper_test_material_app.dart';
 
 class MockActivityRepository extends Mock implements ActivityRepository {}
@@ -26,7 +26,7 @@ void main() {
     setUp(() {
       activityRepository = MockActivityRepository();
 
-      when(() => settingsBloc.state).thenReturn(SettingsState(
+      when(() => settingsBloc.state).thenReturn(const SettingsState(
           locale: Locale('en', ''),
           theme: 'Pale',
           fontSize: 12,
@@ -43,7 +43,7 @@ void main() {
         child: StatisticsScreen(activityRepository: activityRepository),
       ));
 
-      expect(find.byKey(Key('something wrong stats')), findsOneWidget);
+      expect(find.byKey(const Key('something wrong stats')), findsOneWidget);
     });
   });
 
@@ -51,7 +51,7 @@ void main() {
     setUp(() {
       activityRepository = MockActivityRepository();
 
-      when(() => settingsBloc.state).thenReturn(SettingsState(
+      when(() => settingsBloc.state).thenReturn(const SettingsState(
           locale: Locale('en', ''),
           theme: 'Pale',
           fontSize: 12,
@@ -72,17 +72,17 @@ void main() {
         child: StatisticsScreen(activityRepository: activityRepository),
       ));
 
-      expect(find.byKey(Key('noActivitiesText stats')), findsOneWidget);
-      expect(find.byKey(Key('stats chart')), findsNothing);
+      expect(find.byKey(const Key('noActivitiesText stats')), findsOneWidget);
+      expect(find.byKey(const Key('stats chart')), findsNothing);
     });
 
     testWidgets('screen with data', (widgetTester) async {
       Activity testActivity1 = Activity(title: 'test title');
       Activity testActivity2 = Activity(title: 'arch title');
       testActivity1.addInterval(TimeInterval.duration(
-          end: DateTime.now(), duration: Duration(hours: 1)));
+          end: DateTime.now(), duration: const Duration(hours: 1)));
       testActivity2.addInterval(TimeInterval.duration(
-          end: DateTime.now(), duration: Duration(hours: 2)));
+          end: DateTime.now(), duration: const Duration(hours: 2)));
 
       when(() => statisticsBloc.state).thenReturn(NormalStatisticsState(
           shownActivities: {0: true}, shownArchiveActivities: {0: true}));
@@ -102,9 +102,9 @@ void main() {
         child: StatisticsScreen(activityRepository: activityRepository),
       ));
 
-      expect(find.byKey(Key('stats chart')), findsOneWidget);
-      expect(find.byKey(Key('stats activities')), findsOneWidget);
-      expect(find.byKey(Key('stats archive')), findsOneWidget);
+      expect(find.byKey(const Key('stats chart')), findsOneWidget);
+      expect(find.byKey(const Key('stats activities')), findsOneWidget);
+      expect(find.byKey(const Key('stats archive')), findsOneWidget);
       expect(find.byType(Checkbox), findsNWidgets(2));
       expect(find.text('test title, 1 h'), findsOneWidget);
       expect(find.text('arch title, 2 h'), findsOneWidget);

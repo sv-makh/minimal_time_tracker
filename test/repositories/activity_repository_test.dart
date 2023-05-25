@@ -88,9 +88,9 @@ void main() {
         ..addTimeToActivity(
             1,
             TimeInterval.duration(
-                end: DateTime.now(), duration: Duration(hours: 1)));
+                end: DateTime.now(), duration: const Duration(hours: 1)));
       expect(activityRepository.getActivityFromBoxAt(1).totalTime(),
-          Duration(hours: 1));
+          const Duration(hours: 1));
 
       activityRepository.activitiesDeleteAt(1);
     });
@@ -100,10 +100,10 @@ void main() {
         ..addTimeToActivity(
             0,
             TimeInterval.duration(
-                end: DateTime.now(), duration: Duration(hours: 1)))
+                end: DateTime.now(), duration: const Duration(hours: 1)))
         ..deleteTimeFromActivity(0, 0);
-      expect(
-          activityRepository.getActivityFromBoxAt(0).totalTime(), Duration());
+      expect(activityRepository.getActivityFromBoxAt(0).totalTime(),
+          const Duration());
     });
 
     test('moveActivityFromBoxToArchive', () {

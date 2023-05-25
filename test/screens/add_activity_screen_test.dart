@@ -1,13 +1,13 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/data/activity_bloc/activity_bloc.dart';
-import 'package:minimal_time_tracker/settings/color_palettes.dart';
-import 'package:minimal_time_tracker/settings/settings_bloc/settings_bloc.dart';
 import 'package:mocktail/mocktail.dart';
-import '../helper_test_material_app.dart';
+import 'package:minimal_time_tracker/data/activity.dart';
+import 'package:minimal_time_tracker/data/settings/color_palettes.dart';
+import 'package:minimal_time_tracker/bloc/activity_bloc/activity_bloc.dart';
+import 'package:minimal_time_tracker/bloc/settings_bloc/settings_bloc.dart';
 import 'package:minimal_time_tracker/screens/add_activity_screen.dart';
+import '../helper_test_material_app.dart';
 
 class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
     implements SettingsBloc {}
@@ -45,7 +45,7 @@ void main() {
 
   group('new activity screen', () {
     setUp(() {
-      when(() => settingsBloc.state).thenReturn(SettingsState(
+      when(() => settingsBloc.state).thenReturn(const SettingsState(
           locale: Locale('en', ''),
           theme: 'Pastel',
           themeMode: false,
@@ -54,10 +54,11 @@ void main() {
           status: Status.normal));
 
       when(() => activitiesBloc.state).thenReturn(NormalActivitiesState(
-          {Duration(hours: 1): false, Duration(minutes: 30): false},
+          {const Duration(hours: 1): false, const Duration(minutes: 30): false},
           0,
           Presentation.BUTTONS,
-          0, []));
+          0,
+          []));
     });
 
     testWidgets('default new activity screen', (widgetTester) async {
@@ -67,10 +68,12 @@ void main() {
           child: AddActivityScreen()));
 
       final titleTextFinder = find.ancestor(
-          of: find.text(''), matching: find.byKey(Key('title text field')));
+          of: find.text(''),
+          matching: find.byKey(const Key('title text field')));
       expect(titleTextFinder, findsOneWidget);
       final subtitleTextFinder = find.ancestor(
-          of: find.text(''), matching: find.byKey(Key('subtitle text field')));
+          of: find.text(''),
+          matching: find.byKey(const Key('subtitle text field')));
       expect(subtitleTextFinder, findsOneWidget);
 
       expect(find.byBoxDecorationColored(color: pastel[0]), findsOneWidget);
@@ -84,8 +87,8 @@ void main() {
           description: 'Switch is switched for BUTTONS');
       expect(switchFinder, findsOneWidget);
 
-      expect(find.byKey(Key('_buttonSettings')), findsOneWidget);
-      expect(find.byKey(Key('_tableSettings')), findsNothing);
+      expect(find.byKey(const Key('_buttonSettings')), findsOneWidget);
+      expect(find.byKey(const Key('_tableSettings')), findsNothing);
 
       final states = <MaterialState>{};
       final buttonFinder = find.byWidgetPredicate((widget) =>
@@ -105,7 +108,7 @@ void main() {
 
       await widgetTester.tap(find.byIcon(Icons.save));
       await widgetTester.pump();
-      expect(find.byKey(Key('noTitleSnackBar')), findsOneWidget);
+      expect(find.byKey(const Key('noTitleSnackBar')), findsOneWidget);
     });
   });
 
@@ -113,7 +116,7 @@ void main() {
     late Activity testActivity;
 
     setUp(() {
-      when(() => settingsBloc.state).thenReturn(SettingsState(
+      when(() => settingsBloc.state).thenReturn(const SettingsState(
           locale: Locale('en', ''),
           theme: 'Pastel',
           themeMode: false,
@@ -124,26 +127,34 @@ void main() {
       int testColor = 1;
       Presentation testPresentation = Presentation.BUTTONS;
       Map<Duration, bool> testDurationButtons = {
-        Duration(minutes: 15): true,
-        Duration(minutes: 10): true
+        const Duration(minutes: 15): true,
+        const Duration(minutes: 10): true
       };
       testActivity = Activity(
         title: 'test title',
         subtitle: 'test subtitle',
-        durationButtons: [Duration(minutes: 15), Duration(minutes: 10)],
+        durationButtons: [
+          const Duration(minutes: 15),
+          const Duration(minutes: 10)
+        ],
         presentation: testPresentation,
         color: testColor,
       );
 
       testActivity.addInterval(TimeInterval.duration(
-          end: DateTime.now(), duration: Duration(minutes: 15)));
+          end: DateTime.now(), duration: const Duration(minutes: 15)));
       testActivity.addInterval(TimeInterval.duration(
-          end: DateTime.now(), duration: Duration(minutes: 10)));
+          end: DateTime.now(), duration: const Duration(minutes: 10)));
       testActivity.addInterval(TimeInterval.duration(
-          end: DateTime.now(), duration: Duration(minutes: 10)));
+          end: DateTime.now(), duration: const Duration(minutes: 10)));
 
       when(() => activitiesBloc.state).thenReturn(NormalActivitiesState(
-          testDurationButtons, testColor, testPresentation, 2, [0, 1, 2], testActivity));
+          testDurationButtons,
+          testColor,
+          testPresentation,
+          2,
+          [0, 1, 2],
+          testActivity));
     });
 
     testWidgets('screen with edited activity', (widgetTester) async {
@@ -153,10 +164,12 @@ void main() {
           child: AddActivityScreen.editActivity(editedActivity: testActivity)));
 
       final titleTextFinder = find.ancestor(
-          of: find.text('test title'), matching: find.byKey(Key('title text field')));
+          of: find.text('test title'),
+          matching: find.byKey(const Key('title text field')));
       expect(titleTextFinder, findsOneWidget);
       final subtitleTextFinder = find.ancestor(
-          of: find.text('test subtitle'), matching: find.byKey(Key('subtitle text field')));
+          of: find.text('test subtitle'),
+          matching: find.byKey(const Key('subtitle text field')));
       expect(subtitleTextFinder, findsOneWidget);
 
       final states = <MaterialState>{};
@@ -167,9 +180,9 @@ void main() {
       expect(find.text('15 m'), findsOneWidget);
       expect(find.text('10 m'), findsOneWidget);
 
-      expect(find.byKey(Key('editActivityData')), findsOneWidget);
-      expect(find.byKey(Key('editActivityDataCard')), findsNWidgets(3));
-      expect(find.byKey(Key('editActivityDataButton')), findsOneWidget);
+      expect(find.byKey(const Key('editActivityData')), findsOneWidget);
+      expect(find.byKey(const Key('editActivityDataCard')), findsNWidgets(3));
+      expect(find.byKey(const Key('editActivityDataButton')), findsOneWidget);
       expect(find.text('Total: 35 m'), findsOneWidget);
     });
   });

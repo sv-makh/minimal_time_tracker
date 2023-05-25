@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:minimal_time_tracker/data/activity_bloc/activity_bloc.dart';
-import 'package:minimal_time_tracker/data/statistics_bloc/statistics_bloc.dart';
-import 'package:minimal_time_tracker/settings/settings_bloc/settings_bloc.dart';
+import 'package:minimal_time_tracker/bloc/activity_bloc/activity_bloc.dart';
+import 'package:minimal_time_tracker/bloc/statistics_bloc/statistics_bloc.dart';
+import 'package:minimal_time_tracker/bloc/settings_bloc/settings_bloc.dart';
 
 class MockActivitiesBloc extends MockBloc<ActivityEvent, ActivitiesState>
     implements ActivitiesBloc {}

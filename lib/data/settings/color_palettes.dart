@@ -1,7 +1,5 @@
 import 'dart:ui';
 
-//https://coolors.co/
-
 const List<Color> pale = [
   Color(0xFFF0FAFF),
   Color(0xFFF0FAFF),

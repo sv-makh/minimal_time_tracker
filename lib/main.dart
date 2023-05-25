@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:minimal_time_tracker/data/statistics_bloc/statistics_bloc.dart';
-import '../data/activity_bloc/activity_bloc.dart';
-import '../settings/settings_bloc/settings_bloc.dart';
+import '../bloc/statistics_bloc/statistics_bloc.dart';
+import '../bloc/activity_bloc/activity_bloc.dart';
+import '../bloc/settings_bloc/settings_bloc.dart';
 import '../screens/main_activities_view.dart';
-import '../settings/settings_data.dart';
-import '../settings/themes.dart';
+import '../data/settings/settings_data.dart';
+import '../data/settings/themes.dart';
 import '../data/activity_repository.dart';
-import '../settings/settings_repository.dart';
+import '../data/settings/settings_repository.dart';
 
 void main() async {
   ActivityRepository activityRepository = ActivityRepository();
@@ -59,10 +59,10 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           locale: state.locale,
           title: 'Minimal Time Tracker',
-          theme: appTheme(state.theme!, state.fontSize!),
-          darkTheme: appThemeDark(state.theme!, state.fontSize!),
+          theme: appTheme(state.theme, state.fontSize),
+          darkTheme: appThemeDark(state.theme, state.fontSize),
           themeMode: themeMode,
-          localizationsDelegates: [
+          localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,

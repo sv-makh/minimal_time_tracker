@@ -1,6 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:minimal_time_tracker/data/activity.dart';
 import 'package:minimal_time_tracker/data/activity_repository.dart';
 
 part 'statistics_event.dart';
@@ -12,12 +10,12 @@ class StatisticsBloc extends Bloc<StatisticsEvent, StatisticsState> {
 
   StatisticsBloc({required this.activityRepository})
       : super(NormalStatisticsState(
-          shownActivities: {},//activityRepository.getActivityMap(),
-          shownArchiveActivities: {},//activityRepository.getArchiveMap(),
+          shownActivities: {}, //activityRepository.getActivityMap(),
+          shownArchiveActivities: {}, //activityRepository.getArchiveMap(),
         )) {
-
     //обновление данных состояния при переходе на экран со статистикой
-    on<OpenStatisticsScreen>((OpenStatisticsScreen event, Emitter<StatisticsState> emitter) {
+    on<OpenStatisticsScreen>(
+        (OpenStatisticsScreen event, Emitter<StatisticsState> emitter) {
       try {
         return emitter(NormalStatisticsState(
           shownActivities: activityRepository.getActivityMap(),

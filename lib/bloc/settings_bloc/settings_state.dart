@@ -25,8 +25,8 @@ class SettingsState extends Equatable {
         theme,
         fontSize,
         showArchive,
-    themeMode,
-    status,
+        themeMode,
+        status,
       ];
 
   SettingsState copyWith({
@@ -46,21 +46,4 @@ class SettingsState extends Equatable {
       status: status ?? this.status,
     );
   }
-
-/*  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-          other is SettingsState &&
-              runtimeType == other.runtimeType &&
-              locale == other.locale &&
-              theme == other.theme &&
-              fontSize == other.fontSize &&
-              showArchive == other.showArchive;
-
-  @override
-  int get hashCode =>
-      locale.hashCode ^
-      theme.hashCode ^
-      fontSize.hashCode ^
-      showArchive.hashCode;*/
 }

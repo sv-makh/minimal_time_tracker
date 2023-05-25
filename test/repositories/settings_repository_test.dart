@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:minimal_time_tracker/settings/settings_repository.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:minimal_time_tracker/data/settings/settings_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MockContext extends Mock implements BuildContext {}
 
@@ -57,7 +57,7 @@ void main() {
     });
 
     test('setLocale', () {
-      Locale testLocale = Locale('en');
+      Locale testLocale = const Locale('en');
       settingsRepository.setLocale(testLocale);
       expect(settingsRepository.getLocale(), testLocale);
     });

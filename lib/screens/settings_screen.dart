@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../data/activity_bloc/activity_bloc.dart';
-import '../settings/settings_bloc/settings_bloc.dart';
-import '../settings/settings_data.dart';
-import '../settings/themes.dart';
+import '../bloc/activity_bloc/activity_bloc.dart';
+import '../bloc/settings_bloc/settings_bloc.dart';
+import '../data/settings/settings_data.dart';
+import '../data/settings/themes.dart';
 import '../widgets/spacer_box.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -32,8 +32,8 @@ class SettingsScreen extends StatelessWidget {
                     AppLocalizations.of(context)!.language,
                   ),
                   DropdownButton(
-                    key: Key('languageCodeDropdownButton'),
-                    value: settingsState.locale!.languageCode.substring(0, 2),
+                    key: const Key('languageCodeDropdownButton'),
+                    value: settingsState.locale.languageCode.substring(0, 2),
                     icon: const Icon(Icons.arrow_downward),
                     items: supportedLocales
                         .map<DropdownMenuItem<String>>((Locale value) {
@@ -55,7 +55,7 @@ class SettingsScreen extends StatelessWidget {
                     AppLocalizations.of(context)!.theme,
                   ),
                   DropdownButton(
-                    key: Key('themeDropdownButton'),
+                    key: const Key('themeDropdownButton'),
                     value: settingsState.theme,
                     icon: const Icon(Icons.arrow_downward),
                     items: themePalettes.keys
@@ -77,14 +77,14 @@ class SettingsScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.light_mode),
+                      const Icon(Icons.light_mode),
                       Switch(
                           value: themeModeValue,
                           onChanged: (bool value) {
                             BlocProvider.of<SettingsBloc>(context)
                                 .add(ChangeThemeMode(mode: value));
                           }),
-                      Icon(Icons.dark_mode),
+                      const Icon(Icons.dark_mode),
                     ],
                   ),
                   const SpacerBox(),
@@ -92,7 +92,7 @@ class SettingsScreen extends StatelessWidget {
                     AppLocalizations.of(context)!.font,
                   ),
                   DropdownButton(
-                    key: Key('fontDropdownButton'),
+                    key: const Key('fontDropdownButton'),
                     value: settingsState.fontSize,
                     icon: const Icon(Icons.arrow_downward),
                     items: fontSizes.map<DropdownMenuItem<int>>((int value) {
@@ -112,8 +112,8 @@ class SettingsScreen extends StatelessWidget {
                   const SpacerBox(),
                   Text(AppLocalizations.of(context)!.showArchivedActivities),
                   Switch(
-                    key: Key('archiveSwitch'),
-                    value: settingsState.showArchive!,
+                    key: const Key('archiveSwitch'),
+                    value: settingsState.showArchive,
                     onChanged: (bool value) {
                       BlocProvider.of<SettingsBloc>(context)
                           .add(ChangeArchiveVisibility(showArchive: value));
@@ -121,7 +121,10 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   const SpacerBox(),
                   const SpacerBox(),
-                  OutlinedButton(onPressed: () {_deleteAllDialog(context);},
+                  OutlinedButton(
+                      onPressed: () {
+                        _deleteAllDialog(context);
+                      },
                       child: Text(AppLocalizations.of(context)!.deleteAll)),
                 ],
               ),
@@ -134,25 +137,27 @@ class SettingsScreen extends StatelessWidget {
 
   Future<void> _deleteAllDialog(BuildContext context) {
     return showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(AppLocalizations.of(context)!.deleteAllActivities),
-            content: Text(AppLocalizations.of(context)!.deleteAllWarning),
-            actions: <Widget>[
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(AppLocalizations.of(context)!.cancel)),
-              TextButton(
-                  onPressed: () { BlocProvider.of<ActivitiesBloc>(context)
-                        .add(DeleteAllActivities());
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(AppLocalizations.of(context)!.deleteAll)),
-            ],
-          );
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.deleteAllActivities),
+          content: Text(AppLocalizations.of(context)!.deleteAllWarning),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(AppLocalizations.of(context)!.cancel)),
+            TextButton(
+                onPressed: () {
+                  BlocProvider.of<ActivitiesBloc>(context)
+                      .add(DeleteAllActivities());
+                  Navigator.of(context).pop();
+                },
+                child: Text(AppLocalizations.of(context)!.deleteAll)),
+          ],
+        );
+      },
+    );
   }
 }

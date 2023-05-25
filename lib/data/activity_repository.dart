@@ -1,4 +1,3 @@
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'activity.dart';
@@ -10,8 +9,8 @@ class ActivityRepository {
   late Box<Activity> archiveBox;
 
   ActivityRepository()
-      : this.boxName = 'activitiesBox',
-        this.archiveName = 'archiveBox';
+      : boxName = 'activitiesBox',
+        archiveName = 'archiveBox';
 
   ActivityRepository.setBoxnames(
       {required this.boxName, required this.archiveName}) {

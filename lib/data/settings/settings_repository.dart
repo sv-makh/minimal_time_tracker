@@ -28,7 +28,8 @@ class SettingsRepository {
 
   //true - dark mode; false - light mode
   bool getThemeMode(BuildContext context) {
-    var brightness = MediaQuery.maybeOf(context)?.platformBrightness ?? Brightness.light;
+    var brightness =
+        MediaQuery.maybeOf(context)?.platformBrightness ?? Brightness.light;
     bool deviceMode = brightness == Brightness.dark;
     return prefs.getBool('themeMode') ?? deviceMode;
   }

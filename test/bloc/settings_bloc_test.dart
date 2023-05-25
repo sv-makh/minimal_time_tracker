@@ -1,9 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:minimal_time_tracker/settings/settings_repository.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:minimal_time_tracker/settings/settings_bloc/settings_bloc.dart';
+import 'package:minimal_time_tracker/data/settings/settings_repository.dart';
+import 'package:minimal_time_tracker/bloc/settings_bloc/settings_bloc.dart';
 
 class MockSettingsRepository extends Mock implements SettingsRepository {}
 
@@ -16,7 +16,7 @@ void main() {
     settingsRepository = MockSettingsRepository();
   });
 
-  Locale defaultLocale = Locale('en', '');
+  Locale defaultLocale = const Locale('en', '');
   String defaultTheme = 'Pale';
   int defaultFontSize = 12;
   bool defaultArch = true;
@@ -77,30 +77,33 @@ void main() {
     blocTest<SettingsBloc, SettingsState>(
       'changing language',
       setUp: () {
-        when(() => settingsRepository.setLocale(Locale('ru', ''))).thenAnswer((_) {});
+        when(() => settingsRepository.setLocale(const Locale('ru', '')))
+            .thenAnswer((_) {});
       },
       build: () => SettingsBloc(settingsRepository: settingsRepository),
-      act: (bloc) => bloc.add(ChangeLanguage(locale: Locale('ru', ''))),
+      act: (bloc) => bloc.add(ChangeLanguage(locale: const Locale('ru', ''))),
       expect: () => [
         SettingsState(
-            locale: Locale('ru', ''),
+            locale: const Locale('ru', ''),
             theme: defaultTheme,
             fontSize: defaultFontSize,
             showArchive: defaultArch,
             status: Status.normal)
       ],
       verify: (_) {
-        verify(() => settingsRepository.setLocale(Locale('ru', ''))).called(1);
+        verify(() => settingsRepository.setLocale(const Locale('ru', '')))
+            .called(1);
       },
     );
 
     blocTest<SettingsBloc, SettingsState>(
       'changing language & error',
       setUp: () {
-        when(() => settingsRepository.setLocale(Locale('ru', ''))).thenThrow(Exception('Error'));
+        when(() => settingsRepository.setLocale(const Locale('ru', '')))
+            .thenThrow(Exception('Error'));
       },
       build: () => SettingsBloc(settingsRepository: settingsRepository),
-      act: (bloc) => bloc.add(ChangeLanguage(locale: Locale('ru', ''))),
+      act: (bloc) => bloc.add(ChangeLanguage(locale: const Locale('ru', ''))),
       expect: () => [
         SettingsState(
             locale: defaultLocale,
@@ -110,7 +113,8 @@ void main() {
             status: Status.error)
       ],
       verify: (_) {
-        verify(() => settingsRepository.setLocale(Locale('ru', ''))).called(1);
+        verify(() => settingsRepository.setLocale(const Locale('ru', '')))
+            .called(1);
       },
     );
 
@@ -137,7 +141,8 @@ void main() {
     blocTest<SettingsBloc, SettingsState>(
       'changing font size & error',
       setUp: () {
-        when(() => settingsRepository.setFontSize(14)).thenThrow(Exception('Error'));
+        when(() => settingsRepository.setFontSize(14))
+            .thenThrow(Exception('Error'));
       },
       build: () => SettingsBloc(settingsRepository: settingsRepository),
       act: (bloc) => bloc.add(ChangeFontSize(fontSize: 14)),
@@ -177,7 +182,8 @@ void main() {
     blocTest<SettingsBloc, SettingsState>(
       'changing theme & error',
       setUp: () {
-        when(() => settingsRepository.setTheme('Pastel')).thenThrow(Exception('Error'));
+        when(() => settingsRepository.setTheme('Pastel'))
+            .thenThrow(Exception('Error'));
       },
       build: () => SettingsBloc(settingsRepository: settingsRepository),
       act: (bloc) => bloc.add(ChangeTheme(theme: 'Pastel')),
@@ -197,7 +203,8 @@ void main() {
     blocTest<SettingsBloc, SettingsState>(
       'changing visibility for archived activities',
       setUp: () {
-        when(() => settingsRepository.setArchiveVisibility(false)).thenAnswer((_) {});
+        when(() => settingsRepository.setArchiveVisibility(false))
+            .thenAnswer((_) {});
       },
       build: () => SettingsBloc(settingsRepository: settingsRepository),
       act: (bloc) => bloc.add(ChangeArchiveVisibility(showArchive: false)),
@@ -217,7 +224,8 @@ void main() {
     blocTest<SettingsBloc, SettingsState>(
       'changing visibility for archived activities & error',
       setUp: () {
-        when(() => settingsRepository.setArchiveVisibility(false)).thenThrow(Exception('Error'));
+        when(() => settingsRepository.setArchiveVisibility(false))
+            .thenThrow(Exception('Error'));
       },
       build: () => SettingsBloc(settingsRepository: settingsRepository),
       act: (bloc) => bloc.add(ChangeArchiveVisibility(showArchive: false)),
@@ -258,7 +266,8 @@ void main() {
     blocTest<SettingsBloc, SettingsState>(
       'changing theme mode & error',
       setUp: () {
-        when(() => settingsRepository.setThemeMode(false)).thenThrow(Exception('Error'));
+        when(() => settingsRepository.setThemeMode(false))
+            .thenThrow(Exception('Error'));
       },
       build: () => SettingsBloc(settingsRepository: settingsRepository),
       act: (bloc) => bloc.add(ChangeThemeMode(mode: false)),

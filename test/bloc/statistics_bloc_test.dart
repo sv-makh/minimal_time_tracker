@@ -1,8 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:minimal_time_tracker/data/activity_repository.dart';
-import 'package:minimal_time_tracker/data/statistics_bloc/statistics_bloc.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:minimal_time_tracker/data/activity_repository.dart';
+import 'package:minimal_time_tracker/bloc/statistics_bloc/statistics_bloc.dart';
 
 class MockActivityRepository extends Mock implements ActivityRepository {}
 
@@ -85,7 +85,7 @@ void main() {
           ..add(ArchivedActivityPressed(index: 0));
       },
       expect: () =>
-      [isA<NormalStatisticsState>(), isA<NormalStatisticsState>()],
+          [isA<NormalStatisticsState>(), isA<NormalStatisticsState>()],
     );
 
     blocTest<StatisticsBloc, StatisticsState>(

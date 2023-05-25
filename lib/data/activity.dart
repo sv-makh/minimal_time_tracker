@@ -8,21 +8,27 @@ class Activity {
   //заголовок активности
   @HiveField(0)
   String title;
+
   //подзаголовок активоности
   @HiveField(1)
   String? subtitle;
+
   //добавленные пользователем интервалы времени
   @HiveField(2)
   List<TimeInterval> _intervals = [];
+
   //кнопки, с помощью которых добавляется время
   @HiveField(3)
   List<Duration> durationButtons = <Duration>[];
+
   //кнопочное/табличное добавление времени
   @HiveField(4)
   Presentation? presentation;
+
   //количество яцеек в таблице в случает табличного представления
   @HiveField(5)
   int? maxNum;
+
   //цвет карточки активности - индекс цвета из массивов цветов для темы
   @HiveField(6)
   int? color;
@@ -45,8 +51,7 @@ class Activity {
   }
 
   Duration totalTime() {
-    Duration sum = Duration();
-    if (_intervals == null) return Duration();
+    Duration sum = const Duration();
     for (var interval in _intervals) {
       sum += interval.length();
     }

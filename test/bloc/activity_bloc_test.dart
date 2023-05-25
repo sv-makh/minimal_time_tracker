@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/data/activity_bloc/activity_bloc.dart';
+import 'package:minimal_time_tracker/bloc/activity_bloc/activity_bloc.dart';
 import 'package:minimal_time_tracker/data/activity_repository.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -12,14 +12,18 @@ void main() {
     late ActivityRepository activityRepository;
 
     final TimeInterval testTimeInterval = TimeInterval.duration(
-        end: DateTime.now(), duration: Duration(hours: 1));
+        end: DateTime.now(), duration: const Duration(hours: 1));
     late Activity testActivity;
 
     setUp(() {
       activityRepository = MockActivityRepository();
 
-      testActivity = Activity(title: 'title', durationButtons: [
-        Duration(hours: 1)], color: 1, presentation: Presentation.TABLE, maxNum: 2);
+      testActivity = Activity(
+          title: 'title',
+          durationButtons: [const Duration(hours: 1)],
+          color: 1,
+          presentation: Presentation.TABLE,
+          maxNum: 2);
       testActivity.addInterval(testTimeInterval);
       testActivity.addInterval(testTimeInterval);
     });
@@ -133,8 +137,10 @@ void main() {
             .called(1);
         NormalActivitiesState state = bloc.state as NormalActivitiesState;
         expect(state.color, 0);
-        expect(state.durationButtons,
-            {Duration(hours: 1): false, Duration(minutes: 30): false});
+        expect(state.durationButtons, {
+          const Duration(hours: 1): false,
+          const Duration(minutes: 30): false
+        });
       },
     );
 
@@ -156,14 +162,14 @@ void main() {
       'normal state after AddedDurationButton',
       build: () => ActivitiesBloc(activityRepository: activityRepository),
       act: (bloc) =>
-          bloc.add(AddedDurationButton(duration: Duration(hours: 2))),
+          bloc.add(AddedDurationButton(duration: const Duration(hours: 2))),
       expect: () => [isA<NormalActivitiesState>()],
       verify: (bloc) {
         NormalActivitiesState state = bloc.state as NormalActivitiesState;
         expect(state.durationButtons, {
-          Duration(hours: 1): false,
-          Duration(minutes: 30): false,
-          Duration(hours: 2): false,
+          const Duration(hours: 1): false,
+          const Duration(minutes: 30): false,
+          const Duration(hours: 2): false,
         });
       },
     );
@@ -172,13 +178,13 @@ void main() {
       'normal state after PressedDurationButton',
       build: () => ActivitiesBloc(activityRepository: activityRepository),
       act: (bloc) =>
-          bloc.add(PressedDurationButton(duration: Duration(hours: 1))),
+          bloc.add(PressedDurationButton(duration: const Duration(hours: 1))),
       expect: () => [isA<NormalActivitiesState>()],
       verify: (bloc) {
         NormalActivitiesState state = bloc.state as NormalActivitiesState;
         expect(state.durationButtons, {
-          Duration(hours: 1): true,
-          Duration(minutes: 30): false,
+          const Duration(hours: 1): true,
+          const Duration(minutes: 30): false,
         });
       },
     );
@@ -206,8 +212,8 @@ void main() {
         expect(state.presentation, Presentation.BUTTONS);
         expect(state.numOfCells, 0);
         expect(state.durationButtons, {
-          Duration(hours: 1): false,
-          Duration(minutes: 30): false,
+          const Duration(hours: 1): false,
+          const Duration(minutes: 30): false,
         });
       },
     );
@@ -228,11 +234,11 @@ void main() {
       'normal state after AddedDurationForTable',
       build: () => ActivitiesBloc(activityRepository: activityRepository),
       act: (bloc) =>
-          bloc.add(AddedDurationForTable(duration: Duration(hours: 2))),
+          bloc.add(AddedDurationForTable(duration: const Duration(hours: 2))),
       expect: () => [isA<NormalActivitiesState>()],
       verify: (bloc) {
         NormalActivitiesState state = bloc.state as NormalActivitiesState;
-        expect(state.durationButtons, {Duration(hours: 2): false});
+        expect(state.durationButtons, {const Duration(hours: 2): false});
       },
     );
 
@@ -303,7 +309,8 @@ void main() {
           bloc.add(SaveEditedActivity(activity: testActivity, index: 0)),
       expect: () => [isA<NormalActivitiesState>()],
       verify: (_) {
-        verify(() => activityRepository.putActivityToBoxAt(0, testActivity)).called(1);
+        verify(() => activityRepository.putActivityToBoxAt(0, testActivity))
+            .called(1);
       },
     );
 
@@ -318,15 +325,17 @@ void main() {
           bloc.add(SaveEditedActivity(activity: testActivity, index: 0)),
       expect: () => [isA<ActivitiesError>()],
       verify: (_) {
-        verify(() => activityRepository.putActivityToBoxAt(0, testActivity)).called(1);
+        verify(() => activityRepository.putActivityToBoxAt(0, testActivity))
+            .called(1);
       },
     );
 
     blocTest<ActivitiesBloc, ActivitiesState>(
       'normal state after DeleteIntervalEditedActivity',
       build: () => ActivitiesBloc(activityRepository: activityRepository),
-      act: (bloc) => bloc..add(EditActivity(activity: testActivity))
-      ..add(DeleteIntervalEditedActivity(index: 1)),
+      act: (bloc) => bloc
+        ..add(EditActivity(activity: testActivity))
+        ..add(DeleteIntervalEditedActivity(index: 1)),
       skip: 1,
       expect: () => [isA<NormalActivitiesState>()],
       verify: (bloc) {
@@ -338,20 +347,22 @@ void main() {
     blocTest<ActivitiesBloc, ActivitiesState>(
       'normal state after DeleteAllIntervalsEditedActivity',
       build: () => ActivitiesBloc(activityRepository: activityRepository),
-      act: (bloc) => bloc..add(EditActivity(activity: testActivity))
+      act: (bloc) => bloc
+        ..add(EditActivity(activity: testActivity))
         ..add(DeleteAllIntervalsEditedActivity()),
       skip: 1,
       expect: () => [isA<NormalActivitiesState>()],
       verify: (bloc) {
         NormalActivitiesState state = bloc.state as NormalActivitiesState;
-        expect(state.editedActivity!.totalTime(), Duration());
+        expect(state.editedActivity!.totalTime(), const Duration());
       },
     );
 
     blocTest<ActivitiesBloc, ActivitiesState>(
       'normal state after DeleteIntervalScreen',
       build: () => ActivitiesBloc(activityRepository: activityRepository),
-      act: (bloc) => bloc..add(EditActivity(activity: testActivity))
+      act: (bloc) => bloc
+        ..add(EditActivity(activity: testActivity))
         ..add(DeleteIntervalScreen(index: 0)),
       skip: 1,
       expect: () => [isA<NormalActivitiesState>()],
@@ -364,7 +375,8 @@ void main() {
     blocTest<ActivitiesBloc, ActivitiesState>(
       'error state after DeleteIntervalScreen',
       build: () => ActivitiesBloc(activityRepository: activityRepository),
-      act: (bloc) => bloc..add(EditActivity(activity: testActivity))
+      act: (bloc) => bloc
+        ..add(EditActivity(activity: testActivity))
         ..add(DeleteIntervalScreen(index: 2)),
       skip: 1,
       expect: () => [isA<ActivitiesError>()],
@@ -373,7 +385,8 @@ void main() {
     blocTest<ActivitiesBloc, ActivitiesState>(
       'normal state after DeleteAllIntervalsScreen',
       build: () => ActivitiesBloc(activityRepository: activityRepository),
-      act: (bloc) => bloc..add(EditActivity(activity: testActivity))
+      act: (bloc) => bloc
+        ..add(EditActivity(activity: testActivity))
         ..add(DeleteAllIntervalsScreen()),
       skip: 1,
       expect: () => [isA<NormalActivitiesState>()],
@@ -390,11 +403,11 @@ void main() {
             .thenAnswer((_) {});
       },
       build: () => ActivitiesBloc(activityRepository: activityRepository),
-      act: (bloc) =>
-          bloc.add(ActivityArchived(index: 0)),
+      act: (bloc) => bloc.add(ActivityArchived(index: 0)),
       expect: () => [isA<NormalActivitiesState>()],
       verify: (_) {
-        verify(() => activityRepository.moveActivityFromBoxToArchive(0)).called(1);
+        verify(() => activityRepository.moveActivityFromBoxToArchive(0))
+            .called(1);
       },
     );
 
@@ -405,11 +418,11 @@ void main() {
             .thenThrow(Exception('Error'));
       },
       build: () => ActivitiesBloc(activityRepository: activityRepository),
-      act: (bloc) =>
-          bloc.add(ActivityArchived(index: 0)),
+      act: (bloc) => bloc.add(ActivityArchived(index: 0)),
       expect: () => [isA<ActivitiesError>()],
       verify: (_) {
-        verify(() => activityRepository.moveActivityFromBoxToArchive(0)).called(1);
+        verify(() => activityRepository.moveActivityFromBoxToArchive(0))
+            .called(1);
       },
     );
 
@@ -420,11 +433,11 @@ void main() {
             .thenAnswer((_) {});
       },
       build: () => ActivitiesBloc(activityRepository: activityRepository),
-      act: (bloc) =>
-          bloc.add(ActivityUnarchived(index: 0)),
+      act: (bloc) => bloc.add(ActivityUnarchived(index: 0)),
       expect: () => [isA<NormalActivitiesState>()],
       verify: (_) {
-        verify(() => activityRepository.moveActivityFromArchiveToBox(0)).called(1);
+        verify(() => activityRepository.moveActivityFromArchiveToBox(0))
+            .called(1);
       },
     );
 
@@ -435,18 +448,18 @@ void main() {
             .thenThrow(Exception('Error'));
       },
       build: () => ActivitiesBloc(activityRepository: activityRepository),
-      act: (bloc) =>
-          bloc.add(ActivityUnarchived(index: 0)),
+      act: (bloc) => bloc.add(ActivityUnarchived(index: 0)),
       expect: () => [isA<ActivitiesError>()],
       verify: (_) {
-        verify(() => activityRepository.moveActivityFromArchiveToBox(0)).called(1);
+        verify(() => activityRepository.moveActivityFromArchiveToBox(0))
+            .called(1);
       },
     );
 
-    blocTest<ActivitiesBloc, ActivitiesState>('normal state after DeleteAllActivities',
+    blocTest<ActivitiesBloc, ActivitiesState>(
+      'normal state after DeleteAllActivities',
       setUp: () {
-        when(() => activityRepository.clearAll())
-            .thenAnswer((_) async {});
+        when(() => activityRepository.clearAll()).thenAnswer((_) async {});
       },
       build: () => ActivitiesBloc(activityRepository: activityRepository),
       act: (bloc) => bloc.add(DeleteAllActivities()),
@@ -456,10 +469,10 @@ void main() {
       },
     );
 
-    blocTest<ActivitiesBloc, ActivitiesState>('error state after DeleteAllActivities',
+    blocTest<ActivitiesBloc, ActivitiesState>(
+      'error state after DeleteAllActivities',
       setUp: () {
-        when(() => activityRepository.clearAll())
-            .thenThrow(Exception('Error'));
+        when(() => activityRepository.clearAll()).thenThrow(Exception('Error'));
       },
       build: () => ActivitiesBloc(activityRepository: activityRepository),
       act: (bloc) => bloc.add(DeleteAllActivities()),

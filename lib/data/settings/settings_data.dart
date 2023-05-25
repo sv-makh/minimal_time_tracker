@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 List<Locale> supportedLocales = [
-  Locale('en', ''), // English, no country code
-  Locale('ru', ''), // Russian, no country code
+  const Locale('en', ''), // English, no country code
+  const Locale('ru', ''), // Russian, no country code
 ];
 
 List<int> fontSizes = [

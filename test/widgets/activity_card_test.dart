@@ -1,14 +1,12 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:minimal_time_tracker/data/activity.dart';
-import 'package:minimal_time_tracker/settings/color_palettes.dart';
-import 'package:minimal_time_tracker/settings/settings_bloc/settings_bloc.dart';
-import 'package:minimal_time_tracker/widgets/activity_card.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_test/hive_test.dart';
-import '../helper_test_material_app.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:minimal_time_tracker/data/activity.dart';
+import 'package:minimal_time_tracker/data/settings/color_palettes.dart';
+import 'package:minimal_time_tracker/bloc/settings_bloc/settings_bloc.dart';
+import 'package:minimal_time_tracker/widgets/activity_card.dart';
+import '../helper_test_material_app.dart';
 
 class MockSettingsBloc extends MockBloc<SettingsEvent, SettingsState>
     implements SettingsBloc {}
@@ -68,7 +66,7 @@ void main() {
   group('ActivityCard tests', () {
 
     test('testing stubbing the bloc stream and emitting one state', () async {
-      when(() => settingsBloc.state).thenReturn(SettingsState(
+      when(() => settingsBloc.state).thenReturn(const SettingsState(
           locale: Locale('en', ''),
           theme: 'Pale',
           fontSize: 12,
@@ -76,7 +74,7 @@ void main() {
           status: Status.normal));
       expect(
           settingsBloc.state,
-          equals(SettingsState(
+          equals(const SettingsState(
               locale: Locale('en', ''),
               theme: 'Pale',
               fontSize: 12,
@@ -86,7 +84,7 @@ void main() {
 
     testWidgets('activity only with title, not in archive',
         (widgetTester) async {
-      when(() => settingsBloc.state).thenReturn(SettingsState(
+      when(() => settingsBloc.state).thenReturn(const SettingsState(
           locale: Locale('en', ''),
           theme: 'Pale',
           themeMode: false,
@@ -95,23 +93,23 @@ void main() {
           status: Status.normal));
 
       await widgetTester.pumpWidget(TestMaterialApp(
+        settingsBloc: settingsBloc,
         child: ActivityCard(
           activity: Activity(title: 'test title'),
           activityIndex: 0,
           archived: false,
         ),
-        settingsBloc: settingsBloc,
       ));
 
-      expect(find.byKey(Key('title of activity')), findsOneWidget);
+      expect(find.byKey(const Key('title of activity')), findsOneWidget);
       expect(find.text('test title, total = 0 m'), findsOneWidget);
-      expect(find.byKey(Key('subtitle of activity')), findsNothing);
+      expect(find.byKey(const Key('subtitle of activity')), findsNothing);
       expect(find.byIcon(Icons.edit), findsOneWidget);
       expect(find.byIcon(Icons.archive), findsOneWidget);
       expect(find.byIcon(Icons.unarchive), findsNothing);
       expect(find.byIcon(Icons.delete), findsOneWidget);
-      expect(find.byKey(Key('rowOfButtons')), findsNothing);
-      expect(find.byKey(Key('tableOfButtons')), findsNothing);
+      expect(find.byKey(const Key('rowOfButtons')), findsNothing);
+      expect(find.byKey(const Key('tableOfButtons')), findsNothing);
     });
 
     testWidgets('activity with table buttons, not in archive',
@@ -125,14 +123,14 @@ void main() {
         maxNum: maxNum,
       );
       for (int i = 0; i < maxNum; i++) {
-        testActivity.addDurationButton(Duration(hours: 1));
+        testActivity.addDurationButton(const Duration(hours: 1));
       }
       for (int i = 0; i < 3; i++) {
         testActivity.addInterval(TimeInterval.duration(
-            end: DateTime.now(), duration: Duration(hours: 1)));
+            end: DateTime.now(), duration: const Duration(hours: 1)));
       }
 
-      when(() => settingsBloc.state).thenReturn(SettingsState(
+      when(() => settingsBloc.state).thenReturn(const SettingsState(
           locale: Locale('en', ''),
           theme: 'Pastel',
           themeMode: false,
@@ -141,21 +139,21 @@ void main() {
           status: Status.normal));
 
       await widgetTester.pumpWidget(TestMaterialApp(
+        settingsBloc: settingsBloc,
         child: ActivityCard(
             activity: testActivity, activityIndex: 0, archived: false),
-        settingsBloc: settingsBloc,
       ));
 
       final card = widgetTester.widget<Card>(find.byType(Card));
       expect(card.color, pastel[1]);
 
-      expect(find.byKey(Key('title of activity')), findsOneWidget);
+      expect(find.byKey(const Key('title of activity')), findsOneWidget);
       expect(find.text('test title, total = 3 h'), findsOneWidget);
 
-      expect(find.byKey(Key('subtitle of activity')), findsOneWidget);
+      expect(find.byKey(const Key('subtitle of activity')), findsOneWidget);
       expect(find.text('test subtitle'), findsOneWidget);
 
-      expect(find.byKey(Key('tableOfButtons')), findsOneWidget);
+      expect(find.byKey(const Key('tableOfButtons')), findsOneWidget);
       expect(find.text('Checked cells: 3'), findsOneWidget);
       expect(find.text('Total: $maxNum'), findsOneWidget);
 
@@ -174,14 +172,14 @@ void main() {
         presentation: Presentation.BUTTONS,
         color: 1,
       );
-      testActivity.addDurationButton(Duration(hours: 1));
-      testActivity.addDurationButton(Duration(minutes: 40));
+      testActivity.addDurationButton(const Duration(hours: 1));
+      testActivity.addDurationButton(const Duration(minutes: 40));
       testActivity.addInterval(TimeInterval.duration(
-          end: DateTime.now(), duration: Duration(hours: 1)));
+          end: DateTime.now(), duration: const Duration(hours: 1)));
       testActivity.addInterval(TimeInterval.duration(
-          end: DateTime.now(), duration: Duration(minutes: 40)));
+          end: DateTime.now(), duration: const Duration(minutes: 40)));
 
-      when(() => settingsBloc.state).thenReturn(SettingsState(
+      when(() => settingsBloc.state).thenReturn(const SettingsState(
           locale: Locale('en', ''),
           theme: 'Pastel',
           themeMode: false,
@@ -190,25 +188,25 @@ void main() {
           status: Status.normal));
 
       await widgetTester.pumpWidget(TestMaterialApp(
+        settingsBloc: settingsBloc,
         child: ActivityCard(
             activity: testActivity, activityIndex: 0, archived: true),
-        settingsBloc: settingsBloc,
       ));
 
       expect(find.byIcon(Icons.edit), findsNothing);
       expect(find.byIcon(Icons.archive), findsNothing);
       expect(find.byIcon(Icons.unarchive), findsOneWidget);
       expect(find.byIcon(Icons.delete), findsOneWidget);
-      expect(find.byKey(Key('rowOfButtons')), findsOneWidget);
-      expect(find.byKey(Key('tableOfButtons')), findsNothing);
+      expect(find.byKey(const Key('rowOfButtons')), findsOneWidget);
+      expect(find.byKey(const Key('tableOfButtons')), findsNothing);
 
       final card = widgetTester.widget<Card>(find.byType(Card));
       expect(card.color, pastelInactive[1]);
 
-      expect(find.byKey(Key('title of activity')), findsOneWidget);
+      expect(find.byKey(const Key('title of activity')), findsOneWidget);
       expect(find.text('test title, total = 1 h 40 m'), findsOneWidget);
 
-      expect(find.byKey(Key('subtitle of activity')), findsOneWidget);
+      expect(find.byKey(const Key('subtitle of activity')), findsOneWidget);
       expect(find.text('test subtitle'), findsOneWidget);
 
       expect(find.byType(OutlinedButton), findsNWidgets(2));
