@@ -5,6 +5,7 @@ import '../bloc/activity_bloc/activity_bloc.dart';
 import '../bloc/settings_bloc/settings_bloc.dart';
 import '../data/settings/settings_data.dart';
 import '../data/settings/themes.dart';
+import '../widgets/about_app_dialog.dart';
 import '../widgets/spacer_box.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -120,12 +121,22 @@ class SettingsScreen extends StatelessWidget {
                     },
                   ),
                   const SpacerBox(),
-                  const SpacerBox(),
                   OutlinedButton(
                       onPressed: () {
                         _deleteAllDialog(context);
                       },
                       child: Text(AppLocalizations.of(context)!.deleteAll)),
+                  const SpacerBox(),
+                  const SpacerBox(),
+                  OutlinedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AboutAppDialog(context: context),
+                      );
+                    },
+                    child: Text(AppLocalizations.of(context)!.aboutApp),
+                  ),
                 ],
               ),
             ),

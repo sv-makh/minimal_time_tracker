@@ -41,7 +41,12 @@
     "showArchivedActivities": "Show archived activities",
     "somethingWrong": "Something went wrong!",
     "statistics": "Statistics",
-    "deleteAll": "Delete all",
+    "deleteAll": "Clear all data",
     "deleteAllActivities": "Delete all activities?",
-    "deleteAllWarning": "All data will will be lost."
+    "deleteAllWarning": "All data will will be lost.",
+    "aboutApp": "About app",
+    "author": "Author",
+    "version": "Version",
+    "source": "Source",
+    "license": "License"
 }

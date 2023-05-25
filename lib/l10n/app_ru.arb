@@ -41,7 +41,12 @@
     "showArchivedActivities": "Показывать архивированные активности",
     "somethingWrong": "Что-то пошло не так!",
     "statistics": "Статистика",
-    "deleteAll": "Удалить всё",
+    "deleteAll": "Очистить все данные",
     "deleteAllActivities": "Удалить все активности?",
-    "deleteAllWarning": "Все данные будут потеряны."
+    "deleteAllWarning": "Все данные будут потеряны.",
+    "aboutApp": "О приложении",
+    "author": "Автор",
+    "version": "Версия",
+    "source": "Исходный код",
+    "license": "Лицензия"
 }
