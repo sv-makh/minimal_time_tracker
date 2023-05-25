@@ -163,6 +163,7 @@ class ActivityCard extends StatelessWidget {
                   },
                   child: Text(AppLocalizations.of(context)!.cancel)),
               TextButton(
+                key: const Key('deleteTextButton'),
                   onPressed: () {
                     archived
                         ? BlocProvider.of<ActivitiesBloc>(context)
