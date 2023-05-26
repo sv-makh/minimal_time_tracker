@@ -21,6 +21,7 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
   @override
   void initState() {
     super.initState();
+    initPackageInfo();
   }
 
   Future<void> initPackageInfo() async {
@@ -34,7 +35,6 @@ class _AboutAppDialogState extends State<AboutAppDialog> {
 
   @override
   Widget build(context) {
-    initPackageInfo();
 
     return BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, SettingsState settingsState) {
