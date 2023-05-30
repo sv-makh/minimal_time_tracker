@@ -8,8 +8,10 @@
         </intent>
     </queries>
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
-        android:label="minimal_time_tracker"
+        android:label="Minimal Time Tracker"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -10,7 +10,8 @@ class SettingsRepository {
   }
 
   Locale getLocale() {
-    String langCode = prefs.getString('lang') ?? Platform.localeName;
+    String langCode =
+        prefs.getString('lang') ?? Platform.localeName.substring(0, 2);
     return Locale(langCode);
   }
 

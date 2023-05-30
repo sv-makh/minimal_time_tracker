@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -11,8 +12,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final SettingsRepository settingsRepository;
 
   SettingsBloc({required this.settingsRepository})
-      : super(const SettingsState(
-          locale: Locale('en', ''),
+      : super(SettingsState(
+          locale: Locale(Platform.localeName.substring(0, 2)),
           theme: 'Pale',
           fontSize: 12,
           showArchive: true,
