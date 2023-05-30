@@ -14,8 +14,8 @@
 - изменение темы, светлого/тёмного режима, языка (ru/en), размера шрифта
 
 ## Скриншоты
-<img src="screenshots/en/main_screen_ru.png" alt= “main_screen_ru.png” width="200"> <img src="screenshots/en/dark_mode_ru.png" alt= “dark_mode_ru.png” width="200"> <img src="screenshots/en/pale_ru.png" alt= “pale_ru.png” width="200"> 
-<img src="screenshots/en/edit_activity_ru.png" alt= “edit_activity_ru.png” width="200"> <img src="screenshots/en/statistics_ru.png" alt= “statistics_ru.png” width="200"> <img src="screenshots/en/settings_ru.png" alt= “settings_ru.png” width="200"> 
+<img src="screenshots/ru/main_screen_ru.png" alt= “main_screen_ru.png” width="200"> <img src="screenshots/ru/dark_mode_ru.png" alt= “dark_mode_ru.png” width="200"> <img src="screenshots/ru/pale_ru.png" alt= “pale_ru.png” width="200"> 
+<img src="screenshots/ru/edit_activity_ru.png" alt= “edit_activity_ru.png” width="200"> <img src="screenshots/ru/statistics_ru.png" alt= “statistics_ru.png” width="200"> <img src="screenshots/ru/settings_ru.png" alt= “settings_ru.png” width="200"> 
 
 ## Пакеты
 В этом проекте использованы следующие пакеты:
