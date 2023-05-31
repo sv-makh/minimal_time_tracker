@@ -10,7 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      # The branch or tag ref that triggered the workflow will be checked out.
+      # https://github.com/actions/checkout
       - uses: actions/checkout@v3
+      # Setup a flutter environment.
+      # https://github.com/marketplace/actions/flutter-action
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
